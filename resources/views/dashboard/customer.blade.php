@@ -34,21 +34,21 @@
                     <div class="card-icon">🚗</div>
                     <h3>My Vehicles</h3>
                     <p>View and manage your registered vehicles</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Vehicles</a>
+                    <a href="{{ route('customer.vehicles') }}" class="btn btn-primary btn-sm">View Vehicles</a>
                 </div>
 
                 <div class="dashboard-card">
                     <div class="card-icon">📅</div>
                     <h3>Appointments</h3>
                     <p>Schedule and track service appointments</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Appointments</a>
+                    <a href="{{ route('customer.services') }}" class="btn btn-primary btn-sm">Book Service</a>
                 </div>
 
                 <div class="dashboard-card">
                     <div class="card-icon">📋</div>
                     <h3>Service History</h3>
                     <p>View past service records and invoices</p>
-                    <a href="#" class="btn btn-primary btn-sm">View History</a>
+                    <a href="{{ route('customer.history') }}" class="btn btn-primary btn-sm">View History</a>
                 </div>
 
                 <div class="dashboard-card">
@@ -63,6 +63,20 @@
                     <h3>My Profile</h3>
                     <p>Manage your profile and account settings</p>
                     <a href="{{ route('customer.profile') }}" class="btn btn-primary btn-sm">View Profile</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">🧾</div>
+                    <h3>My Bookings</h3>
+                    <p>See pending, ongoing, and completed bookings</p>
+                    <a href="{{ route('customer.bookings') }}" class="btn btn-primary btn-sm">View Bookings</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">🚙</div>
+                    <h3>Rental Vehicles</h3>
+                    <p>Browse and manage rental bookings</p>
+                    <a href="{{ route('customer.rentals') }}" class="btn btn-primary btn-sm">Rentals</a>
                 </div>
             </div>
 

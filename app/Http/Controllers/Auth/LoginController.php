@@ -95,22 +95,22 @@ class LoginController extends Controller
             !\App\Models\StaffMember::where('email', $credentials['email'])->exists() &&
             !\App\Models\CustomerUser::where('email', $credentials['email'])->exists()) {
             
-            if (Auth::attempt($credentials, $remember)) {
-                $request->session()->regenerate();
-                $user = Auth::user();
-                
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+            
                 // Clear any intended URL
                 $request->session()->forget('url.intended');
                 
                 // Redirect based on role - use direct redirect, not intended
                 if (isset($user->role)) {
-                    switch ($user->role) {
-                        case 'admin':
+            switch ($user->role) {
+                case 'admin':
                             return redirect()->route('dashboard.admin');
-                        case 'staff':
+                case 'staff':
                             return redirect()->route('dashboard.staff');
-                        case 'customer':
-                        default:
+                case 'customer':
+                default:
                             return redirect()->route('dashboard.customer');
                     }
                 }

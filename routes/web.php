@@ -59,6 +59,14 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::get('/profile', [\App\Http\Controllers\CustomerProfileController::class, 'index'])->name('customer.profile');
         Route::post('/profile/update', [\App\Http\Controllers\CustomerProfileController::class, 'updateProfile'])->name('customer.profile.update');
         Route::post('/profile/password', [\App\Http\Controllers\CustomerProfileController::class, 'updatePassword'])->name('customer.profile.password');
+
+        // Customer static pages
+        Route::view('/services', 'customer.services')->name('customer.services');
+        Route::view('/bookings', 'customer.bookings')->name('customer.bookings');
+        Route::view('/vehicles', 'customer.vehicles')->name('customer.vehicles');
+        Route::view('/history', 'customer.history')->name('customer.history');
+        Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
+        Route::view('/settings', 'customer.settings')->name('customer.settings');
     });
 
     // Staff Profile Routes
@@ -66,6 +74,13 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::get('/profile', [\App\Http\Controllers\StaffProfileController::class, 'index'])->name('staff.profile');
         Route::post('/profile/update', [\App\Http\Controllers\StaffProfileController::class, 'updateProfile'])->name('staff.profile.update');
         Route::post('/profile/password', [\App\Http\Controllers\StaffProfileController::class, 'updatePassword'])->name('staff.profile.password');
+
+        // Staff static pages
+        Route::view('/bookings', 'staff.bookings')->name('staff.bookings');
+        Route::view('/service-logs', 'staff.service-logs')->name('staff.service.logs');
+        Route::view('/inventory', 'staff.inventory')->name('staff.inventory');
+        Route::view('/customers', 'staff.customers')->name('staff.customers');
+        Route::view('/settings', 'staff.profile-settings')->name('staff.settings');
     });
 
     // Admin Staff Applications

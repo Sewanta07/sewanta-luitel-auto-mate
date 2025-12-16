@@ -10,7 +10,13 @@
                 <div class="logo">
                     <h1>AutoMate</h1>
                 </div>
-                <div class="nav-links">
+                <div class="nav-links nav-links-staff">
+                    <a href="<?php echo e(route('dashboard.staff')); ?>" class="btn btn-outline">Dashboard</a>
+                    <a href="<?php echo e(route('staff.bookings')); ?>" class="btn btn-outline">Bookings</a>
+                    <a href="<?php echo e(route('staff.service.logs')); ?>" class="btn btn-outline">Service Logs</a>
+                    <a href="<?php echo e(route('staff.inventory')); ?>" class="btn btn-outline">Inventory</a>
+                    <a href="<?php echo e(route('staff.customers')); ?>" class="btn btn-outline">Customers</a>
+                    <a href="<?php echo e(route('staff.settings')); ?>" class="btn btn-outline">Settings</a>
                     <a href="<?php echo e(route('staff.profile')); ?>" class="btn btn-outline">My Profile</a>
                     <span class="user-info">Welcome, <?php echo e($user->name); ?></span>
                     <form method="POST" action="<?php echo e(route('logout')); ?>" class="inline">

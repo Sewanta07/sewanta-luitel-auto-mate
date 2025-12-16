@@ -26,13 +26,13 @@ class CheckStaffStatus
         
         if ($isStaff || $userRole === 'staff') {
             if (isset($user->status)) {
-                if ($user->status === 'pending') {
-                    return redirect()->route('staff.pending');
-                }
+            if ($user->status === 'pending') {
+                return redirect()->route('staff.pending');
+            }
 
-                if ($user->status === 'rejected') {
-                    Auth::logout();
-                    return redirect()->route('staff.rejected');
+            if ($user->status === 'rejected') {
+                Auth::logout();
+                return redirect()->route('staff.rejected');
                 }
             }
         }

@@ -60,6 +60,10 @@ class AdminProfileController extends Controller
 
         $admin->update($validated);
 
+        // Refresh the authenticated admin so updated data shows immediately
+        $admin->refresh();
+        Auth::setUser($admin);
+
         return back()->with('success', 'Profile updated successfully!');
     }
 
@@ -85,6 +89,10 @@ class AdminProfileController extends Controller
         $admin->update([
             'password' => Hash::make($validated['password']),
         ]);
+
+        // Refresh the authenticated admin so changes reflect immediately
+        $admin->refresh();
+        Auth::setUser($admin);
 
         return back()->with('success', 'Password updated successfully!');
     }

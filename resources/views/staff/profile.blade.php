@@ -11,8 +11,14 @@
                 <div class="logo">
                     <h1>AutoMate</h1>
                 </div>
-                <div class="nav-links">
+                <div class="nav-links nav-links-staff">
                     <a href="{{ route('dashboard.staff') }}" class="btn btn-outline">Dashboard</a>
+                    <a href="{{ route('staff.bookings') }}" class="btn btn-outline">Bookings</a>
+                    <a href="{{ route('staff.service.logs') }}" class="btn btn-outline">Service Logs</a>
+                    <a href="{{ route('staff.inventory') }}" class="btn btn-outline">Inventory</a>
+                    <a href="{{ route('staff.customers') }}" class="btn btn-outline">Customers</a>
+                    <a href="{{ route('staff.settings') }}" class="btn btn-outline">Settings</a>
+                    <a href="{{ route('staff.profile') }}" class="btn btn-outline">My Profile</a>
                     <span class="user-info">Welcome, {{ $staff?->name }}</span>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
