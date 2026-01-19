@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StaffApplicationController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\ContactController;
 
 // Landing Page - Redirect authenticated users to their dashboard
 Route::get('/', function () {
@@ -47,6 +48,9 @@ Route::middleware('guest')->group(function () {
 
 // Logout Route
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Contact Form Route
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Protected Routes
 Route::middleware(['auth', 'check.staff.status'])->group(function () {
@@ -116,6 +120,12 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/settings/notification', [\App\Http\Controllers\Admin\SettingsController::class, 'updateNotification'])->name('admin.settings.notification');
         Route::post('/settings/display', [\App\Http\Controllers\Admin\SettingsController::class, 'updateDisplay'])->name('admin.settings.display');
         Route::post('/settings/security', [\App\Http\Controllers\Admin\SettingsController::class, 'updateSecurity'])->name('admin.settings.security');
+
+        // Contact Messages
+        Route::get('/contact-messages', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.contact-messages.index');
+        Route::get('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('admin.contact-messages.show');
+        Route::post('/contact-messages/{id}/status', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateStatus'])->name('admin.contact-messages.updateStatus');
+        Route::delete('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.contact-messages.destroy');
     });
 });
 

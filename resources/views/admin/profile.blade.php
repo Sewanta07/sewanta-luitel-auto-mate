@@ -3,7 +3,6 @@
 @section('title', 'Admin Profile')
 
 @section('content')
-@section('content')
 @include('components.admin-sidebar')
 
 <div class="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50">
@@ -138,22 +137,40 @@
 
                             <div class="col-span-full">
                                 <label for="current_password" class="block text-sm font-medium leading-6 text-gray-900">Current Password</label>
-                                <div class="mt-2">
-                                    <input type="password" name="current_password" id="current_password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                <div class="mt-2 relative">
+                                    <input type="password" name="current_password" id="current_password" required class="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                    <button type="button" onclick="togglePassword('current_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="eye-current_password">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="sm:col-span-3">
                                 <label for="password" class="block text-sm font-medium leading-6 text-gray-900">New Password</label>
-                                <div class="mt-2">
-                                    <input type="password" name="password" id="password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                <div class="mt-2 relative">
+                                    <input type="password" name="password" id="password" required class="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                    <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="eye-password">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="sm:col-span-3">
                                 <label for="password_confirmation" class="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
-                                <div class="mt-2">
-                                    <input type="password" name="password_confirmation" id="password_confirmation" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                <div class="mt-2 relative">
+                                    <input type="password" name="password_confirmation" id="password_confirmation" required class="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#ff5a1f] sm:text-sm sm:leading-6">
+                                    <button type="button" onclick="togglePassword('password_confirmation')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="eye-password_confirmation">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -199,6 +216,12 @@
 </div>
 
 <script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+    field.setAttribute('type', type);
+}
+
 function previewImage(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -219,5 +242,4 @@ function previewImage(input) {
     }
 }
 </script>
-@endsection
 @endsection
