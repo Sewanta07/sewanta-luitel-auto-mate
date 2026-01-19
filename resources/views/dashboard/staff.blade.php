@@ -3,106 +3,144 @@
 @section('title', 'Staff Dashboard - AutoMate')
 
 @section('content')
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
-                </div>
-                <div class="nav-links nav-links-staff">
-                    <a href="{{ route('dashboard.staff') }}" class="btn btn-outline">Dashboard</a>
-                    <a href="{{ route('staff.bookings') }}" class="btn btn-outline">Bookings</a>
-                    <a href="{{ route('staff.service.logs') }}" class="btn btn-outline">Service Logs</a>
-                    <a href="{{ route('staff.inventory') }}" class="btn btn-outline">Inventory</a>
-                    <a href="{{ route('staff.customers') }}" class="btn btn-outline">Customers</a>
-                    <a href="{{ route('staff.settings') }}" class="btn btn-outline">Settings</a>
-                    <a href="{{ route('staff.profile') }}" class="btn btn-outline">My Profile</a>
-                    <span class="user-info">Welcome, {{ $user->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
-                    </form>
-                </div>
+@include('components.staff-navbar')
+
+<div class="min-h-screen bg-gray-50 pb-12">
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {{-- Page Header --}}
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Staff Portal</h1>
+                <p class="mt-2 text-lg text-gray-600">Manage your service queue and update repair status.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 animate-pulse">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                    System Online
+                </span>
             </div>
         </div>
-    </nav>
 
-    <div class="dashboard-content">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2>Staff Dashboard</h2>
-                <p>Manage service appointments and vehicle maintenance</p>
+        {{-- Dashboard Cards Grid --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {{-- Card 1: Service Queue --}}
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-1">Service Queue</h3>
+                <p class="text-sm text-gray-500 mb-6">12 Pending requests</p>
+                <a href="{{ route('staff.bookings') }}" class="mt-auto text-sm font-bold text-[#ff5a1f] hover:text-[#e64b15] flex items-center transition">
+                    View Queue <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-icon">📋</div>
-                    <h3>Service Queue</h3>
-                    <p>View and manage pending service requests</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Queue</a>
+            {{-- Card 2: Active Services --}}
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+                <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">🔧</div>
-                    <h3>Active Services</h3>
-                    <p>Track services currently in progress</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Active</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">✅</div>
-                    <h3>Completed Services</h3>
-                    <p>Review completed service records</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Completed</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">📊</div>
-                    <h3>Reports</h3>
-                    <p>Generate service reports and statistics</p>
-                    <a href="#" class="btn btn-primary btn-sm">View Reports</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">👤</div>
-                    <h3>My Profile</h3>
-                    <p>Manage your profile and credentials</p>
-                    <a href="{{ route('staff.profile') }}" class="btn btn-primary btn-sm">View Profile</a>
-                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-1">Active Jobs</h3>
+                <p class="text-sm text-gray-500 mb-6">4 Vehicles in bay</p>
+                <a href="#" class="mt-auto text-sm font-bold text-[#ff5a1f] hover:text-[#e64b15] flex items-center transition">
+                    Manage Active <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
             </div>
 
-            <div class="dashboard-section">
-                <h3>Today's Schedule</h3>
-                <div class="schedule-list">
-                    <div class="schedule-item">
-                        <div class="schedule-time">09:00 AM</div>
-                        <div class="schedule-content">
-                            <h4>Oil Change - Vehicle #1234</h4>
-                            <p>Customer: John Doe</p>
-                        </div>
-                        <div class="schedule-status status-pending">Pending</div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-time">11:30 AM</div>
-                        <div class="schedule-content">
-                            <h4>Brake Inspection - Vehicle #5678</h4>
-                            <p>Customer: Jane Smith</p>
-                        </div>
-                        <div class="schedule-status status-in-progress">In Progress</div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-time">02:00 PM</div>
-                        <div class="schedule-content">
-                            <h4>Tire Replacement - Vehicle #9012</h4>
-                            <p>Customer: Bob Johnson</p>
-                        </div>
-                        <div class="schedule-status status-scheduled">Scheduled</div>
-                    </div>
+            {{-- Card 3: Inventory --}}
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+                <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                 </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-1">Inventory</h3>
+                <p class="text-sm text-gray-500 mb-6">Check stock levels</p>
+                <a href="{{ route('staff.inventory') }}" class="mt-auto text-sm font-bold text-[#ff5a1f] hover:text-[#e64b15] flex items-center transition">
+                    View Inventory <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+
+            {{-- Card 4: Reports --}}
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-1">Reports</h3>
+                <p class="text-sm text-gray-500 mb-6">Daily logs & stats</p>
+                <a href="{{ route('staff.service.logs') }}" class="mt-auto text-sm font-bold text-[#ff5a1f] hover:text-[#e64b15] flex items-center transition">
+                    View Reports <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
             </div>
         </div>
-    </div>
+
+        {{-- Schedule Section --}}
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-900">Today's Schedule</h2>
+                <span class="text-sm text-gray-500">{{ date('l, F j, Y') }}</span>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {{-- Schedule Item 1 --}}
+                <div class="p-6 hover:bg-gray-50 transition flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start md:items-center gap-4">
+                        <div class="px-4 py-2 bg-gray-100 rounded-xl text-center min-w-[5rem]">
+                            <span class="block text-sm font-bold text-gray-900">09:00</span>
+                            <span class="block text-xs text-gray-500 uppercase">AM</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Oil Change - Toyota Corolla</h3>
+                            <p class="text-sm text-gray-500">Owner: John Doe • <span class="font-mono text-gray-400">#1234</span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">
+                            Pending
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Schedule Item 2 --}}
+                <div class="p-6 hover:bg-gray-50 transition flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start md:items-center gap-4">
+                        <div class="px-4 py-2 bg-blue-50 rounded-xl text-center min-w-[5rem]">
+                            <span class="block text-sm font-bold text-blue-900">11:30</span>
+                            <span class="block text-xs text-blue-500 uppercase">AM</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Brake Inspection - Honda CR-V</h3>
+                            <p class="text-sm text-gray-500">Owner: Jane Smith • <span class="font-mono text-gray-400">#5678</span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
+                            In Progress
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Schedule Item 3 --}}
+                 <div class="p-6 hover:bg-gray-50 transition flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start md:items-center gap-4">
+                        <div class="px-4 py-2 bg-gray-100 rounded-xl text-center min-w-[5rem]">
+                            <span class="block text-sm font-bold text-gray-900">02:00</span>
+                            <span class="block text-xs text-gray-500 uppercase">PM</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Tire Replacement - Ford F-150</h3>
+                            <p class="text-sm text-gray-500">Owner: Bob Johnson • <span class="font-mono text-gray-400">#9012</span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600">
+                            Scheduled
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 text-center">
+                <a href="{{ route('staff.bookings') }}" class="text-sm font-bold text-gray-600 hover:text-[#ff5a1f] transition">View Full Schedule &rarr;</a>
+            </div>
+        </div>
+    </main>
 </div>
 @endsection
-

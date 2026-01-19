@@ -63,7 +63,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         // Customer static pages
         Route::view('/services', 'customer.services')->name('customer.services');
         Route::view('/bookings', 'customer.bookings')->name('customer.bookings');
-        Route::view('/vehicles', 'customer.vehicles')->name('customer.vehicles');
+        Route::view('/vehicles', 'customer.vehicles.index')->name('customer.vehicles');
         Route::view('/history', 'customer.history')->name('customer.history');
         Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
@@ -117,6 +117,18 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/settings/display', [\App\Http\Controllers\Admin\SettingsController::class, 'updateDisplay'])->name('admin.settings.display');
         Route::post('/settings/security', [\App\Http\Controllers\Admin\SettingsController::class, 'updateSecurity'])->name('admin.settings.security');
     });
+});
+
+// Additional customer UI routes (protected)
+Route::middleware(['auth', 'check.staff.status'])->group(function () {
+    // Requests
+    Route::get('/customer/requests', function () {
+        return view('customer.requests.index');
+    })->name('customer.requests.index');
+
+    Route::get('/customer/requests/create', function () {
+        return view('customer.requests.create');
+    })->name('customer.requests.create');
 });
 
 // Staff status pages

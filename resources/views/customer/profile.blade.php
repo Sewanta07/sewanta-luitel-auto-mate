@@ -4,360 +4,208 @@
 
 @section('content')
 @php($customer = $user ?? auth()->user())
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
-                </div>
-                <div class="nav-links">
-                    <a href="{{ route('dashboard.customer') }}" class="btn btn-outline">Dashboard</a>
-                    <span class="user-info">Welcome, {{ $customer?->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
+@include('components.customer-navbar')
+
+<div class="min-h-screen bg-gray-50 pb-12">
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {{-- Page Header --}}
+        <div class="mb-8 mt-4">
+            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
+            <p class="mt-2 text-lg text-gray-600">Manage your personal details, vehicles, and account security.</p>
+        </div>
+
+        {{-- Success/Error Alerts --}}
+        @if(session('success'))
+            <div class="mb-6 p-4 rounded-2xl bg-green-50 border border-green-100 text-green-800 flex items-center">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {{-- Left Column: Profile & Security (lg:col-span-1) --}}
+            <div class="space-y-8">
+                {{-- Profile Picture Card --}}
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 text-center">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6 text-left">Profile Picture</h3>
+                    <form action="{{ route('customer.profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
+                        <div class="relative inline-block">
+                            <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-orange-50 mx-auto bg-gray-100 flex items-center justify-center">
+                                @if($customer->profile_image)
+                                    <img src="{{ asset('storage/' . $customer->profile_image) }}" id="profile-preview-left" alt="Profile" class="w-full h-full object-cover">
+                                @else
+                                    <span class="text-4xl font-bold text-gray-300">{{ strtoupper(substr($customer->name ?? 'U', 0, 1)) }}</span>
+                                @endif
+                            </div>
+                            <label for="profile_image_input" class="absolute bottom-0 right-0 bg-[#ff5a1f] p-2 rounded-full text-white cursor-pointer shadow-lg hover:bg-[#e64b15] transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <input type="file" id="profile_image_input" name="profile_image" class="hidden" accept="image/*" onchange="previewProfileImage(this)">
+                            </label>
+                        </div>
+                        <p class="mt-4 text-xs text-gray-500 italic">Accepted formats: JPG, PNG, GIF. Max 2MB.</p>
+                        <button type="submit" class="mt-6 w-full py-2.5 rounded-xl bg-orange-50 text-[#ff5a1f] font-semibold hover:bg-orange-100 transition">
+                            Update Photo
+                        </button>
+                    </form>
+                </div>
+
+                {{-- Change Password Card --}}
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="p-2 bg-purple-50 rounded-lg">
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Security</h3>
+                    </div>
+                    <form action="{{ route('customer.profile.password') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Current Password</label>
+                            <input type="password" name="current_password" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">New Password</label>
+                            <input type="password" name="password" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Confirm New Password</label>
+                            <input type="password" name="password_confirmation" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gray-900 text-white font-bold hover:bg-gray-800 transition shadow-lg shadow-gray-200">
+                            Update Password
+                        </button>
                     </form>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <div class="dashboard-content">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2>My Profile</h2>
-                <p>Manage your profile information and credentials</p>
-            </div>
-
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="alert alert-error">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <!-- Profile Information Section -->
-            <div class="dashboard-section">
-                <h3>Profile Information</h3>
-                
-                <form method="POST" action="{{ route('customer.profile.update') }}" enctype="multipart/form-data" class="profile-form">
-                    @csrf
-                    
-                    <div class="profile-header">
-                        <div class="profile-image-section">
-                            <div class="profile-image-preview">
-                                @if($customer->profile_image)
-                                    <img src="{{ asset('storage/' . $customer->profile_image) }}" alt="Profile Image" id="profile-preview">
-                                @else
-                                    <div class="profile-placeholder" id="profile-preview">
-                                        <span>{{ strtoupper(substr($customer->name, 0, 1)) }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="profile_image">Profile Picture</label>
-                                <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(this)" class="form-control">
-                                <small class="text-muted">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</small>
-                                @error('profile_image')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
+            {{-- Right Column: Information & Vehicles (lg:col-span-2) --}}
+            <div class="lg:col-span-2 space-y-8">
+                {{-- Personal Information Card --}}
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="p-2 bg-orange-50 rounded-lg">
+                            <svg class="w-5 h-5 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
+                        <h3 class="text-lg font-bold text-gray-900">Personal Information</h3>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name <span class="required">*</span></label>
-                            <input type="text" id="name" name="name" value="{{ old('name', $customer->name) }}" required class="form-control @error('name') is-invalid @enderror">
-                            @error('name')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
+                    <form action="{{ route('customer.profile.update') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @csrf
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
+                            <input type="text" name="name" value="{{ old('name', $customer->name) }}" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
                         </div>
-
-                        <div class="form-group">
-                            <label for="email">Email Address <span class="required">*</span></label>
-                            <input type="email" id="email" name="email" value="{{ old('email', $customer->email) }}" required class="form-control @error('email') is-invalid @enderror">
-                            @error('email')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
+                            <input type="email" value="{{ $customer->email }}" disabled class="block w-full px-4 py-3 rounded-xl border-gray-100 bg-gray-50 text-gray-500 cursor-not-allowed">
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" value="{{ old('phone', $customer->phone) }}" class="form-control @error('phone') is-invalid @enderror" placeholder="e.g., +1234567890">
-                            @error('phone')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Phone Number</label>
+                            <input type="tel" name="phone" value="{{ old('phone', $customer->phone) }}" class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
                         </div>
-
-                        <div class="form-group">
-                            <label for="status">Account Status</label>
-                            <input type="text" value="{{ ucfirst($customer->status) }}" class="form-control" disabled>
-                            <small class="text-muted">Status cannot be changed from profile</small>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mailing Address</label>
+                            <input type="text" name="current_address" value="{{ old('current_address', $customer->current_address) }}" class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="current_address">Current Address</label>
-                        <textarea id="current_address" name="current_address" rows="3" class="form-control @error('current_address') is-invalid @enderror" placeholder="Enter your full address">{{ old('current_address', $customer->current_address) }}</textarea>
-                        @error('current_address')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Update Profile</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Password Change Section -->
-            <div class="dashboard-section">
-                <h3>Change Password</h3>
-                
-                <form method="POST" action="{{ route('customer.profile.password') }}" class="password-form">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="current_password">Current Password <span class="required">*</span></label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="current_password" name="current_password" required class="form-control @error('current_password') is-invalid @enderror">
-                            <button type="button" class="password-toggle" onclick="togglePassword('current_password')">
-                                <span class="password-icon-show">👁️</span>
-                                <span class="password-icon-hide" style="display: none;">🙈</span>
+                        <div class="md:col-span-2 flex justify-end pt-4">
+                            <button type="submit" class="px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] shadow-lg shadow-orange-100 transform hover:-translate-y-0.5 transition duration-200">
+                                Save Changes
                             </button>
                         </div>
-                        @error('current_password')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    </form>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="password">New Password <span class="required">*</span></label>
-                            <div class="password-input-wrapper">
-                                <input type="password" id="password" name="password" required class="form-control @error('password') is-invalid @enderror">
-                                <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                                    <span class="password-icon-show">👁️</span>
-                                    <span class="password-icon-hide" style="display: none;">🙈</span>
-                                </button>
+                {{-- Vehicle Information Card --}}
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-blue-50 rounded-lg">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             </div>
-                            @error('password')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
+                            <h3 class="text-lg font-bold text-gray-900">Registered Vehicles</h3>
                         </div>
-
-                        <div class="form-group">
-                            <label for="password_confirmation">Confirm New Password <span class="required">*</span></label>
-                            <div class="password-input-wrapper">
-                                <input type="password" id="password_confirmation" name="password_confirmation" required class="form-control">
-                                <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
-                                    <span class="password-icon-show">👁️</span>
-                                    <span class="password-icon-hide" style="display: none;">🙈</span>
-                                </button>
-                            </div>
-                        </div>
+                        <a href="{{ route('customer.vehicles') }}" class="text-sm font-bold text-[#ff5a1f] hover:text-[#e64b15] transition flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            Add New
+                        </a>
                     </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Update Password</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Account Credentials Section -->
-            <div class="dashboard-section">
-                <h3>Account Credentials</h3>
-                <div class="credentials-info">
-                    <div class="info-row">
-                        <span class="info-label">Customer ID:</span>
-                        <span class="info-value">{{ $customer->id }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Email:</span>
-                        <span class="info-value">{{ $customer->email }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Role:</span>
-                        <span class="info-value badge success">Customer</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Account Created:</span>
-                        <span class="info-value">{{ $customer->created_at->format('F d, Y') }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Last Updated:</span>
-                        <span class="info-value">{{ $customer->updated_at->format('F d, Y h:i A') }}</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 rounded-xl">
+                                <tr>
+                                    <th class="px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider rounded-l-xl">Vehicle</th>
+                                    <th class="px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Model/Year</th>
+                                    <th class="px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Plate No.</th>
+                                    <th class="px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider rounded-r-xl">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                {{-- Mock Item 1 --}}
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center mr-3">
+                                                <svg class="w-4 h-4 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                                            </div>
+                                            <span class="text-sm font-bold text-gray-900">Toyota Corolla</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-600">Executive / 2018</td>
+                                    <td class="px-4 py-4 text-sm text-gray-600 font-mono">BA 2 PA 1234</td>
+                                    <td class="px-4 py-4 text-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <button class="text-blue-600 hover:text-blue-800 transition font-medium">Edit</button>
+                                            <button class="text-red-500 hover:text-red-700 transition font-medium">Remove</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{-- Mock Item 2 --}}
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
+                                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                                            </div>
+                                            <span class="text-sm font-bold text-gray-900">Honda CR-V</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-600">Touring / 2021</td>
+                                    <td class="px-4 py-4 text-sm text-gray-600 font-mono">BAG 5 CHA 5678</td>
+                                    <td class="px-4 py-4 text-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <button class="text-blue-600 hover:text-blue-800 transition font-medium">Edit</button>
+                                            <button class="text-red-500 hover:text-red-700 transition font-medium">Remove</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
-<style>
-.profile-header {
-    margin-bottom: 2rem;
-}
-
-.profile-image-section {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    padding: 1.5rem;
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-}
-
-.profile-image-preview {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.profile-image-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.profile-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), #2563eb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 3rem;
-    font-weight: bold;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .profile-image-section {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-.form-actions {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.required {
-    color: var(--danger-color);
-}
-
-.credentials-info {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    border: 1px solid var(--border-color);
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.info-label {
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.info-value {
-    color: var(--text-primary);
-    font-weight: 500;
-}
-
-.password-form {
-    margin-top: 1rem;
-}
-</style>
-
 <script>
-function previewImage(input) {
-    const preview = document.getElementById('profile-preview');
-    const file = input.files[0];
-    
-    if (file) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            if (preview.tagName === 'IMG') {
-                preview.src = e.target.result;
-            } else {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Profile Image';
-                img.id = 'profile-preview';
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                preview.parentNode.replaceChild(img, preview);
+    function previewProfileImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('profile-preview-left');
+                if (preview) {
+                    preview.src = e.target.result;
+                } else {
+                    // If there was no image before, create one
+                    const container = input.closest('.relative').querySelector('.w-32');
+                    container.innerHTML = `<img src="${e.target.result}" id="profile-preview-left" alt="Profile" class="w-full h-full object-cover">`;
+                }
             }
-        };
-        
-        reader.readAsDataURL(file);
+            reader.readAsDataURL(input.files[0]);
+        }
     }
-}
-
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const wrapper = input.closest('.password-input-wrapper');
-    const button = wrapper.querySelector('.password-toggle');
-    const showIcon = button.querySelector('.password-icon-show');
-    const hideIcon = button.querySelector('.password-icon-hide');
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        showIcon.style.display = 'none';
-        hideIcon.style.display = 'inline-block';
-    } else {
-        input.type = 'password';
-        showIcon.style.display = 'inline-block';
-        hideIcon.style.display = 'none';
-    }
-}
 </script>
 @endsection
-

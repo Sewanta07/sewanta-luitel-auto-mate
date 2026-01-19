@@ -3,106 +3,102 @@
 @section('title', 'Customer Dashboard - AutoMate')
 
 @section('content')
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
-                </div>
-                <div class="nav-links">
-                    <a href="{{ route('customer.profile') }}" class="btn btn-outline">My Profile</a>
-                    <span class="user-info">Welcome, {{ $user->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+{{-- Include Navigation Bar --}}
+@include('components.customer-navbar')
 
-    <div class="dashboard-content">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2>Customer Dashboard</h2>
-                <p>Manage your vehicles and service appointments</p>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-icon">🚗</div>
-                    <h3>My Vehicles</h3>
-                    <p>View and manage your registered vehicles</p>
-                    <a href="{{ route('customer.vehicles') }}" class="btn btn-primary btn-sm">View Vehicles</a>
+<div class="min-h-screen bg-gray-50">
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {{-- Left column: main content --}}
+        <section class="lg:col-span-3 space-y-6">
+            {{-- Welcome Section --}}
+            <div class="p-6 rounded-2xl bg-white shadow-sm flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-900">Welcome back 👋</h2>
+                    <p class="text-sm text-gray-500 mt-1">Let's get your vehicle running smoothly — request a service when you're ready.</p>
                 </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">📅</div>
-                    <h3>Appointments</h3>
-                    <p>Schedule and track service appointments</p>
-                    <a href="{{ route('customer.services') }}" class="btn btn-primary btn-sm">Book Service</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">📋</div>
-                    <h3>Service History</h3>
-                    <p>View past service records and invoices</p>
-                    <a href="{{ route('customer.history') }}" class="btn btn-primary btn-sm">View History</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">💬</div>
-                    <h3>Support</h3>
-                    <p>Get help or contact our support team</p>
-                    <a href="#" class="btn btn-primary btn-sm">Contact Support</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">👤</div>
-                    <h3>My Profile</h3>
-                    <p>Manage your profile and account settings</p>
-                    <a href="{{ route('customer.profile') }}" class="btn btn-primary btn-sm">View Profile</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">🧾</div>
-                    <h3>My Bookings</h3>
-                    <p>See pending, ongoing, and completed bookings</p>
-                    <a href="{{ route('customer.bookings') }}" class="btn btn-primary btn-sm">View Bookings</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-icon">🚙</div>
-                    <h3>Rental Vehicles</h3>
-                    <p>Browse and manage rental bookings</p>
-                    <a href="{{ route('customer.rentals') }}" class="btn btn-primary btn-sm">Rentals</a>
+                <div class="hidden sm:flex items-center space-x-4">
+                    <div class="text-sm text-gray-500">Member since</div>
+                    <div class="text-sm font-medium text-gray-900">Jan 2026</div>
                 </div>
             </div>
 
-            <div class="dashboard-section">
-                <h3>Recent Activity</h3>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">✓</div>
-                        <div class="activity-content">
-                            <h4>Service Completed</h4>
-                            <p>Your vehicle service has been completed successfully.</p>
-                            <span class="activity-date">2 days ago</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">📅</div>
-                        <div class="activity-content">
-                            <h4>Appointment Scheduled</h4>
-                            <p>New appointment scheduled for next week.</p>
-                            <span class="activity-date">5 days ago</span>
-                        </div>
-                    </div>
+            {{-- Status Summary Cards --}}
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                @include('customer.components.status-card', [
+                    'title' => 'Pending Requests',
+                    'count' => '0',
+                    'bgColor' => '#fff7ed',
+                    'textColor' => '#ff5a1f',
+                    'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 002-2V7a2 2 0 00-2-2h-3.5a1.5 1.5 0 01-3 0H7a2 2 0 00-2 2v3a2 2 0 002 2h2"></path></svg>'
+                ])
+
+                @include('customer.components.status-card', [
+                    'title' => 'In Progress',
+                    'count' => '0',
+                    'bgColor' => '#dbeafe',
+                    'textColor' => '#2563eb',
+                    'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l1-6h16l1 6M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"></path></svg>'
+                ])
+
+                @include('customer.components.status-card', [
+                    'title' => 'Completed Services',
+                    'count' => '0',
+                    'bgColor' => '#f0fdf4',
+                    'textColor' => '#10b981',
+                    'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                ])
+            </div>
+
+            {{-- Quick Action Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    @component('customer.components.quick-action-card', ['title' => 'Request a Service', 'subtitle' => 'Book a new service for your vehicle', 'bgColor' => '#fff7ed', 'textColor' => '#ff5a1f'])
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a4 4 0 11-5.6 5.6L3 18l3 1 5.1-5.1a4 4 0 001.6-4.6l-2-4.1z"></path></svg>
+                    @endcomponent
+                </div>
+
+                <div>
+                    @component('customer.components.quick-action-card', ['title' => 'View My Requests', 'subtitle' => 'Check the status of existing requests', 'bgColor' => '#dbeafe', 'textColor' => '#2563eb'])
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 002-2V7a2 2 0 00-2-2h-3.5a1.5 1.5 0 01-3 0H7a2 2 0 00-2 2v3a2 2 0 002 2h2"></path></svg>
+                    @endcomponent
+                </div>
+
+                <div>
+                    @component('customer.components.quick-action-card', ['title' => 'Manage My Vehicles', 'subtitle' => 'Add or edit your vehicles', 'bgColor' => '#dbeafe', 'textColor' => '#2563eb'])
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l1-6h16l1 6M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"></path></svg>
+                    @endcomponent
                 </div>
             </div>
-        </div>
-    </div>
+
+            {{-- Service Progress Section --}}
+            <div>
+                @include('customer.components.progress-tracker')
+            </div>
+
+            {{-- Empty State Example (visual only) --}}
+            <div>
+                @include('customer.components.empty-state')
+            </div>
+        </section>
+
+        {{-- Right column: sidebar --}}
+        <aside class="space-y-4">
+            <div class="p-4 rounded-2xl bg-white shadow-sm">
+                <div class="text-sm text-gray-500">Quick Links</div>
+                <div class="mt-3 grid gap-2">
+                    <a href="#" class="text-sm px-3 py-2 rounded-md hover:bg-gray-50">Request Service</a>
+                    <a href="#" class="text-sm px-3 py-2 rounded-md hover:bg-gray-50">My Requests</a>
+                    <a href="#" class="text-sm px-3 py-2 rounded-md hover:bg-gray-50">My Vehicles</a>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white shadow-sm text-center">
+                <div class="text-sm text-gray-500">Tips</div>
+                <div class="mt-2 text-sm text-gray-700">Keep your vehicle documents up to date for faster processing.</div>
+            </div>
+        </aside>
+    </main>
 </div>
+
 @endsection
 

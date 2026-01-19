@@ -1,131 +1,125 @@
 <?php $__env->startSection('title', 'Admin Dashboard - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
+<div class="flex h-screen bg-gray-50 overflow-hidden">
+    
+    <aside class="w-64 flex-shrink-0 z-30">
+        <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    </aside>
+
+    
+    <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50 h-full w-full"> 
+        
+        
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Admin Overview</h1>
+                    <p class="mt-2 text-lg text-gray-600">Monitor system performance, user activity, and fleet status.</p>
                 </div>
-                <div class="nav-links">
-                    <span class="user-info">Welcome, <?php echo e($user->name); ?></span>
+                <div class="flex space-x-2 bg-white p-1 rounded-xl shadow-sm border border-gray-200">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">Today</button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">Week</button>
+                    <button class="px-4 py-2 text-sm font-bold text-[#ff5a1f] bg-orange-50 rounded-lg shadow-sm">Month</button>
+                    <a href="<?php echo e(route('index')); ?>" target="_blank" class="px-3 py-2 text-gray-400 hover:text-[#ff5a1f] transition" title="View Site">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <div class="dashboard-content admin-layout">
-        <aside class="admin-sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">Navigation</div>
-                <a href="<?php echo e(route('dashboard.admin')); ?>" class="sidebar-link">Overview</a>
-                <a href="<?php echo e(route('admin.profile')); ?>" class="sidebar-link">Profile</a>
-                <a href="<?php echo e(route('admin.users')); ?>" class="sidebar-link">Manage Users</a>
-                <a href="<?php echo e(route('admin.staff-applications.index')); ?>" class="sidebar-link">Staff Applications</a>
-                <a href="<?php echo e(route('admin.vehicles')); ?>" class="sidebar-link">Vehicles</a>
-                <a href="<?php echo e(route('admin.analytics')); ?>" class="sidebar-link">Analytics</a>
-                <a href="<?php echo e(route('admin.settings')); ?>" class="sidebar-link">Settings</a>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-green-50 rounded-2xl">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">+6.5%</span>
+                    </div>
+                    <h3 class="text-gray-500 text-sm font-medium">Total Revenue</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">$12,450</p>
+                </div>
+
+                
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-blue-50 rounded-2xl">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+2.1%</span>
+                    </div>
+                    <h3 class="text-gray-500 text-sm font-medium">New Orders</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">1,245</p>
+                </div>
+
+                 
+                 <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-orange-50 rounded-2xl">
+                            <svg class="w-6 h-6 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12</span>
+                    </div>
+                    <h3 class="text-gray-500 text-sm font-medium">Active Users</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">8,500</p>
+                </div>
+
+                
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-red-50 rounded-2xl">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        </div>
+                        <span class="text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded-full">2 New</span>
+                    </div>
+                    <h3 class="text-gray-500 text-sm font-medium">Pending Alerts</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">5</p>
+                </div>
             </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">Shortcuts</div>
-                <a href="<?php echo e(route('logout')); ?>" class="sidebar-link"
-                   onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
-                    Logout
-                </a>
-                <form id="sidebar-logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display:none;">
-                    <?php echo csrf_field(); ?>
-                </form>
-            </div>
-        </aside>
 
-        <main class="admin-main">
-            <div class="container">
-                <div class="admin-topbar">
-                    <div>
-                        <div class="admin-breadcrumb">Home / Dashboard</div>
-                        <h2>Admin Dashboard</h2>
-                        <p>Use the navigation to manage users, staff approvals, and system settings.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Performance Overview</h2>
+                            <p class="text-sm text-gray-500">Year-over-year growth comparison</p>
+                        </div>
                     </div>
-                    <div class="admin-top-actions">
-                        <button class="btn btn-outline btn-sm">Today</button>
-                        <button class="btn btn-outline btn-sm">This Week</button>
-                        <button class="btn btn-primary btn-sm">This Month</button>
+                    <div class="h-64 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border border-dashed border-gray-200">
+                        [Chart Placeholder]
                     </div>
                 </div>
 
-                <div class="stat-grid">
-                    <div class="stat-card primary">
-                        <div class="stat-label">Sales</div>
-                        <div class="stat-value">3,500</div>
-                        <div class="stat-meta">+6.5% vs last week</div>
-                    </div>
-                    <div class="stat-card secondary">
-                        <div class="stat-label">Orders</div>
-                        <div class="stat-value">2,900</div>
-                        <div class="stat-meta">+2.1%</div>
-                    </div>
-                    <div class="stat-card neutral">
-                        <div class="stat-label">Invoices</div>
-                        <div class="stat-value">6,500</div>
-                        <div class="stat-meta">On track</div>
-                    </div>
-                    <div class="stat-card accent">
-                        <div class="stat-label">Alerts</div>
-                        <div class="stat-value">72</div>
-                        <div class="stat-meta">2 new</div>
-                    </div>
-                </div>
-
-                <div class="admin-panels">
-                    <div class="panel highlight">
-                        <div class="panel-header">
-                            <div>
-                                <div class="panel-title">Congratulations, <?php echo e($user->name ?? 'Admin'); ?> 🎉</div>
-                                <div class="panel-subtitle">You have added 66% more protection than last year.</div>
+                
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+                    <div class="space-y-4">
+                        <a href="<?php echo e(route('admin.users')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
+                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                             </div>
-                        </div>
-                        <div class="panel-metrics">
-                            <div class="panel-metric">
-                                <div class="metric-label">Income</div>
-                                <div class="metric-value">$4,800</div>
-                            </div>
-                            <div class="panel-metric">
-                                <div class="metric-label">Expenses</div>
-                                <div class="metric-value">$2,300</div>
-                            </div>
-                        </div>
-                    </div>
+                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">Manage Users</span>
+                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
 
-                    <div class="panel">
-                        <div class="panel-header">
-                            <div class="panel-title">Overall Sales</div>
-                        </div>
-                        <div class="panel-chart-placeholder">Chart area</div>
-                    </div>
-                </div>
+                        <a href="<?php echo e(route('admin.staff-applications.index')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
+                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">Staff Applications</span>
+                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
 
-                <div class="admin-quick">
-                    <div class="dashboard-section">
-                        <h3>Quick Actions</h3>
-                        <div class="quick-links">
-                            <a href="#" class="quick-link">
-                                <span class="quick-icon">👤</span>
-                                Profile
-                            </a>
-                            <a href="<?php echo e(route('admin.users')); ?>" class="quick-link">
-                                <span class="quick-icon">👥</span>
-                                Manage Users
-                            </a>
-                            <a href="<?php echo e(route('admin.staff-applications.index')); ?>" class="quick-link">
-                                <span class="quick-icon">🧾</span>
-                                Staff Applications
-                            </a>
-                            <a href="<?php echo e(route('admin.settings')); ?>" class="quick-link">
-                                <span class="quick-icon">⚙️</span>
-                                Settings
-                            </a>
-                        </div>
+                        <a href="<?php echo e(route('admin.settings')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
+                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">System Settings</span>
+                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -133,6 +127,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/dashboard/admin.blade.php ENDPATH**/ ?>

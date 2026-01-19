@@ -3,66 +3,158 @@
 @section('title', 'Customer Interaction - AutoMate')
 
 @section('content')
-@php($user = auth()->user())
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
-                </div>
-                <div class="nav-links nav-links-staff">
-                    <a href="{{ route('dashboard.staff') }}" class="btn btn-outline">Dashboard</a>
-                    <a href="{{ route('staff.bookings') }}" class="btn btn-outline">Bookings</a>
-                    <a href="{{ route('staff.service.logs') }}" class="btn btn-outline">Service Logs</a>
-                    <a href="{{ route('staff.inventory') }}" class="btn btn-outline">Inventory</a>
-                    <a href="{{ route('staff.customers') }}" class="btn btn-outline">Customers</a>
-                    <a href="{{ route('staff.settings') }}" class="btn btn-outline">Settings</a>
-                    <a href="{{ route('staff.profile') }}" class="btn btn-outline">My Profile</a>
-                    <span class="user-info">Welcome, {{ $user?->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
-                    </form>
+@include('components.staff-navbar')
+
+<div class="min-h-screen bg-gray-50 pb-12">
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {{-- Page Header --}}
+        <div class="sm:flex sm:items-center sm:justify-between mb-8 mt-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Customer Interaction</h1>
+                <p class="mt-2 text-lg text-gray-600">View customer details and manage communications for assigned bookings.</p>
+            </div>
+            <div class="mt-4 sm:mt-0">
+                <div class="relative rounded-xl shadow-sm">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <input type="text" name="search" id="search" class="block w-full rounded-xl border border-gray-300 pl-10 underline focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3" placeholder="Search customers...">
                 </div>
             </div>
         </div>
-    </nav>
 
-    <div class="dashboard-content">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2>Customer Interaction</h2>
-                <p>Access limited customer details for assigned services.</p>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-icon">👥</div>
-                    <h3>Customer Details</h3>
-                    <p>See customer contact info for assigned bookings</p>
-                    <ul class="feature-list">
-                        <li>Name, phone, and email (limited view)</li>
-                        <li>Vehicle details for the booking</li>
-                        <li>Service notes and preferences</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary btn-sm">View Customers</a>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <!-- Customer List -->
+            <div class="space-y-6">
+                {{-- Placeholder Customer Card 1 --}}
+                <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center">
+                                <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-[#ff5a1f] font-bold text-lg">
+                                    JD
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">John Doe</h3>
+                                    <p class="text-sm text-gray-500">Toyota Camry (ABC-1234)</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                In Service
+                            </span>
+                        </div>
+                        <div class="mt-4 border-t border-gray-100 pt-4">
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Phone</span>
+                                    <span class="block text-gray-900 font-medium">+1 (555) 123-4567</span>
+                                </div>
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Email</span>
+                                    <span class="block text-gray-900 font-medium truncate">john.doe@example.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex space-x-3">
+                            <button type="button" class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-[#ff5a1f] hover:bg-[#e64b15] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition-colors">
+                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                                Call
+                            </button>
+                            <button type="button" class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition-colors">
+                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" /></svg>
+                                Message
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="dashboard-card">
-                    <div class="card-icon">☎️</div>
-                    <h3>Contact Customer</h3>
-                    <p>Quick access to contact options</p>
-                    <ul class="feature-list">
-                        <li>Call and SMS shortcuts</li>
-                        <li>Predefined update messages</li>
-                        <li>Log communications</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary btn-sm">Contact Now</a>
+                {{-- Placeholder Customer Card 2 --}}
+                <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-lg">
+                                    AS
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Alice Smith</h3>
+                                    <p class="text-sm text-gray-500">Honda Civic (XYZ-9876)</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                Pending
+                            </span>
+                        </div>
+                        <div class="mt-4 border-t border-gray-100 pt-4">
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Phone</span>
+                                    <span class="block text-gray-900 font-medium">+1 (555) 987-6543</span>
+                                </div>
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Email</span>
+                                    <span class="block text-gray-900 font-medium truncate">alice.smith@example.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex space-x-3">
+                            <button type="button" class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-[#ff5a1f] hover:bg-[#e64b15] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition-colors">
+                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                                Call
+                            </button>
+                            <button type="button" class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition-colors">
+                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" /></svg>
+                                Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Interactions Panel -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden h-fit">
+                <div class="p-6 border-b border-gray-100 bg-gray-50">
+                    <h3 class="text-lg font-bold text-gray-900">Recent Interactions</h3>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex space-x-3">
+                            <div class="flex-shrink-0">
+                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-100">
+                                    <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                </span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-gray-900">Called John Doe</p>
+                                <p class="text-sm text-gray-500">Discussed additional brake repairs.</p>
+                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex space-x-3">
+                            <div class="flex-shrink-0">
+                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100">
+                                    <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                                </span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-gray-900">SMS to Alice Smith</p>
+                                <p class="text-sm text-gray-500">Service started notification sent.</p>
+                                <p class="text-xs text-gray-400 mt-1">4 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 border-t border-gray-100">
+                    <button class="w-full inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-[#ff5a1f] hover:text-[#e64b15] transition-colors">
+                         View All History
+                         <svg class="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 @endsection
 

@@ -11,17 +11,16 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
+    <!-- Tailwind CSS via CDN -->
+    <!-- Tailwind CSS via Vite -->
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
-<body>
+<body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-50">
         <?php echo $__env->yieldContent('content'); ?>
     </div>
 
-    <!-- Scripts -->
-    <script src="<?php echo e(asset('js/app.js')); ?>"></script>
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>

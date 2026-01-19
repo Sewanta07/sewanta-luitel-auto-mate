@@ -6,6 +6,10 @@
         "build": "vite build",
         "dev": "vite"
     },
+    "dependencies": {
+        "heroicons": "^2.0.18",
+        "lucide-react": "^0.263.1"
+    },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",

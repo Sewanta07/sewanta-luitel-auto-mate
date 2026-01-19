@@ -3,107 +3,96 @@
 @section('title', 'User Profile')
 
 @section('content')
-@php($authUser = auth()->user())
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
+@section('content')
+@include('components.admin-sidebar')
+
+<div class="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50">
+    <div class="max-w-4xl mx-auto">
+        {{-- Page Header --}}
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="min-w-0 flex-1">
+                 <div class="flex items-center text-sm text-gray-500 mb-1">
+                    <a href="{{ route('admin.users') }}" class="hover:text-[#ff5a1f] transition-colors">Users</a>
+                    <svg class="h-4 w-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span>Profile</span>
                 </div>
-                <div class="nav-links">
-                    <span class="user-info">Welcome, {{ $authUser?->name }}</span>
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{ $user->name }}</h2>
+                <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
+                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                        <svg class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                        {{ ucfirst($user->role) }}
+                    </div>
+                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                         @if($user->status === 'active')
+                            <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Active</span>
+                        @else
+                             <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Inactive</span>
+                        @endif
+                    </div>
                 </div>
+            </div>
+             <div class="mt-4 flex md:ml-4 md:mt-0">
+                <a href="{{ url()->previous() }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    Back
+                </a>
             </div>
         </div>
-    </nav>
 
-    <div class="dashboard-content admin-layout">
-        <aside class="admin-sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">Navigation</div>
-                <a href="{{ route('dashboard.admin') }}" class="sidebar-link">Overview</a>
-                <a href="{{ route('admin.profile') }}" class="sidebar-link">Profile</a>
-                <a href="{{ route('admin.users') }}" class="sidebar-link">Manage Users</a>
-                <a href="{{ route('admin.staff-applications.index') }}" class="sidebar-link">Staff Applications</a>
-                <a href="{{ route('admin.vehicles') }}" class="sidebar-link">Vehicles</a>
-                <a href="{{ route('admin.analytics') }}" class="sidebar-link">Analytics</a>
-                <a href="{{ route('admin.settings') }}" class="sidebar-link">Settings</a>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">Shortcuts</div>
-                <a href="{{ route('logout') }}" class="sidebar-link"
-                   onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
-                    Logout
-                </a>
-                <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-                    @csrf
-                </form>
-            </div>
-        </aside>
-
-        <main class="admin-main">
-            <div class="container">
-                <div class="admin-topbar">
-                    <div>
-                        <div class="admin-breadcrumb">Admin / Users / Profile</div>
-                        <h2>{{ $user->name }}</h2>
-                        <p>Role: {{ ucfirst($user->role) }} | Status: {{ ucfirst($user->status ?? 'active') }}</p>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+            <div class="px-4 py-6 sm:px-6 bg-gray-50 border-b border-gray-200">
+                <div class="flex items-center">
+                    <div class="h-16 w-16 rounded-full bg-[#ff5a1f] flex items-center justify-center text-white text-2xl font-bold">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
-                    <div class="admin-top-actions">
-                        <a class="btn btn-outline btn-sm" href="{{ url()->previous() }}">Back</a>
-                    </div>
-                </div>
-
-                <div class="dashboard-section profile-card">
-                    <div class="profile-header">
-                        <div class="avatar">
-                            <span>{{ strtoupper(substr($user->name,0,1)) }}</span>
-                        </div>
-                        <div>
-                            <h3>{{ $user->name }}</h3>
-                            <p>{{ $user->email }}</p>
-                        </div>
-                    </div>
-                    <div class="profile-grid">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control" value="{{ $user->name }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" value="{{ $user->email }}" disabled>
-                        </div>
-                        @if($user->role === 'staff')
-                        <div class="form-group">
-                            <label>Level</label>
-                            <input type="text" class="form-control" value="{{ $user->staffDetail->position ?? 'N/A' }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" class="form-control" value="{{ $user->staffDetail->phone ?? 'Not provided' }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Experience</label>
-                            <input type="text" class="form-control" value="{{ $user->staffDetail->experience ?? 'Not provided' }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Documents</label>
-                            <input type="text" class="form-control" value="{{ $user->staffDetail->documents ?? 'Not provided' }}" disabled>
-                        </div>
-                        @endif
-                        <div class="form-group">
-                            <label>Member Since</label>
-                            <input type="text" class="form-control" value="{{ $user->created_at?->format('M d, Y') }}" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" class="form-control" value="Not provided" disabled>
+                    <div class="ml-4">
+                        <h3 class="text-xl font-bold text-gray-900">{{ $user->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $user->email }}</p>
                     </div>
                 </div>
             </div>
-        </main>
+            
+            <div class="px-4 py-6 sm:p-8">
+                 <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $user->name }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Email Address</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $user->email }}</dd>
+                    </div>
+
+                    @if($user->role === 'staff')
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Position</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $user->staffDetail->position ?? 'N/A' }}</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Phone</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $user->staffDetail->phone ?? 'Not provided' }}</dd>
+                        </div>
+                         <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Experience</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $user->staffDetail->experience ?? 'Not provided' }}</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Documents</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $user->staffDetail->documents ?? 'Not provided' }}</dd>
+                        </div>
+                    @endif
+
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Member Since</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $user->created_at?->format('M d, Y') }}</dd>
+                    </div>
+                    
+                    <div class="col-span-full">
+                        <dt class="text-sm font-medium text-gray-500">Address</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $user->address ?? 'Not provided' }}</dd>
+                    </div>
+                 </dl>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

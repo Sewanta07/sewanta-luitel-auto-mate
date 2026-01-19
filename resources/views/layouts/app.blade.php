@@ -11,17 +11,16 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <!-- Tailwind CSS via CDN -->
+    <!-- Tailwind CSS via Vite -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body>
+<body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-50">
         @yield('content')
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
