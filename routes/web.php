@@ -44,6 +44,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/register/success', function () {
         return view('auth.register-success');
     })->name('register.success');
+    
+    // NEW: Forgot Password
+    Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
 });
 
 // Logout Route
@@ -51,6 +54,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 // Contact Form Route
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+// TEST ROUTE - Remove this after testing
+Route::view('/test-pages', 'test-pages')->name('test.pages');
 
 // Protected Routes
 Route::middleware(['auth', 'check.staff.status'])->group(function () {
@@ -71,6 +77,10 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::view('/history', 'customer.history')->name('customer.history');
         Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
+        
+        // NEW: Customer payment pages
+        Route::view('/payments', 'customer.payments')->name('customer.payments');
+        Route::view('/payment-history', 'customer.payment-history')->name('customer.payment-history');
     });
 
     // Staff Profile Routes
@@ -85,6 +95,9 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::view('/inventory', 'staff.inventory')->name('staff.inventory');
         Route::view('/customers', 'staff.customers')->name('staff.customers');
         Route::view('/settings', 'staff.profile-settings')->name('staff.settings');
+        
+        // NEW: Staff service details
+        Route::view('/services/{id}', 'staff.services.show')->name('staff.services.show');
     });
 
     // Admin Staff Applications
@@ -126,6 +139,19 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::get('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('admin.contact-messages.show');
         Route::post('/contact-messages/{id}/status', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateStatus'])->name('admin.contact-messages.updateStatus');
         Route::delete('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.contact-messages.destroy');
+        
+        // NEW: Service Management
+        Route::view('/services', 'admin.services')->name('admin.services');
+        Route::view('/services/assign/{id}', 'admin.services.assign')->name('admin.services.assign');
+        
+        // NEW: Rental Management
+        Route::view('/rentals', 'admin.rentals')->name('admin.rentals');
+        
+        // NEW: Stock Management
+        Route::view('/stock', 'admin.stock')->name('admin.stock');
+        
+        // NEW: Issues Management
+        Route::view('/issues', 'admin.issues')->name('admin.issues');
     });
 });
 
@@ -139,6 +165,17 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
     Route::get('/customer/requests/create', function () {
         return view('customer.requests.create');
     })->name('customer.requests.create');
+    
+    // NEW: Service request details
+    Route::get('/customer/requests/{id}', function () {
+        return view('customer.requests.show');
+    })->name('customer.requests.show');
+    
+    // NEW: Notifications
+    Route::view('/notifications', 'notifications.index')->name('notifications.index');
+    
+    // NEW: Search
+    Route::view('/search', 'search.index')->name('search.index');
 });
 
 // Staff status pages

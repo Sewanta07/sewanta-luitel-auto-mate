@@ -3,8 +3,8 @@
 @section('title', 'My Profile - AutoMate')
 
 @section('content')
+@include('customer.navbar')
 @php($customer = $user ?? auth()->user())
-@include('components.customer-navbar')
 
 <div class="min-h-screen bg-gray-50 pb-12">
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">

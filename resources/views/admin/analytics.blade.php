@@ -1,64 +1,175 @@
 @extends('layouts.app')
 
-@section('title', 'Analytics')
-
 @section('content')
 <div class="flex h-screen bg-gray-50 overflow-hidden">
-    {{-- Sidebar --}}
-    <aside class="w-64 flex-shrink-0 z-30">
-        @include('components.admin-sidebar')
-    </aside>
+  <aside class="w-64 flex-shrink-0 z-30">
+    @include('components.admin-sidebar')
+  </aside>
 
-    {{-- Main Content --}}
-    <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50 h-full w-full">
-        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-            {{-- Page Header --}}
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-4">
+  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
+    <main class="max-w-7xl w-full mx-auto p-6">
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+        <p class="text-gray-500 mt-1">Comprehensive business insights and reports</p>
+      </div>
+
+      <!-- Time Period Selector -->
+      <div class="flex gap-4 mb-6">
+        <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold">This Month</button>
+        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">Last 3 Months</button>
+        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">This Year</button>
+        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">Custom Range</button>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-sm p-6 text-white">
+          <p class="text-sm opacity-90">Total Revenue</p>
+          <p class="text-3xl font-bold mt-1">रू 2.4M</p>
+          <p class="text-xs mt-2 opacity-75">+12.5% from last month</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-sm p-6 text-white">
+          <p class="text-sm opacity-90">Services Completed</p>
+          <p class="text-3xl font-bold mt-1">145</p>
+          <p class="text-xs mt-2 opacity-75">+8% from last month</p>
+        </div>
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-sm p-6 text-white">
+          <p class="text-sm opacity-90">Customer Satisfaction</p>
+          <p class="text-3xl font-bold mt-1">4.8★</p>
+          <p class="text-xs mt-2 opacity-75">Based on 120 reviews</p>
+        </div>
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-sm p-6 text-white">
+          <p class="text-sm opacity-90">Active Customers</p>
+          <p class="text-3xl font-bold mt-1">342</p>
+          <p class="text-xs mt-2 opacity-75">+15 new this month</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Revenue Chart -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Revenue Trend</h2>
+          <div class="h-64 flex items-end space-x-2">
+            <div class="flex-1 bg-blue-200 rounded-t" style="height: 40%"></div>
+            <div class="flex-1 bg-blue-300 rounded-t" style="height: 55%"></div>
+            <div class="flex-1 bg-blue-400 rounded-t" style="height: 70%"></div>
+            <div class="flex-1 bg-blue-500 rounded-t" style="height: 85%"></div>
+            <div class="flex-1 bg-blue-600 rounded-t" style="height: 100%"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-xs text-gray-500">
+            <span>Week 1</span>
+            <span>Week 2</span>
+            <span>Week 3</span>
+            <span>Week 4</span>
+            <span>Week 5</span>
+          </div>
+        </div>
+
+        <!-- Service Distribution -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Service Distribution</h2>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-gray-600">Engine Repair</span>
+                <span class="text-sm font-semibold">35%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-500 h-2 rounded-full" style="width: 35%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-gray-600">Brake Service</span>
+                <span class="text-sm font-semibold">25%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-gray-600">Oil Change</span>
+                <span class="text-sm font-semibold">20%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-orange-500 h-2 rounded-full" style="width: 20%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-gray-600">General Inspection</span>
+                <span class="text-sm font-semibold">20%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-purple-500 h-2 rounded-full" style="width: 20%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Customer Activity -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Top Customers</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">RK</div>
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Analytics</h1>
-                    <p class="mt-2 text-lg text-gray-600">Key metrics and trends across the platform.</p>
+                  <p class="font-medium">Rajesh Kumar</p>
+                  <p class="text-xs text-gray-500">12 services</p>
                 </div>
-                <div class="flex space-x-2 bg-white p-1 rounded-xl shadow-sm border border-gray-200">
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">7 Days</button>
-                    <button class="px-4 py-2 text-sm font-bold text-[#ff5a1f] bg-orange-50 rounded-lg shadow-sm">30 Days</button>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">90 Days</button>
-                </div>
+              </div>
+              <span class="font-bold text-gray-900">रू 85,500</span>
             </div>
-
-            {{-- Content Card --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                 <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[300px] flex flex-col items-center justify-center text-center">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Revenue Growth</h3>
-                    <p class="text-gray-500 text-sm mb-4">Monthly Revenue vs Expenses</p>
-                    <div class="w-full h-40 bg-gradient-to-t from-orange-50 to-white border-b border-gray-200 flex items-end justify-around pb-2 px-4 gap-2">
-                        <div class="w-1/6 bg-orange-200 rounded-t-lg h-[40%]"></div>
-                        <div class="w-1/6 bg-orange-300 rounded-t-lg h-[60%]"></div>
-                        <div class="w-1/6 bg-orange-400 rounded-t-lg h-[50%]"></div>
-                        <div class="w-1/6 bg-orange-500 rounded-t-lg h-[75%]"></div>
-                        <div class="w-1/6 bg-[#ff5a1f] rounded-t-lg h-[90%] shadow-lg shadow-orange-200"></div>
-                    </div>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold mr-3">SS</div>
+                <div>
+                  <p class="font-medium">Sita Sharma</p>
+                  <p class="text-xs text-gray-500">8 services</p>
                 </div>
-
-                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[300px] flex flex-col items-center justify-center text-center">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Service Requests</h3>
-                    <p class="text-gray-500 text-sm mb-4">Status Distribution</p>
-                     <div class="relative w-40 h-40 rounded-full border-[12px] border-orange-100 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-full border-[12px] border-[#ff5a1f] border-t-transparent border-l-transparent rotate-45"></div>
-                         <div class="text-3xl font-bold text-gray-900">85%</div>
-                     </div>
-                     <p class="mt-4 text-sm text-gray-500">Completed on Time</p>
-                </div>
+              </div>
+              <span class="font-bold text-gray-900">रू 62,000</span>
             </div>
+          </div>
+        </div>
 
-             <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[200px] flex flex-col items-center justify-center text-center">
-                <div class="text-gray-400 mb-4">
-                    <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Advanced Reports</h3>
-                <p class="text-gray-500">More detailed analytics report generation coming soon.</p>
+        <!-- Inventory Usage -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Top Used Parts</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div>
+                <p class="font-medium">Engine Oil Filter</p>
+                <p class="text-xs text-gray-500">145 units used</p>
+              </div>
+              <span class="font-bold text-orange-600">रू 65,250</span>
             </div>
-        </main>
-    </div>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div>
+                <p class="font-medium">Brake Pad Set</p>
+                <p class="text-xs text-gray-500">82 units used</p>
+              </div>
+              <span class="font-bold text-orange-600">रू 229,600</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Section -->
+      <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Export Reports</h2>
+        <div class="flex flex-wrap gap-4">
+          <button class="px-4 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600">Export as Excel</button>
+          <button class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600">Export as PDF</button>
+          <button class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600">Email Report</button>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>
 @endsection
-

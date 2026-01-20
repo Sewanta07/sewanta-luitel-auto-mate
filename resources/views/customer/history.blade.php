@@ -3,7 +3,7 @@
 @section('title', 'Service History - AutoMate')
 
 @section('content')
-@include('components.customer-navbar')
+@include('customer.navbar')
 
 <div class="min-h-screen bg-gray-50 pb-12">
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">

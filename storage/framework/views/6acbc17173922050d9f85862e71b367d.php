@@ -3,7 +3,7 @@
 <?php $__env->startSection('title', 'Request a Service - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
-<?php echo $__env->make('components.customer-navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('customer.navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <div class="min-h-screen bg-gray-50 pb-12">
     <main class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">

@@ -3,9 +3,13 @@
     <div class="flex justify-between items-center h-16">
       {{-- Logo / Brand --}}
       <div class="flex-shrink-0 flex items-center">
-        <a href="{{ route('dashboard.staff') }}" class="flex items-center gap-2">
-            <span class="text-2xl font-bold" style="color: #ff5a1f;">AutoMate</span>
-            <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">Pro</span>
+        <a href="{{ route('dashboard.staff') }}" class="flex items-center space-x-2 group">
+          <svg class="w-8 h-8 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          <span class="text-xl font-black tracking-tight text-gray-900">
+            Auto<span class="text-[#ff5a1f]">Mate</span><span class="ml-1 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">Pro</span>
+          </span>
         </a>
       </div>
 
