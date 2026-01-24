@@ -1,144 +1,119 @@
 
 
 <?php $__env->startSection('content'); ?>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <div class="bg-white border-b border-gray-200">
-      <div class="max-w-7xl mx-auto px-6 py-4">
-        <div class="flex items-center justify-between">
-          <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
-          <div class="flex gap-4">
-            <button class="text-sm text-blue-600 hover:text-blue-800 font-semibold">Mark all as read</button>
-            <button class="text-sm text-gray-600 hover:text-gray-800 font-semibold">Settings</button>
+  <?php echo $__env->make('customer.navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+  <div class="min-h-screen bg-[#f8fafc] pb-12">
+    
+    <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-orange-50 to-transparent -z-10"></div>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+        <div class="flex items-center space-x-4">
+          <a href="<?php echo e(route('dashboard.customer')); ?>" class="group flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 text-gray-400 hover:text-[#ff5a1f] hover:border-orange-100 transition-all duration-300">
+            <svg class="w-6 h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </a>
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Updates & Alerts</h1>
+            <p class="text-gray-500 font-medium">Stay informed about your vehicle services</p>
           </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <button class="px-5 py-2.5 rounded-xl bg-white border border-gray-100 text-sm font-bold text-gray-600 hover:text-[#ff5a1f] hover:border-orange-100 shadow-sm transition-all active:scale-95">
+            Mark all read
+          </button>
+          <button class="p-2.5 rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-gray-600 shadow-sm transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </button>
         </div>
       </div>
-    </div>
 
-    <div class="max-w-7xl mx-auto p-6">
-      <!-- Filter Tabs -->
-      <div class="flex gap-4 mb-6">
-        <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold">All</button>
-        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">Unread</button>
-        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">Services</button>
-        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">Payments</button>
-        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100">System</button>
+      
+      <div class="flex items-center space-x-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-[#ff5a1f] text-white font-bold shadow-lg shadow-orange-100 transition-all">All Activity</button>
+        <button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-500 font-bold hover:bg-gray-50 transition-all border border-gray-100">Unread</button>
+        <button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-500 font-bold hover:bg-gray-50 transition-all border border-gray-100">Service Logs</button>
+        <button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-500 font-bold hover:bg-gray-50 transition-all border border-gray-100">Payments</button>
       </div>
 
-      <!-- Notifications List -->
-      <div class="space-y-3">
-        <!-- Notification 1 (Unread) -->
-        <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 hover:shadow-md transition">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white flex-shrink-0 mr-4">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
-              </svg>
+      
+      <div class="space-y-4">
+        
+        
+        <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-50/50 transition-all duration-300">
+          <div class="absolute top-6 right-6 w-3 h-3 bg-blue-500 rounded-full animate-pulse group-hover:scale-125 transition-transform"></div>
+          <div class="flex items-start space-x-5">
+            <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div class="flex-1">
-              <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-900">Service Request Updated</h3>
-                <span class="text-xs text-gray-500">2 minutes ago</span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-black text-blue-500 uppercase tracking-widest">Service Update</span>
+                <span class="text-xs font-bold text-gray-400">Just now</span>
               </div>
-              <p class="text-sm text-gray-700 mt-1">Your service request #SR-2026-001 is now in progress. Mechanic John Doe has been assigned.</p>
-              <div class="mt-3 flex gap-2">
-                <button class="text-sm text-blue-600 hover:text-blue-800 font-semibold">View Request</button>
-                <button class="text-sm text-gray-600 hover:text-gray-800">Dismiss</button>
+              <h3 class="text-lg font-black text-gray-900 mb-2">Service Request in Progress</h3>
+              <p class="text-gray-600 leading-relaxed max-w-2xl">Your 2018 Toyota Corolla (#SR-2026-001) is currently being inspected by <span class="text-gray-900 font-bold">John Doe</span>. We'll update you on the progress shortly.</p>
+              <div class="mt-5 flex items-center space-x-3">
+                <a href="<?php echo e(route('customer.requests.index')); ?>" class="px-5 py-2 rounded-xl bg-gray-900 text-white text-sm font-bold hover:bg-gray-800 transition-colors shadow-sm">View Timeline</a>
+                <button class="px-5 py-2 rounded-xl bg-gray-50 text-gray-500 text-sm font-bold hover:bg-gray-100 transition-colors">Dismiss</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Notification 2 (Unread) -->
-        <div class="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 hover:shadow-md transition">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white flex-shrink-0 mr-4">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
+        
+        <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-green-100 hover:shadow-xl hover:shadow-green-50/50 transition-all duration-300">
+          <div class="flex items-start space-x-5">
+            <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div class="flex-1">
-              <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-900">Payment Successful</h3>
-                <span class="text-xs text-gray-500">1 hour ago</span>
+            <div class="flex-1 text-opacity-60">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-black text-green-500 uppercase tracking-widest">Billing success</span>
+                <span class="text-xs font-bold text-gray-400">2 hours ago</span>
               </div>
-              <p class="text-sm text-gray-700 mt-1">Payment of रू 10,735 for service #SR-2026-001 has been processed successfully.</p>
-              <div class="mt-3 flex gap-2">
-                <button class="text-sm text-green-600 hover:text-green-800 font-semibold">View Invoice</button>
-                <button class="text-sm text-gray-600 hover:text-gray-800">Dismiss</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notification 3 (Read) -->
-        <div class="bg-white border-l-4 border-gray-300 rounded-lg p-4 hover:shadow-md transition">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white flex-shrink-0 mr-4">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <div class="flex-1 opacity-75">
-              <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-900">Appointment Reminder</h3>
-                <span class="text-xs text-gray-500">5 hours ago</span>
-              </div>
-              <p class="text-sm text-gray-700 mt-1">Your vehicle service is scheduled for tomorrow at 10:00 AM. Please arrive 10 minutes early.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notification 4 (Unread - Warning) -->
-        <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 hover:shadow-md transition">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white flex-shrink-0 mr-4">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <div class="flex-1">
-              <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-900">Service Delay Notice</h3>
-                <span class="text-xs text-gray-500">Yesterday</span>
-              </div>
-              <p class="text-sm text-gray-700 mt-1">Due to parts availability, your service completion may be delayed by 1-2 days. We apologize for the inconvenience.</p>
-              <div class="mt-3 flex gap-2">
-                <button class="text-sm text-yellow-600 hover:text-yellow-800 font-semibold">Contact Support</button>
-                <button class="text-sm text-gray-600 hover:text-gray-800">Dismiss</button>
+              <h3 class="text-lg font-black text-gray-900 mb-2">Payment Received</h3>
+              <p class="text-gray-600 leading-relaxed max-w-2xl">Invoice <span class="font-mono font-bold text-gray-900">#INV-8812</span> has been paid in full. Your service history has been updated successfully.</p>
+              <div class="mt-5">
+                <button class="px-5 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-all flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  Download Receipt
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Notification 5 (System) -->
-        <div class="bg-purple-50 border-l-4 border-purple-500 rounded-lg p-4 hover:shadow-md transition">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white flex-shrink-0 mr-4">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
-              </svg>
+        
+        <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-orange-100 hover:shadow-xl hover:shadow-orange-50/50 transition-all duration-300 opacity-80 hover:opacity-100 border-l-4 border-l-orange-500">
+          <div class="flex items-start space-x-5">
+            <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div class="flex-1">
-              <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-900">New Feature Available</h3>
-                <span class="text-xs text-gray-500">2 days ago</span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-black text-orange-500 uppercase tracking-widest">Schedule info</span>
+                <span class="text-xs font-bold text-gray-400">Yesterday</span>
               </div>
-              <p class="text-sm text-gray-700 mt-1">We've added car rental service! Rent a vehicle while yours is being serviced.</p>
-              <div class="mt-3 flex gap-2">
-                <button class="text-sm text-purple-600 hover:text-purple-800 font-semibold">Learn More</button>
-                <button class="text-sm text-gray-600 hover:text-gray-800">Dismiss</button>
-              </div>
+              <h3 class="text-lg font-black text-gray-900 mb-2">Appointment Scheduled</h3>
+              <p class="text-gray-600 leading-relaxed max-w-2xl">Reminder: Your vehicle pickup is scheduled for tomorrow between <span class="text-gray-900 font-bold">10:00 AM - 12:00 PM</span>. Please ensure your keys are ready.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Load More -->
-      <div class="mt-6 text-center">
-        <button class="px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-100 shadow-sm">Load More Notifications</button>
+      
+      <div class="mt-12 text-center">
+        <button class="inline-flex items-center space-x-2 text-gray-400 font-bold hover:text-gray-600 transition-colors">
+          <span>View past updates</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
       </div>
-    </div>
+    </main>
   </div>
 <?php $__env->stopSection(); ?>
 
