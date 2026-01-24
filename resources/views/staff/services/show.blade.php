@@ -9,7 +9,7 @@
       <!-- Header -->
       <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">Assigned Service Details</h1>
-        <p class="text-gray-500 mt-1">Service Request #SR-2026-001</p>
+        <p class="text-gray-500 mt-1">Service Request #BK-{{ str_pad($booking->id, 4, '0', STR_PAD_LEFT) }}</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -21,19 +21,19 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <p class="text-sm text-gray-500">Customer Name</p>
-                <p class="font-semibold text-gray-900">Rajesh Kumar</p>
+                <p class="font-semibold text-gray-900">{{ $booking->customer->name ?? 'Unknown' }}</p>
               </div>
               <div>
                 <p class="text-sm text-gray-500">Contact</p>
-                <p class="font-semibold text-gray-900">+977 9841234567</p>
+                <p class="font-semibold text-gray-900">{{ $booking->phone_number ?? ($booking->customer->phone ?? 'N/A') }}</p>
               </div>
               <div>
                 <p class="text-sm text-gray-500">Email</p>
-                <p class="font-semibold text-gray-900">rajesh@example.com</p>
+                <p class="font-semibold text-gray-900">{{ $booking->customer->email ?? 'N/A' }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-500">Address</p>
-                <p class="font-semibold text-gray-900">Kathmandu, Nepal</p>
+                <p class="text-sm text-gray-500">Pick-up Location</p>
+                <p class="font-semibold text-gray-900">{{ $booking->location }}</p>
               </div>
             </div>
           </div>
@@ -43,68 +43,50 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <p class="text-sm text-gray-500">Make & Model</p>
-                <p class="font-semibold text-gray-900">Toyota Camry 2020</p>
+                <p class="font-semibold text-gray-900">{{ $booking->vehicle_model }}</p>
               </div>
               <div>
                 <p class="text-sm text-gray-500">License Plate</p>
-                <p class="font-semibold text-gray-900">BA-01-PA-1234</p>
+                <p class="font-semibold text-gray-900">{{ $booking->vehicle_number }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-500">VIN</p>
-                <p class="font-semibold text-gray-900">1HGCM82633A123456</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Mileage</p>
-                <p class="font-semibold text-gray-900">45,230 km</p>
+                <p class="text-sm text-gray-500">Vehicle Type</p>
+                <p class="font-semibold text-gray-900">{{ $booking->vehicle_type }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Service Details -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Service Details</h2>
-            <div class="space-y-4">
-              <div>
-                <p class="text-sm text-gray-500">Service Type</p>
-                <p class="font-semibold text-gray-900">Engine Repair</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Customer Request</p>
-                <p class="text-gray-900">Engine making unusual noise, needs inspection and possible repair. Oil change also requested.</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Scheduled Date</p>
-                <p class="font-semibold text-gray-900">Jan 18, 2026, 10:00 AM</p>
-              </div>
-            </div>
           </div>
 
-          <!-- Add Notes -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Service Notes</h2>
-            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Add your notes here..."></textarea>
-            <div class="mt-4">
-              <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">Add Note</button>
-            </div>
-            
-            <!-- Previous Notes -->
-            <div class="mt-6 space-y-3">
-              <div class="border-l-4 border-blue-500 pl-4 py-2 bg-blue-50">
-                <p class="text-sm text-gray-500">Jan 18, 2026 10:30 AM</p>
-                <p class="text-gray-900 mt-1">Initial inspection completed. Found worn-out engine mount.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Upload Images -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Upload Images</h2>
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-              <p class="mt-2 text-sm text-gray-600">Click to upload or drag and drop</p>
-              <p class="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+          <!-- Progress Logs -->
+          <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+            <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-3 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Service History & Logs
+            </h2>
+            <div class="space-y-6">
+                @forelse($booking->logs()->with('user')->latest()->get() as $log)
+                    <div class="flex gap-4 relative">
+                        @if(!$loop->last)
+                            <div class="absolute left-5 top-10 bottom-0 w-0.5 bg-gray-50"></div>
+                        @endif
+                        <div class="flex-shrink-0 w-10 h-10 rounded-xl {{ $log->status == 'Completed' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-[#ff5a1f]' }} flex items-center justify-center font-black text-xs z-10">
+                            {{ substr($log->status, 0, 1) }}
+                        </div>
+                        <div class="flex-1 pb-6">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm font-black text-gray-900">{{ $log->status }}</span>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $log->created_at->format('M d, H:i') }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500 font-medium bg-gray-50/50 p-3 rounded-xl border border-gray-50">{{ $log->notes }}</p>
+                            <div class="text-[10px] font-black text-gray-400 mt-2 tracking-tighter uppercase">By {{ $log->user->name }}</div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8">
+                        <p class="text-gray-400 font-bold italic">No log entries yet.</p>
+                    </div>
+                @endforelse
             </div>
           </div>
         </div>
@@ -112,49 +94,24 @@
         <!-- Sidebar -->
         <div class="space-y-6">
           <!-- Update Status -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="font-bold text-gray-900 mb-4">Update Status</h3>
-            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4">
-              <option>Pending</option>
-              <option>In Progress</option>
-              <option>Inspection Done</option>
-              <option>Repair Done</option>
-              <option>Quality Check</option>
-              <option>Ready for Pickup</option>
-              <option>Completed</option>
-            </select>
-            <button class="w-full px-4 py-3 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">Update Status</button>
-          </div>
-
-          <!-- Parts Used -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="font-bold text-gray-900 mb-4">Parts Used</h3>
-            <div class="space-y-3 mb-4">
-              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8">
+            <h3 class="font-black text-gray-900 mb-6 uppercase text-xs tracking-[0.2em]">Update Progress</h3>
+            <form action="{{ route('staff.bookings.status', $booking->id) }}" method="POST" class="space-y-6">
+                @csrf
                 <div>
-                  <p class="font-medium text-gray-900">Engine Mount</p>
-                  <p class="text-xs text-gray-500">Qty: 1</p>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Current Status</label>
+                    <select name="status" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none outline-none">
+                      <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                      <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                      <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    </select>
                 </div>
-                <button class="text-red-500 text-sm">Remove</button>
-              </div>
-            </div>
-            <button class="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50">+ Add Part</button>
-          </div>
-
-          <!-- Time Tracking -->
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="font-bold text-gray-900 mb-4">Time Tracking</h3>
-            <div class="space-y-2 text-sm">
-              <div class="flex justify-between">
-                <span class="text-gray-600">Started</span>
-                <span class="font-medium">10:15 AM</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Duration</span>
-                <span class="font-medium">2h 15m</span>
-              </div>
-            </div>
-            <button class="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded-lg font-semibold">Mark Complete</button>
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Update Notes</label>
+                    <textarea name="notes" rows="4" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none resize-none" placeholder="What progress was made?"></textarea>
+                </div>
+                <button type="submit" class="w-full px-8 py-5 bg-[#ff5a1f] text-white font-black rounded-2xl shadow-xl shadow-orange-100 hover:bg-[#e44d18] transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Post Update</button>
+            </form>
           </div>
         </div>
       </div>

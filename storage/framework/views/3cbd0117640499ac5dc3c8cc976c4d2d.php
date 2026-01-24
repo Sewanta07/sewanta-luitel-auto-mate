@@ -22,9 +22,9 @@
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
             Dashboard
           </a>
-          <a href="<?php echo e(route('customer.requests.index')); ?>" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('customer.requests*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
-            My Requests
+          <a href="<?php echo e(route('bookings.index')); ?>" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('bookings*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
+            My Bookings
           </a>
           <a href="<?php echo e(route('customer.rentals')); ?>" 
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
@@ -45,9 +45,9 @@
       <div class="flex items-center space-x-4">
         
         
-        <a href="<?php echo e(route('customer.requests.create')); ?>" 
+        <a href="<?php echo e(route('bookings.create')); ?>" 
            class="hidden md:flex items-center px-6 py-2.5 rounded-full text-sm font-black bg-[#ff5a1f] text-white shadow-lg shadow-orange-100 hover:bg-[#e44d18] hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-          Request Service
+          Book Service
         </a>
 
         
@@ -114,7 +114,7 @@
        class="lg:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
     
     <a href="<?php echo e(route('dashboard.customer')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
-    <a href="<?php echo e(route('customer.requests.index')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Requests</a>
+    <a href="<?php echo e(route('bookings.index')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Bookings</a>
     <a href="<?php echo e(route('customer.rentals')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent a Car</a>
     <a href="<?php echo e(route('customer.payment-history')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Service History</a>
     <a href="<?php echo e(route('customer.vehicles')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>

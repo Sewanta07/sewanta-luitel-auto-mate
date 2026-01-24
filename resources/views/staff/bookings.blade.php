@@ -39,7 +39,7 @@
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate">Assigned to Me</dt>
                                 <dd class="flex items-baseline">
-                                    <div class="text-2xl font-semibold text-gray-900">12</div>
+                                    <div class="text-2xl font-semibold text-gray-900">{{ $stats['total'] }}</div>
                                 </dd>
                             </dl>
                         </div>
@@ -59,7 +59,7 @@
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate">In Progress</dt>
                                 <dd class="flex items-baseline">
-                                    <div class="text-2xl font-semibold text-gray-900">4</div>
+                                    <div class="text-2xl font-semibold text-gray-900">{{ $stats['in_progress'] }}</div>
                                 </dd>
                             </dl>
                         </div>
@@ -79,7 +79,7 @@
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate">Completed Today</dt>
                                 <dd class="flex items-baseline">
-                                    <div class="text-2xl font-semibold text-gray-900">3</div>
+                                    <div class="text-2xl font-semibold text-gray-900">{{ $stats['completed_today'] }}</div>
                                 </dd>
                             </dl>
                         </div>
@@ -99,7 +99,7 @@
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate">Pending Review</dt>
                                 <dd class="flex items-baseline">
-                                    <div class="text-2xl font-semibold text-gray-900">2</div>
+                                    <div class="text-2xl font-semibold text-gray-900">{{ $stats['pending'] }}</div>
                                 </dd>
                             </dl>
                         </div>
@@ -124,110 +124,63 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        {{-- Placeholder Data Row 1 --}}
+                        @forelse($bookings as $booking)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">#BK-7890</span>
+                                <span class="text-sm font-medium text-gray-900">#BK-{{ str_pad($booking->id, 4, '0', STR_PAD_LEFT) }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-xs">JD</div>
+                                    <div class="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-[#ff5a1f] font-bold text-xs">
+                                        {{ substr($booking->customer->name ?? '?', 0, 1) }}{{ substr(strrchr($booking->customer->name ?? '?', ' '), 1, 1) }}
+                                    </div>
                                     <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">John Doe</div>
-                                        <div class="text-xs text-gray-500">john@example.com</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $booking->customer->name ?? 'Unknown' }}</div>
+                                        <div class="text-xs text-gray-500">{{ $booking->phone_number ?? ($booking->customer->phone ?? 'N/A') }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">Toyota Camry</div>
-                                <div class="text-xs text-gray-500">ABC-1234</div>
+                                <div class="text-sm text-gray-900">{{ $booking->vehicle_model }}</div>
+                                <div class="text-xs text-gray-500">{{ $booking->vehicle_number }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700">Full Service</span>
+                                <span class="text-sm text-gray-700">{{ $booking->service_type }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ date('M d, Y') }}</div>
-                                <div class="text-xs text-gray-500">10:00 AM</div>
+                                <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($booking->preferred_date)->format('M d, Y') }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    In Progress
+                                @php
+                                    $statusClasses = [
+                                        'Pending' => 'bg-yellow-100 text-yellow-800',
+                                        'In Progress' => 'bg-blue-100 text-blue-800',
+                                        'Completed' => 'bg-green-100 text-green-800',
+                                    ];
+                                    $class = $statusClasses[$booking->status] ?? 'bg-gray-100 text-gray-800';
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $class }}">
+                                    {{ $booking->status }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">Manage</a>
+                                <form action="{{ route('staff.bookings.status', $booking->id) }}" method="POST" class="flex items-center justify-end gap-2">
+                                    @csrf
+                                    <input type="text" name="notes" placeholder="Update notes..." class="text-[10px] font-bold border-gray-100 bg-gray-50 rounded-lg px-2 py-1 w-24 focus:ring-1 focus:ring-orange-100 outline-none">
+                                    <select name="status" onchange="this.form.submit()" class="text-xs font-bold border-none bg-gray-50 rounded-lg px-2 py-1 focus:ring-2 focus:ring-orange-100 cursor-pointer">
+                                        <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                    </select>
+                                </form>
+                                <a href="{{ route('staff.services.show', $booking->id) }}" class="text-[#ff5a1f] hover:text-[#e64b15] font-black uppercase tracking-tighter text-[10px] mt-2 block">Manage Details</a>
                             </td>
                         </tr>
-
-                        {{-- Placeholder Data Row 2 --}}
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">#BK-7891</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-xs">AS</div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">Alice Smith</div>
-                                        <div class="text-xs text-gray-500">alice@example.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">Honda Civic</div>
-                                <div class="text-xs text-gray-500">XYZ-9876</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700">Oil Change</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ date('M d, Y') }}</div>
-                                <div class="text-xs text-gray-500">02:30 PM</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">Manage</a>
-                            </td>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500 italic">No bookings assigned to you yet.</td>
                         </tr>
-                        
-                         {{-- Placeholder Data Row 3 --}}
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">#BK-7888</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-xs">MR</div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">Mike Ross</div>
-                                        <div class="text-xs text-gray-500">mike@example.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">Ford Focus</div>
-                                <div class="text-xs text-gray-500">LMN-4567</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700">Brake Inspection</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ date('M d, Y', strtotime('-1 day')) }}</div>
-                                <div class="text-xs text-gray-500">09:00 AM</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    Completed
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">View</a>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

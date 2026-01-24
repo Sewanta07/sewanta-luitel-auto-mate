@@ -72,7 +72,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
 
         // Customer static pages
         Route::view('/services', 'customer.services')->name('customer.services');
-        Route::view('/bookings', 'customer.bookings')->name('customer.bookings');
+        Route::resource('bookings', \App\Http\Controllers\ServiceBookingController::class);
         Route::view('/vehicles', 'customer.vehicles.index')->name('customer.vehicles');
         Route::view('/history', 'customer.history')->name('customer.history');
         Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
@@ -140,9 +140,10 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/contact-messages/{id}/status', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateStatus'])->name('admin.contact-messages.updateStatus');
         Route::delete('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.contact-messages.destroy');
         
-        // NEW: Service Management
-        Route::view('/services', 'admin.services')->name('admin.services');
-        Route::view('/services/assign/{id}', 'admin.services.assign')->name('admin.services.assign');
+        // Admin Service Management
+        Route::get('/services', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'index'])->name('admin.services');
+        Route::post('/services/{id}/assign', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'assign'])->name('admin.services.assign');
+        Route::post('/services/{id}/status', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'updateStatus'])->name('admin.services.status');
         
         // NEW: Rental Management
         Route::view('/rentals', 'admin.rentals')->name('admin.rentals');
@@ -176,6 +177,18 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
     
     // NEW: Search
     Route::view('/search', 'search.index')->name('search.index');
+});
+
+// Staff context
+Route::middleware(['auth', 'check.staff.status'])->group(function () {
+    Route::prefix('staff')->group(function () {
+        Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
+        Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
+        Route::get('/services/{id}', function ($id) {
+             $booking = \App\Models\ServiceBooking::with('customer')->findOrFail($id);
+             return view('staff.services.show', compact('booking'));
+        })->name('staff.services.show');
+    });
 });
 
 // Staff status pages

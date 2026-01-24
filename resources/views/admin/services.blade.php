@@ -6,127 +6,277 @@
     @include('components.admin-sidebar')
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
-    <main class="max-w-7xl w-full mx-auto p-6">
-      <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Service Management</h1>
-        <p class="text-gray-500 mt-1">View and manage all service requests</p>
-      </div>
-
-      <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Total Requests</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">145</p>
+  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50/50">
+    <main class="max-w-7xl w-full mx-auto p-8">
+      
+      {{-- Brand & Header --}}
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <h1 class="text-5xl font-black text-gray-900 tracking-tight leading-none">Service <span class="text-[#ff5a1f]">Management</span></h1>
+          <p class="text-gray-400 font-bold mt-4 flex items-center tracking-tight">
+            <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+            System online • Active monitoring enabled
+          </p>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Pending</p>
-          <p class="text-2xl font-bold text-yellow-600 mt-1">12</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">In Progress</p>
-          <p class="text-2xl font-bold text-blue-600 mt-1">28</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Completed</p>
-          <p class="text-2xl font-bold text-green-600 mt-1">105</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Unassigned</p>
-          <p class="text-2xl font-bold text-red-600 mt-1">5</p>
+        <div class="flex gap-3">
+          <button class="px-6 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-black text-gray-900 shadow-sm hover:shadow-md transition-all flex items-center">
+            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export All
+          </button>
         </div>
       </div>
 
-      <!-- Filters -->
-      <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
-        <div class="flex flex-wrap gap-4">
-          <input type="search" placeholder="Search services..." class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg">
-          <select class="px-4 py-2 border border-gray-300 rounded-lg">
-            <option>All Status</option>
-            <option>Pending</option>
-            <option>In Progress</option>
-            <option>Completed</option>
-          </select>
-          <select class="px-4 py-2 border border-gray-300 rounded-lg">
-            <option>All Staff</option>
-            <option>John Doe</option>
-            <option>Jane Smith</option>
-          </select>
+      {{-- Flash Messages --}}
+      @if(session('success'))
+        <div class="mb-10 p-5 bg-green-500 text-white rounded-[2rem] font-black text-sm shadow-xl shadow-green-100 flex items-center animate-bounce-in">
+          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          {{ session('success') }}
+        </div>
+      @endif
+
+      <!-- Stats Grid - Fixed Row Layout -->
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-gray-900 group-hover:text-white transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          </div>
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Active</p>
+          <p class="text-4xl font-black text-gray-900 mt-2">{{ $stats['total'] }}</p>
+        </div>
+        
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-[#ff5a1f] mb-6 group-hover:bg-[#ff5a1f] group-hover:text-white transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pending</p>
+          <p class="text-4xl font-black text-[#ff5a1f] mt-2">{{ $stats['pending'] }}</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6 group-hover:bg-blue-500 group-hover:text-white transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">In Progress</p>
+          <p class="text-4xl font-black text-blue-500 mt-2">{{ $stats['in_progress'] }}</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-500 mb-6 group-hover:bg-green-500 group-hover:text-white transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Completed</p>
+          <p class="text-4xl font-black text-green-500 mt-2">{{ $stats['completed'] }}</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-6 group-hover:bg-red-500 group-hover:text-white transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Unassigned</p>
+          <p class="text-4xl font-black text-red-500 mt-2">{{ $stats['unassigned'] }}</p>
         </div>
       </div>
 
-      <!-- Services Table -->
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Request ID</th>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Customer</th>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Service Type</th>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Vehicle</th>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Assigned To</th>
-              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-              <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm font-medium">#SR-2026-001</td>
-              <td class="px-6 py-4">
-                <div class="text-sm font-medium text-gray-900">Rajesh Kumar</div>
-                <div class="text-xs text-gray-500">+977 9841234567</div>
-              </td>
-              <td class="px-6 py-4 text-sm">Engine Repair</td>
-              <td class="px-6 py-4">
-                <div class="text-sm text-gray-900">Toyota Camry</div>
-                <div class="text-xs text-gray-500">BA-01-PA-1234</div>
-              </td>
-              <td class="px-6 py-4 text-sm">John Doe</td>
-              <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">In Progress</span></td>
-              <td class="px-6 py-4 text-right">
-                <button class="text-orange-600 hover:text-orange-900 font-semibold mr-3">View</button>
-                <button class="text-blue-600 hover:text-blue-900 font-semibold">Reassign</button>
-              </td>
-            </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm font-medium">#SR-2026-002</td>
-              <td class="px-6 py-4">
-                <div class="text-sm font-medium text-gray-900">Sita Sharma</div>
-                <div class="text-xs text-gray-500">+977 9851234567</div>
-              </td>
-              <td class="px-6 py-4 text-sm">Oil Change</td>
-              <td class="px-6 py-4">
-                <div class="text-sm text-gray-900">Honda City</div>
-                <div class="text-xs text-gray-500">BA-02-PA-5678</div>
-              </td>
-              <td class="px-6 py-4 text-sm text-red-600 font-semibold">Unassigned</td>
-              <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span></td>
-              <td class="px-6 py-4 text-right">
-                <button class="text-orange-600 hover:text-orange-900 font-semibold mr-3">View</button>
-                <button class="text-green-600 hover:text-green-900 font-semibold">Assign</button>
-              </td>
-            </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm font-medium">#SR-2026-003</td>
-              <td class="px-6 py-4">
-                <div class="text-sm font-medium text-gray-900">Ram Prasad</div>
-                <div class="text-xs text-gray-500">+977 9861234567</div>
-              </td>
-              <td class="px-6 py-4 text-sm">Brake Service</td>
-              <td class="px-6 py-4">
-                <div class="text-sm text-gray-900">Hyundai Creta</div>
-                <div class="text-xs text-gray-500">BA-03-PA-9012</div>
-              </td>
-              <td class="px-6 py-4 text-sm">Jane Smith</td>
-              <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span></td>
-              <td class="px-6 py-4 text-right">
-                <button class="text-orange-600 hover:text-orange-900 font-semibold">View</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Advanced Filters -->
+      <div class="flex flex-wrap items-center gap-4 mb-8">
+          <div class="flex-1 min-w-[300px] relative group">
+              <input type="text" placeholder="Search by name, vehicle or request ID..." 
+                     class="w-full bg-white border border-gray-100 rounded-3xl pl-14 pr-8 py-5 text-sm font-bold shadow-sm focus:ring-4 focus:ring-orange-100 focus:border-[#ff5a1f] transition-all outline-none">
+              <svg class="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-hover:text-[#ff5a1f] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <div class="flex gap-4">
+              <select class="px-8 py-5 bg-white border border-gray-100 rounded-3xl text-sm font-black tracking-tight shadow-sm hover:shadow-md transition-all appearance-none cursor-pointer outline-none min-w-[160px]">
+                  <option>All Status</option>
+                  <option>Pending</option>
+                  <option>In Progress</option>
+                  <option>Completed</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Main Database Area -->
+      <div class="bg-white rounded-[3rem] shadow-2xl shadow-gray-100/50 border border-gray-50 overflow-hidden relative">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50/30">
+                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Identity</th>
+                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Service Details</th>
+                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Ownership</th>
+                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Technician</th>
+                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              @forelse($bookings as $booking)
+              <tr class="group hover:bg-orange-50/10 transition-colors" x-data="{ openAssign: false, openLogs: false }">
+                <td class="px-10 py-8">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-white font-black text-xs shadow-lg shadow-gray-200 mb-3 tracking-tighter">
+                    #{{ str_pad($booking->id, 3, '0', STR_PAD_LEFT) }}
+                  </div>
+                  <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($booking->created_at)->format('d M, Y') }}</div>
+                </td>
+                <td class="px-10 py-8">
+                  <div class="text-lg font-black text-gray-900 tracking-tight group-hover:text-[#ff5a1f] transition-colors">{{ $booking->service_type }}</div>
+                  <div class="text-xs font-bold text-gray-400 mt-1 flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    {{ $booking->location }}
+                  </div>
+                </td>
+                <td class="px-10 py-8">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-[#ff5a1f] font-black text-sm mr-4">
+                      {{ substr($booking->customer->name ?? '?', 0, 1) }}
+                    </div>
+                    <div>
+                      <div class="text-sm font-black text-gray-900 leading-none">{{ $booking->customer->name ?? 'Unknown User' }}</div>
+                      <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">{{ $booking->vehicle_model }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-10 py-8 text-sm">
+                    @if($booking->staff)
+                        <button @click="openAssign = true" class="flex items-center group/staff bg-green-50/50 hover:bg-green-500 hover:text-white transition-all px-4 py-2 rounded-xl border border-green-100">
+                            <span class="text-sm font-black tracking-tight mr-2">{{ $booking->staff->name }}</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    @else
+                        <button @click="openAssign = true" class="px-5 py-2.5 bg-red-50 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transform transition-all active:scale-95 shadow-sm">
+                            Assign Personnel
+                        </button>
+                    @endif
+
+                    <!-- Assignment Portal -->
+                    <div x-show="openAssign" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md" x-cloak>
+                        <div @click.away="openAssign = false" class="bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl scale-in relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
+                            
+                            <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Task <span class="text-[#ff5a1f]">Delegation</span></h3>
+                            <p class="text-gray-500 font-bold mb-10 leading-relaxed">Select a technician from the approved database to handle this specific service booking.</p>
+                            
+                            <form action="{{ route('admin.services.assign', $booking->id) }}" method="POST" class="space-y-8">
+                                @csrf
+                                <div class="space-y-3">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Approved Personnel</label>
+                                    <div class="relative">
+                                        <select name="staff_id" class="w-full px-8 py-5 bg-gray-50 border-none rounded-3xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none outline-none" required>
+                                            <option value="">Search technicians...</option>
+                                            @foreach($staffMembers as $staff)
+                                                <option value="{{ $staff->id }}" {{ $booking->staff_id == $staff->id ? 'selected' : '' }}>
+                                                    {{ $staff->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <button type="button" @click="openAssign = false" class="px-8 py-5 bg-gray-100 text-gray-400 font-black rounded-3xl hover:bg-gray-200 transition-all uppercase text-xs tracking-widest">Abort</button>
+                                    <button type="submit" class="px-8 py-5 bg-[#ff5a1f] text-white font-black rounded-3xl shadow-2xl shadow-orange-200 hover:bg-[#e44d18] transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Execute Assignment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-10 py-8 text-right">
+                    <div class="flex items-center justify-end gap-4">
+                        <button @click="openLogs = true" class="text-[10px] font-black text-gray-400 hover:text-[#ff5a1f] uppercase tracking-widest transition-colors flex items-center">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            History
+                        </button>
+                        
+                        <form action="{{ route('admin.services.status', $booking->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            <select name="status" onchange="this.form.submit()" class="text-xs font-black border-none rounded-2xl px-6 py-3 tracking-tighter uppercase focus:ring-0 cursor-pointer transition-all
+                                {{ $booking->status == 'Pending' ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 
+                                   ($booking->status == 'In Progress' ? 'bg-blue-50 text-blue-500 hover:bg-blue-100' : 'bg-green-50 text-green-500 hover:bg-green-100') }}">
+                                <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                            </select>
+                        </form>
+                    </div>
+
+                    <!-- History Log Modal -->
+                    <div x-show="openLogs" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md" x-cloak>
+                        <div @click.away="openLogs = false" class="bg-white rounded-[3rem] p-12 max-w-2xl w-full shadow-2xl scale-in relative overflow-hidden flex flex-col max-h-[80vh]">
+                            <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-8">Service <span class="text-[#ff5a1f]">Timeline</span></h3>
+                            
+                            <div class="overflow-y-auto pr-4 -mr-4 flex-1 space-y-8">
+                                @forelse($booking->logs()->with('user')->latest()->get() as $log)
+                                    <div class="flex gap-6 relative">
+                                        @if(!$loop->last)
+                                            <div class="absolute left-6 top-12 bottom-0 w-1 bg-gray-50 rounded-full"></div>
+                                        @endif
+                                        <div class="flex-shrink-0 w-12 h-12 rounded-2xl {{ $log->status == 'Completed' ? 'bg-green-100 text-green-600' : ($log->status == 'Assigned' ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-[#ff5a1f]') }} flex items-center justify-center font-black text-sm z-10 shadow-lg shadow-white">
+                                            {{ substr($log->status, 0, 1) }}
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-lg font-black text-gray-900">{{ $log->status }}</span>
+                                                <span class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ $log->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <div class="bg-gray-50/50 p-5 rounded-[1.5rem] border border-gray-50 text-gray-600 font-bold text-sm leading-relaxed">
+                                                {{ $log->notes }}
+                                            </div>
+                                            <div class="mt-3 flex items-center text-[10px] font-black text-gray-300 uppercase tracking-tighter">
+                                                <span class="w-1 h-1 rounded-full bg-gray-200 mr-2"></span>
+                                                Updated by {{ $log->user->name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-center py-20">
+                                        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-200">
+                                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        </div>
+                                        <p class="text-gray-400 font-black tracking-tight">No events recorded for this request yet.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                            
+                            <button @click="openLogs = false" class="mt-10 w-full px-8 py-5 bg-gray-900 text-white font-black rounded-3xl hover:bg-gray-800 transition-all uppercase text-xs tracking-widest">Close Timeline</button>
+                        </div>
+                    </div>
+                </td>
+              </tr>
+              @empty
+              <tr>
+                <td colspan="5" class="px-10 py-32 text-center">
+                  <div class="w-24 h-24 bg-gray-50 rounded-[3rem] flex items-center justify-center mx-auto mb-8 text-gray-200">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  </div>
+                  <h3 class="text-2xl font-black text-gray-900 mb-2">No active requests</h3>
+                  <p class="text-gray-400 font-bold max-w-sm mx-auto">All systems clear. Check back later for new service bookings from customers.</p>
+                </td>
+              </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
 </div>
+
+<style>
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 50% { opacity: 0.9; transform: scale(1.1); } 70% { opacity: 1; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+.scale-in { animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-bounce-in { animation: bounceIn 0.5s ease-out; }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.overflow-y-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.overflow-y-auto {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
 @endsection
