@@ -6,30 +6,58 @@
     <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
+  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50">
     <main class="max-w-7xl w-full mx-auto p-6">
-      <div class="mb-6">
+      <div class="mb-3">
         <h1 class="text-3xl font-bold text-gray-900">Stock Management</h1>
         <p class="text-gray-500 mt-1">Manage inventory and spare parts</p>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Total Items</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">256</p>
+      <div class="grid grid-cols-4 gap-3 mb-4">
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Items</p>
+              <p class="text-lg font-black text-gray-900">256</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Low Stock Warning</p>
-          <p class="text-2xl font-bold text-red-600 mt-1">15</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Low Stock</p>
+              <p class="text-lg font-black text-red-600">15</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Total Value</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">रू 4.2M</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Value</p>
+              <p class="text-lg font-black text-gray-900">रू 4.2M</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Monthly Usage</p>
-          <p class="text-2xl font-bold text-blue-600 mt-1">रू 850K</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Monthly Usage</p>
+              <p class="text-lg font-black text-orange-600">रू 850K</p>
+            </div>
+          </div>
         </div>
       </div>
 

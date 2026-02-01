@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('service_bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
+            // Use customers table instead of users table
+            $table->unsignedBigInteger('customer_id');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->string('vehicle_number');
             $table->string('vehicle_type'); // Car/Bike
             $table->string('service_type'); // General Service, Repair, Oil Change

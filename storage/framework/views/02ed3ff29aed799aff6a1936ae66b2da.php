@@ -6,30 +6,58 @@
     <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
+  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50">
     <main class="max-w-7xl w-full mx-auto p-6">
-      <div class="mb-6">
+      <div class="mb-3">
         <h1 class="text-3xl font-bold text-gray-900">Issues & Feedback</h1>
         <p class="text-gray-500 mt-1">Manage customer complaints and feedback</p>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Total Issues</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">48</p>
+      <div class="grid grid-cols-4 gap-3 mb-4">
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Issues</p>
+              <p class="text-lg font-black text-gray-900">48</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Open</p>
-          <p class="text-2xl font-bold text-red-600 mt-1">12</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Open</p>
+              <p class="text-lg font-black text-red-600">12</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">In Progress</p>
-          <p class="text-2xl font-bold text-yellow-600 mt-1">8</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">In Progress</p>
+              <p class="text-lg font-black text-yellow-600">8</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Resolved</p>
-          <p class="text-2xl font-bold text-green-600 mt-1">28</p>
+        <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Resolved</p>
+              <p class="text-lg font-black text-green-600">28</p>
+            </div>
+          </div>
         </div>
       </div>
 

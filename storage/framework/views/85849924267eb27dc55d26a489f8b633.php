@@ -6,33 +6,60 @@
     <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
+  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50">
     <main class="max-w-7xl w-full mx-auto p-6">
-      <div class="mb-6">
+      <div class="mb-3">
         <h1 class="text-3xl font-bold text-gray-900">Rental Management</h1>
         <p class="text-gray-500 mt-1">Manage vehicle rentals and bookings</p>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Total Vehicles</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Active Rentals</p>
-          <p class="text-2xl font-bold text-blue-600 mt-1">7</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Available</p>
-          <p class="text-2xl font-bold text-green-600 mt-1">5</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-sm text-gray-500">Revenue (Month)</p>
-          <p class="text-2xl font-bold text-orange-600 mt-1">रू 125K</p>
-        </div>
+      <div class="grid grid-cols-4 gap-3 mb-4">
+          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Vehicles</p>
+                <p class="text-lg font-black text-gray-900">12</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Active Rentals</p>
+                <p class="text-lg font-black text-blue-600">7</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Available</p>
+                <p class="text-lg font-black text-green-600">5</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Revenue</p>
+                <p class="text-lg font-black text-orange-600">रू 125K</p>
+              </div>
+            </div>
+          </div>
       </div>
-
       <!-- Tabs -->
       <div class="flex gap-4 mb-6">
         <button class="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold">Active Bookings</button>

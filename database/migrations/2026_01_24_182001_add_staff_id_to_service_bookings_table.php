@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('service_bookings', function (Blueprint $table) {
-            $table->foreignId('staff_id')->nullable()->after('customer_id')->constrained('users')->onDelete('set null');
+            // Use staff_members table instead of users table
+            $table->unsignedBigInteger('staff_id')->nullable()->after('customer_id');
+            $table->foreign('staff_id')->references('id')->on('staff_members')->onDelete('set null');
         });
     }
 

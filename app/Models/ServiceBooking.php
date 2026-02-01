@@ -25,12 +25,12 @@ class ServiceBooking extends Model
 
     public function customer()
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(CustomerUser::class, 'customer_id');
     }
 
     public function staff()
     {
-        return $this->belongsTo(User::class, 'staff_id');
+        return $this->belongsTo(StaffMember::class, 'staff_id');
     }
 
     public function logs()
@@ -38,3 +38,4 @@ class ServiceBooking extends Model
         return $this->hasMany(ServiceLog::class);
     }
 }
+

@@ -37,10 +37,11 @@ class ServiceBookingController extends Controller
         $booking = ServiceBooking::where('id', $id)->where('staff_id', Auth::id())->firstOrFail();
         $booking->update(['status' => $request->status]);
 
-        // Create log entry
+        // Create log entry with polymorphic relationship
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
             'user_id' => Auth::id(),
+            'user_type' => get_class(Auth::user()),
             'status' => $request->status,
             'notes' => $request->notes ?? "Status updated to {$request->status}",
         ]);

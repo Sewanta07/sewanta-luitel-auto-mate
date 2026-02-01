@@ -9,6 +9,7 @@ class ServiceLog extends Model
     protected $fillable = [
         'service_booking_id',
         'user_id',
+        'user_type',
         'status',
         'notes',
     ];
@@ -18,8 +19,22 @@ class ServiceLog extends Model
         return $this->belongsTo(ServiceBooking::class);
     }
 
+    /**
+     * Get the user that performed the action (Admin, Staff, or Customer)
+     */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
+    }
+    
+    /**
+     * Get the user name regardless of type
+     */
+    public function getUserNameAttribute()
+    {
+        if ($this->user) {
+            return $this->user->name;
+        }
+        return 'Unknown User';
     }
 }

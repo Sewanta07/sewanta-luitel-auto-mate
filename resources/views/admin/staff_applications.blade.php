@@ -10,8 +10,8 @@
     </aside>
 
     {{-- Main Content --}}
-    <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50 h-full w-full">
-        <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50 h-full w-full">
+        <main class="max-w-7xl w-full mx-auto p-6">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-4">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Staff Applications</h1>

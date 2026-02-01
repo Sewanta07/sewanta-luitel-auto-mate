@@ -90,7 +90,6 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/profile/password', [\App\Http\Controllers\StaffProfileController::class, 'updatePassword'])->name('staff.profile.password');
 
         // Staff static pages
-        Route::view('/bookings', 'staff.bookings')->name('staff.bookings');
         Route::view('/service-logs', 'staff.service-logs')->name('staff.service.logs');
         Route::view('/inventory', 'staff.inventory')->name('staff.inventory');
         Route::view('/customers', 'staff.customers')->name('staff.customers');
@@ -180,15 +179,13 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
 });
 
 // Staff context
-Route::middleware(['auth', 'check.staff.status'])->group(function () {
-    Route::prefix('staff')->group(function () {
-        Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
-        Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
-        Route::get('/services/{id}', function ($id) {
-             $booking = \App\Models\ServiceBooking::with('customer')->findOrFail($id);
-             return view('staff.services.show', compact('booking'));
-        })->name('staff.services.show');
-    });
+Route::middleware(['auth', 'check.staff.status'])->prefix('staff')->group(function () {
+    Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
+    Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
+    Route::get('/services/{id}', function ($id) {
+         $booking = \App\Models\ServiceBooking::with('customer')->findOrFail($id);
+         return view('staff.services.show', compact('booking'));
+    })->name('staff.services.show');
 });
 
 // Staff status pages

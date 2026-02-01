@@ -6,7 +6,7 @@
     <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50">
+  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50">
     <main class="max-w-7xl w-full mx-auto p-6">
       <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
@@ -22,26 +22,26 @@
       </div>
 
       <!-- Key Metrics -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-sm p-6 text-white">
-          <p class="text-sm opacity-90">Total Revenue</p>
-          <p class="text-3xl font-bold mt-1">रू 2.4M</p>
-          <p class="text-xs mt-2 opacity-75">+12.5% from last month</p>
+      <div class="grid grid-cols-4 gap-3 mb-6">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-sm p-4 text-white">
+          <p class="text-xs opacity-90">Total Revenue</p>
+          <p class="text-2xl font-bold mt-1">रू 2.4M</p>
+          <p class="text-[10px] mt-1 opacity-75">+12.5% from last month</p>
         </div>
-        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-sm p-6 text-white">
-          <p class="text-sm opacity-90">Services Completed</p>
-          <p class="text-3xl font-bold mt-1">145</p>
-          <p class="text-xs mt-2 opacity-75">+8% from last month</p>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-sm p-4 text-white">
+          <p class="text-xs opacity-90">Services Completed</p>
+          <p class="text-2xl font-bold mt-1">145</p>
+          <p class="text-[10px] mt-1 opacity-75">+8% from last month</p>
         </div>
-        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-sm p-6 text-white">
-          <p class="text-sm opacity-90">Customer Satisfaction</p>
-          <p class="text-3xl font-bold mt-1">4.8★</p>
-          <p class="text-xs mt-2 opacity-75">Based on 120 reviews</p>
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-sm p-4 text-white">
+          <p class="text-xs opacity-90">Customer Satisfaction</p>
+          <p class="text-2xl font-bold mt-1">4.8★</p>
+          <p class="text-[10px] mt-1 opacity-75">Based on 120 reviews</p>
         </div>
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-sm p-6 text-white">
-          <p class="text-sm opacity-90">Active Customers</p>
-          <p class="text-3xl font-bold mt-1">342</p>
-          <p class="text-xs mt-2 opacity-75">+15 new this month</p>
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-sm p-4 text-white">
+          <p class="text-xs opacity-90">Active Customers</p>
+          <p class="text-2xl font-bold mt-1">342</p>
+          <p class="text-[10px] mt-1 opacity-75">+15 new this month</p>
         </div>
       </div>
 

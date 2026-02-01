@@ -6,11 +6,11 @@
     <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-y-auto sm:ml-64 bg-gray-50/50">
-    <main class="max-w-7xl w-full mx-auto p-8">
+  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50/50">
+    <main class="max-w-7xl w-full mx-auto p-6">
       
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
         <div>
           <h1 class="text-5xl font-black text-gray-900 tracking-tight leading-none">Service <span class="text-[#ff5a1f]">Management</span></h1>
           <p class="text-gray-400 font-bold mt-4 flex items-center tracking-tight">
@@ -35,46 +35,66 @@
         </div>
       <?php endif; ?>
 
-      <!-- Stats Grid - Fixed Row Layout -->
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-gray-900 group-hover:text-white transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+      <!-- Stats Grid - Compact One Line Layout -->
+      <div class="grid grid-cols-5 gap-2 mb-6">
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:text-white transition-all flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Total Active</p>
+              <p class="text-xl font-black text-gray-900"><?php echo e($stats['total']); ?></p>
+            </div>
           </div>
-          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Active</p>
-          <p class="text-4xl font-black text-gray-900 mt-2"><?php echo e($stats['total']); ?></p>
         </div>
         
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-[#ff5a1f] mb-6 group-hover:bg-[#ff5a1f] group-hover:text-white transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-[#ff5a1f] group-hover:bg-[#ff5a1f] group-hover:text-white transition-all flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Pending</p>
+              <p class="text-xl font-black text-[#ff5a1f]"><?php echo e($stats['pending']); ?></p>
+            </div>
           </div>
-          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pending</p>
-          <p class="text-4xl font-black text-[#ff5a1f] mt-2"><?php echo e($stats['pending']); ?></p>
         </div>
 
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6 group-hover:bg-blue-500 group-hover:text-white transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">In Progress</p>
+              <p class="text-xl font-black text-blue-500"><?php echo e($stats['in_progress']); ?></p>
+            </div>
           </div>
-          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">In Progress</p>
-          <p class="text-4xl font-black text-blue-500 mt-2"><?php echo e($stats['in_progress']); ?></p>
         </div>
 
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-500 mb-6 group-hover:bg-green-500 group-hover:text-white transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition-all flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Completed</p>
+              <p class="text-xl font-black text-green-500"><?php echo e($stats['completed']); ?></p>
+            </div>
           </div>
-          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Completed</p>
-          <p class="text-4xl font-black text-green-500 mt-2"><?php echo e($stats['completed']); ?></p>
         </div>
 
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-6 group-hover:bg-red-500 group-hover:text-white transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Unassigned</p>
+              <p class="text-xl font-black text-red-500"><?php echo e($stats['unassigned']); ?></p>
+            </div>
           </div>
-          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Unassigned</p>
-          <p class="text-4xl font-black text-red-500 mt-2"><?php echo e($stats['unassigned']); ?></p>
         </div>
       </div>
 

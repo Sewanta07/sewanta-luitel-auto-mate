@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceBooking;
-use App\Models\User;
+use App\Models\StaffMember;
 use Illuminate\Http\Request;
 
 class ServiceBookingController extends Controller
@@ -12,7 +12,8 @@ class ServiceBookingController extends Controller
     public function index()
     {
         $bookings = ServiceBooking::with(['customer', 'staff'])->orderBy('created_at', 'desc')->get();
-        $staffMembers = User::where('role', 'staff')->get();
+        // Get active staff members from staff_members table
+        $staffMembers = StaffMember::where('status', 'active')->orderBy('name')->get();
         
         // Calculate stats
         $stats = [
@@ -29,21 +30,25 @@ class ServiceBookingController extends Controller
     public function assign(Request $request, $id)
     {
         $request->validate([
-            'staff_id' => 'required|exists:users,id',
+            'staff_id' => 'required|exists:staff_members,id',
         ]);
 
         $booking = ServiceBooking::findOrFail($id);
         $booking->update([
             'staff_id' => $request->staff_id,
-            'status' => 'Pending',
+            'status' => 'Assigned',
         ]);
+
+        // Get staff member name
+        $staffMember = StaffMember::findOrFail($request->staff_id);
 
         // Create assignment log
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
             'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
             'status' => 'Assigned',
-            'notes' => "Booking assigned to technician: " . \App\Models\User::find($request->staff_id)->name,
+            'notes' => "Booking assigned to technician: {$staffMember->name}",
         ]);
 
         return redirect()->back()->with('success', 'Staff assigned successfully!');
@@ -62,6 +67,7 @@ class ServiceBookingController extends Controller
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
             'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
             'status' => $request->status,
             'notes' => "Admin updated status to {$request->status}",
         ]);
