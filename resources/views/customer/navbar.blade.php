@@ -22,23 +22,27 @@
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
             Dashboard
           </a>
-          <a href="{{ route('bookings.index') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('bookings*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
-            My Bookings
-          </a>
-          <a href="{{ route('customer.rentals') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
-            Rent a Car
-          </a>
-          <a href="{{ route('customer.payment-history') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.payment-history*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
-            History
+          <a href="{{ route('bookings.create') }}" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('bookings.create') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+            Bookings
           </a>
           <a href="{{ route('customer.vehicles') }}" 
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.vehicles*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
-            My Vehicles
+            Vehicles
           </a>
-        </div>
+          <a href="{{ route('customer.rent-vehicles') }}" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rent-vehicles') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+            Rent Vehicles
+          </a>
+          <a href="{{ route('customer.rentals') }}" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+            My Rentals
+          </a>
+          <a href="{{ route('customer.history') }}" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.history') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+            History
+          </a>
+          </div>
       </div>
 
       {{-- ACTIONS & USER (RIGHT) --}}
@@ -47,7 +51,7 @@
         {{-- High-Priority Action --}}
         <a href="{{ route('bookings.create') }}" 
            class="hidden md:flex items-center px-6 py-2.5 rounded-full text-sm font-black bg-[#ff5a1f] text-white shadow-lg shadow-orange-100 hover:bg-[#e44d18] hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-          Book Service
+          Request Service
         </a>
 
         {{-- Notifications --}}
@@ -114,15 +118,18 @@
        class="lg:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
     
     <a href="{{ route('dashboard.customer') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
-    <a href="{{ route('bookings.index') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Bookings</a>
-    <a href="{{ route('customer.rentals') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent a Car</a>
-    <a href="{{ route('customer.payment-history') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Service History</a>
     <a href="{{ route('customer.vehicles') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>
+    <a href="{{ route('bookings.create') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Request Service</a>
+    <a href="{{ route('customer.rent-vehicles') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent Vehicles</a>
+    <a href="{{ route('customer.rentals') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Rentals</a>
+    <a href="{{ route('customer.profile') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Profile</a>
     
     <div class="h-px bg-gray-100 my-4"></div>
     
-    <a href="{{ route('customer.profile') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Profile</a>
-    <a href="{{ route('customer.payments') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Payments</a>
+    <form action="{{ route('logout') }}" method="POST">
+      @csrf
+      <button type="submit" class="w-full text-left p-4 rounded-xl text-sm font-bold text-red-600 hover:bg-red-50 transition-all">Logout</button>
+    </form>
   </div>
 </nav>
 

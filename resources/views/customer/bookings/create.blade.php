@@ -38,12 +38,25 @@
                     </select>
                     <p class="mt-2 text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">You can also fill details below</p>
                 </div>
+
+                {{-- Pre-filled info message --}}
+                @if($preFilledVehicle)
+                    <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100 flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-bold text-blue-900">Vehicle pre-filled</p>
+                            <p class="text-xs text-blue-700 mt-1">The information for <strong>{{ $preFilledVehicle->brand }} {{ $preFilledVehicle->model }}</strong> ({{ $preFilledVehicle->plate_number }}) has been automatically filled in the form below.</p>
+                        </div>
+                    </div>
+                @endif
                 
                 {{-- Vehicle Details --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="vehicle_name" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Name (Optional)</label>
-                        <input type="text" name="vehicle_name" id="vehicle_name" value="{{ old('vehicle_name') }}" 
+                        <input type="text" name="vehicle_name" id="vehicle_name" value="{{ $preFilledVehicle ? ($preFilledVehicle->vehicle_name ?? ($preFilledVehicle->brand . ' ' . $preFilledVehicle->model)) : old('vehicle_name') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_name') ring-2 ring-red-500 @enderror" 
                                placeholder="e.g. Family Car">
                         @error('vehicle_name')
@@ -53,7 +66,7 @@
 
                     <div>
                         <label for="vehicle_model" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Model</label>
-                        <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="{{ old('vehicle_model') }}" 
+                        <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="{{ $preFilledVehicle ? $preFilledVehicle->model : old('vehicle_model') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_model') ring-2 ring-red-500 @enderror" 
                                placeholder="e.g. Scorpio, Pulsar" required>
                         <datalist id="nepal-vehicles">
@@ -78,7 +91,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="vehicle_year" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Year (Optional)</label>
-                        <input type="number" name="vehicle_year" id="vehicle_year" value="{{ old('vehicle_year') }}" min="1980" max="{{ now()->year }}"
+                        <input type="number" name="vehicle_year" id="vehicle_year" value="{{ $preFilledVehicle ? $preFilledVehicle->year : old('vehicle_year') }}" min="1980" max="{{ now()->year }}"
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_year') ring-2 ring-red-500 @enderror" 
                                placeholder="e.g. 2022">
                         @error('vehicle_year')
@@ -88,7 +101,7 @@
 
                     <div>
                         <label for="vehicle_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">License Plate Number</label>
-                        <input type="text" name="vehicle_number" id="vehicle_number" value="{{ old('vehicle_number') }}" 
+                        <input type="text" name="vehicle_number" id="vehicle_number" value="{{ $preFilledVehicle ? $preFilledVehicle->plate_number : old('vehicle_number') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_number') ring-2 ring-red-500 @enderror" 
                                placeholder="e.g. BA 1 PA 1234" required>
                         @error('vehicle_number')
@@ -103,8 +116,9 @@
                         <select name="vehicle_type" id="vehicle_type" 
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('vehicle_type') ring-2 ring-red-500 @enderror" required>
                             <option value="">Select Type</option>
-                            <option value="Car" {{ old('vehicle_type') == 'Car' ? 'selected' : '' }}>Car</option>
-                            <option value="Bike" {{ old('vehicle_type') == 'Bike' ? 'selected' : '' }}>Bike</option>
+                            <option value="Car" {{ $preFilledVehicle && $preFilledVehicle->vehicle_type == 'Car' || old('vehicle_type') == 'Car' ? 'selected' : '' }}>Car</option>
+                            <option value="SUV" {{ $preFilledVehicle && $preFilledVehicle->vehicle_type == 'SUV' || old('vehicle_type') == 'SUV' ? 'selected' : '' }}>SUV</option>
+                            <option value="Bike" {{ $preFilledVehicle && $preFilledVehicle->vehicle_type == 'Bike' || old('vehicle_type') == 'Bike' ? 'selected' : '' }}>Bike</option>
                         </select>
                         @error('vehicle_type')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>

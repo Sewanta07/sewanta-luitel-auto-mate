@@ -12,19 +12,19 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Total Spent</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 45,320</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. {{ number_format($totalSpent, 2) }}</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">This Month</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 10,735</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. {{ number_format($thisMonthSpent, 2) }}</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Last Payment</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 8,500</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. {{ number_format($lastPayment, 2) }}</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Total Transactions</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">{{ $totalTransactions }}</p>
       </div>
     </div>
 
@@ -43,28 +43,45 @@
 
     <!-- Payment History Table -->
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Invoice</th>
-            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
-            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Service</th>
-            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Amount</th>
-            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-            <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 text-sm font-medium">#INV-2026-012</td>
-            <td class="px-6 py-4 text-sm text-gray-500">Jan 18, 2026</td>
-            <td class="px-6 py-4 text-sm">Engine Repair</td>
-            <td class="px-6 py-4 text-sm font-semibold">Rs. 10,735</td>
-            <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span></td>
-            <td class="px-6 py-4 text-right text-sm"><button class="text-orange-600 font-semibold">View</button></td>
-          </tr>
-        </tbody>
-      </table>
+      @if($bookings->count() > 0)
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Invoice</th>
+              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Service</th>
+              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+              <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @foreach($bookings as $booking)
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-sm font-medium">#INV-{{ $booking->id }}-{{ $booking->created_at->format('md') }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">{{ $booking->updated_at->format('M d, Y') }}</td>
+                <td class="px-6 py-4 text-sm">{{ $booking->service_type ?? 'Service' }}</td>
+                <td class="px-6 py-4 text-sm font-semibold">Rs. {{ number_format($booking->estimated_cost, 2) }}</td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                </td>
+                <td class="px-6 py-4 text-right text-sm">
+                  <a href="{{ route('bookings.invoice', $booking->id) }}" class="text-orange-600 font-semibold hover:text-orange-700">View</a>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      @else
+        <div class="p-12 text-center">
+          <div class="w-16 h-16 rounded-full bg-gray-100 mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <p class="text-gray-600 font-medium">No payment history yet</p>
+          <p class="text-sm text-gray-500 mt-1">Your completed services will appear here</p>
+          <a href="{{ route('bookings.create') }}" class="mt-4 inline-flex items-center px-4 py-2 text-white rounded-lg text-sm font-medium" style="background-color: #ff5a1f;" onmouseover="this.style.backgroundColor='#e64b15'" onmouseout="this.style.backgroundColor='#ff5a1f'">Request a Service</a>
+        </div>
+      @endif
     </div>
   </main>
 @endsection

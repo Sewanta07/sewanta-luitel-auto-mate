@@ -24,7 +24,7 @@ class ServiceBookingController extends Controller
     /**
      * Show the form for creating a new booking.
      */
-    public function create()
+    public function create(Request $request)
     {
         $savedVehicles = ServiceBooking::where('customer_id', Auth::id())
             ->select('vehicle_number', 'vehicle_model', 'vehicle_name', 'vehicle_year', 'vehicle_type')
@@ -32,7 +32,18 @@ class ServiceBookingController extends Controller
             ->orderBy('vehicle_model')
             ->get();
 
-        return view('customer.bookings.create', compact('savedVehicles'));
+        // Check if a vehicle ID is passed to pre-fill the form
+        $preFilledVehicle = null;
+        if ($request->has('vehicle_id')) {
+            $preFilledVehicle = \App\Models\Vehicle::find($request->vehicle_id);
+            
+            // Make sure the vehicle belongs to the authenticated customer
+            if ($preFilledVehicle && $preFilledVehicle->customer_id !== Auth::id()) {
+                $preFilledVehicle = null;
+            }
+        }
+
+        return view('customer.bookings.create', compact('savedVehicles', 'preFilledVehicle'));
     }
 
     /**

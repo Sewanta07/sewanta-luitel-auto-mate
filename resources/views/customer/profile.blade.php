@@ -94,12 +94,12 @@
                     <form action="{{ route('customer.profile.update') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @csrf
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Full Name <span class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name', $customer->name) }}" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
-                            <input type="email" value="{{ $customer->email }}" disabled class="block w-full px-4 py-3 rounded-xl border-gray-100 bg-gray-50 text-gray-500 cursor-not-allowed">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Email Address <span class="text-red-500">*</span></label>
+                            <input type="email" name="email" value="{{ old('email', $customer->email) }}" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Phone Number</label>

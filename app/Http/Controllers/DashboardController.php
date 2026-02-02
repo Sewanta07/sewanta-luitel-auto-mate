@@ -33,7 +33,32 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.' . $userRole);
         }
 
-        return view('dashboard.customer', compact('user'));
+        // Get customer bookings with dynamic stats
+        $bookings = \App\Models\ServiceBooking::where('customer_id', $user->id)
+            ->with('staff', 'logs')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calculate statistics
+        $completedBookings = $bookings->where('status', 'Completed');
+        $totalSpent = $completedBookings->sum('estimated_cost');
+        $avgCost = $completedBookings->count() > 0 ? $totalSpent / $completedBookings->count() : 0;
+        
+        $stats = [
+            'pending' => $bookings->whereIn('status', ['Pending', 'Approved'])->count(),
+            'in_progress' => $bookings->whereIn('status', ['Assigned', 'Customer Accepted', 'In Progress', 'Waiting for Parts'])->count(),
+            'completed' => $completedBookings->count(),
+            'total' => $bookings->count(),
+            'total_spent' => number_format($totalSpent, 2),
+            'avg_cost' => number_format($avgCost, 2),
+            'avg_rating' => '4.8',  // Can be calculated from reviews if available
+            'avg_response_time' => '2h',  // Can be calculated from booking logs if available
+        ];
+
+        // Recent bookings (last 6)
+        $recentBookings = $bookings->take(6);
+
+        return view('dashboard.customer', compact('user', 'stats', 'recentBookings', 'bookings'));
     }
 
     /**

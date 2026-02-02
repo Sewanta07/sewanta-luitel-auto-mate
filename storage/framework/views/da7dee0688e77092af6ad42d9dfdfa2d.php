@@ -38,12 +38,25 @@
                     </select>
                     <p class="mt-2 text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">You can also fill details below</p>
                 </div>
+
+                
+                <?php if($preFilledVehicle): ?>
+                    <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100 flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-bold text-blue-900">Vehicle pre-filled</p>
+                            <p class="text-xs text-blue-700 mt-1">The information for <strong><?php echo e($preFilledVehicle->brand); ?> <?php echo e($preFilledVehicle->model); ?></strong> (<?php echo e($preFilledVehicle->plate_number); ?>) has been automatically filled in the form below.</p>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="vehicle_name" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Name (Optional)</label>
-                        <input type="text" name="vehicle_name" id="vehicle_name" value="<?php echo e(old('vehicle_name')); ?>" 
+                        <input type="text" name="vehicle_name" id="vehicle_name" value="<?php echo e($preFilledVehicle ? ($preFilledVehicle->vehicle_name ?? ($preFilledVehicle->brand . ' ' . $preFilledVehicle->model)) : old('vehicle_name')); ?>" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all <?php $__errorArgs = ['vehicle_name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -67,7 +80,7 @@ unset($__errorArgs, $__bag); ?>
 
                     <div>
                         <label for="vehicle_model" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Model</label>
-                        <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="<?php echo e(old('vehicle_model')); ?>" 
+                        <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="<?php echo e($preFilledVehicle ? $preFilledVehicle->model : old('vehicle_model')); ?>" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all <?php $__errorArgs = ['vehicle_model'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -106,7 +119,7 @@ unset($__errorArgs, $__bag); ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="vehicle_year" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Year (Optional)</label>
-                        <input type="number" name="vehicle_year" id="vehicle_year" value="<?php echo e(old('vehicle_year')); ?>" min="1980" max="<?php echo e(now()->year); ?>"
+                        <input type="number" name="vehicle_year" id="vehicle_year" value="<?php echo e($preFilledVehicle ? $preFilledVehicle->year : old('vehicle_year')); ?>" min="1980" max="<?php echo e(now()->year); ?>"
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all <?php $__errorArgs = ['vehicle_year'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -130,7 +143,7 @@ unset($__errorArgs, $__bag); ?>
 
                     <div>
                         <label for="vehicle_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">License Plate Number</label>
-                        <input type="text" name="vehicle_number" id="vehicle_number" value="<?php echo e(old('vehicle_number')); ?>" 
+                        <input type="text" name="vehicle_number" id="vehicle_number" value="<?php echo e($preFilledVehicle ? $preFilledVehicle->plate_number : old('vehicle_number')); ?>" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all <?php $__errorArgs = ['vehicle_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -166,8 +179,9 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" required>
                             <option value="">Select Type</option>
-                            <option value="Car" <?php echo e(old('vehicle_type') == 'Car' ? 'selected' : ''); ?>>Car</option>
-                            <option value="Bike" <?php echo e(old('vehicle_type') == 'Bike' ? 'selected' : ''); ?>>Bike</option>
+                            <option value="Car" <?php echo e($preFilledVehicle && $preFilledVehicle->vehicle_type == 'Car' || old('vehicle_type') == 'Car' ? 'selected' : ''); ?>>Car</option>
+                            <option value="SUV" <?php echo e($preFilledVehicle && $preFilledVehicle->vehicle_type == 'SUV' || old('vehicle_type') == 'SUV' ? 'selected' : ''); ?>>SUV</option>
+                            <option value="Bike" <?php echo e($preFilledVehicle && $preFilledVehicle->vehicle_type == 'Bike' || old('vehicle_type') == 'Bike' ? 'selected' : ''); ?>>Bike</option>
                         </select>
                         <?php $__errorArgs = ['vehicle_type'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

@@ -77,14 +77,25 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('bookings/{id}/reschedule', [\App\Http\Controllers\ServiceBookingController::class, 'reschedule'])->name('bookings.reschedule');
         Route::post('bookings/{id}/accept', [\App\Http\Controllers\ServiceBookingController::class, 'accept'])->name('bookings.accept');
         Route::get('bookings/{id}/invoice', [\App\Http\Controllers\ServiceBookingController::class, 'invoice'])->name('bookings.invoice');
-        Route::view('/vehicles', 'customer.vehicles.index')->name('customer.vehicles');
+        Route::get('/vehicles', [\App\Http\Controllers\VehicleController::class, 'index'])->name('customer.vehicles');
+        Route::post('/vehicles', [\App\Http\Controllers\VehicleController::class, 'store'])->name('vehicles.store');
+        Route::get('/vehicles/{vehicle}/edit', [\App\Http\Controllers\VehicleController::class, 'edit'])->name('vehicles.edit');
+        Route::put('/vehicles/{vehicle}', [\App\Http\Controllers\VehicleController::class, 'update'])->name('vehicles.update');
+        Route::post('/vehicles/{vehicle}/rent', [\App\Http\Controllers\VehicleController::class, 'toggleRent'])->name('vehicles.toggle-rent');
+        Route::delete('/vehicles/{vehicle}', [\App\Http\Controllers\VehicleController::class, 'destroy'])->name('vehicles.destroy');
+        Route::get('/rent-vehicles', [\App\Http\Controllers\VehicleController::class, 'rentIndex'])->name('customer.rent-vehicles');
+        Route::post('/rent-vehicles/request', [\App\Http\Controllers\RentalRequestController::class, 'store'])->name('rent-vehicles.request');
+        Route::post('/rentals/{request}/approve', [\App\Http\Controllers\RentalRequestController::class, 'approve'])->name('rentals.approve');
+        Route::post('/rentals/{request}/reject', [\App\Http\Controllers\RentalRequestController::class, 'reject'])->name('rentals.reject');
+        Route::post('/rentals/{request}/pay', [\App\Http\Controllers\RentalRequestController::class, 'pay'])->name('rentals.pay');
+        Route::post('/rentals/{request}/return', [\App\Http\Controllers\RentalRequestController::class, 'markReturned'])->name('rentals.return');
         Route::view('/history', 'customer.history')->name('customer.history');
-        Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
+        Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
         
         // NEW: Customer payment pages
         Route::view('/payments', 'customer.payments')->name('customer.payments');
-        Route::view('/payment-history', 'customer.payment-history')->name('customer.payment-history');
+        Route::get('/payment-history', [\App\Http\Controllers\PaymentHistoryController::class, 'index'])->name('customer.payment-history');
     });
 
     // Staff Profile Routes
@@ -177,8 +188,11 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         return redirect()->route('bookings.show', $id);
     })->name('customer.requests.show');
     
-    // NEW: Notifications
-    Route::view('/notifications', 'notifications.index')->name('notifications.index');
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::delete('/notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
     
     // NEW: Search
     Route::view('/search', 'search.index')->name('search.index');
