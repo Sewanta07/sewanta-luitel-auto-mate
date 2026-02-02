@@ -24,35 +24,33 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 sm:p-12 border border-gray-100">
             <form action="{{ route('bookings.store') }}" method="POST" class="space-y-8">
                 @csrf
-                
-                {{-- Vehicle Details Row --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <label for="vehicle_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Number</label>
-                        <input type="text" name="vehicle_number" id="vehicle_number" value="{{ old('vehicle_number') }}" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_number') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. BA 1 PA 1234" required>
-                        @error('vehicle_number')
-                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <div>
-                        <label for="vehicle_type" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Type</label>
-                        <select name="vehicle_type" id="vehicle_type" 
-                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('vehicle_type') ring-2 ring-red-500 @enderror" required>
-                            <option value="">Select Type</option>
-                            <option value="Car" {{ old('vehicle_type') == 'Car' ? 'selected' : '' }}>Car</option>
-                            <option value="Bike" {{ old('vehicle_type') == 'Bike' ? 'selected' : '' }}>Bike</option>
-                        </select>
-                        @error('vehicle_type')
-                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                {{-- Saved Vehicles --}}
+                <div>
+                    <label for="saved_vehicle" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Saved Vehicles (Optional)</label>
+                    <select id="saved_vehicle" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none">
+                        <option value="">Select from your saved vehicles</option>
+                        @foreach($savedVehicles as $vehicle)
+                            <option value="{{ $vehicle->vehicle_number }}">
+                                {{ $vehicle->vehicle_name ? $vehicle->vehicle_name . ' • ' : '' }}{{ $vehicle->vehicle_model }} ({{ $vehicle->vehicle_number }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="mt-2 text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">You can also fill details below</p>
                 </div>
-
-                {{-- Vehicle Model and Location Row --}}
+                
+                {{-- Vehicle Details --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="vehicle_name" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Name (Optional)</label>
+                        <input type="text" name="vehicle_name" id="vehicle_name" value="{{ old('vehicle_name') }}" 
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_name') ring-2 ring-red-500 @enderror" 
+                               placeholder="e.g. Family Car">
+                        @error('vehicle_name')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div>
                         <label for="vehicle_model" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Model</label>
                         <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="{{ old('vehicle_model') }}" 
@@ -75,35 +73,132 @@
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="vehicle_year" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Year (Optional)</label>
+                        <input type="number" name="vehicle_year" id="vehicle_year" value="{{ old('vehicle_year') }}" min="1980" max="{{ now()->year }}"
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_year') ring-2 ring-red-500 @enderror" 
+                               placeholder="e.g. 2022">
+                        @error('vehicle_year')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     <div>
-                        <label for="location" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Pick-up Location</label>
-                        <input type="text" name="location" id="location" value="{{ old('location') }}" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('location') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. Kathmandu, Pokhara" required>
-                        @error('location')
+                        <label for="vehicle_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">License Plate Number</label>
+                        <input type="text" name="vehicle_number" id="vehicle_number" value="{{ old('vehicle_number') }}" 
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_number') ring-2 ring-red-500 @enderror" 
+                               placeholder="e.g. BA 1 PA 1234" required>
+                        @error('vehicle_number')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
-                {{-- Service and Phone Row --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="vehicle_type" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Type</label>
+                        <select name="vehicle_type" id="vehicle_type" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('vehicle_type') ring-2 ring-red-500 @enderror" required>
+                            <option value="">Select Type</option>
+                            <option value="Car" {{ old('vehicle_type') == 'Car' ? 'selected' : '' }}>Car</option>
+                            <option value="Bike" {{ old('vehicle_type') == 'Bike' ? 'selected' : '' }}>Bike</option>
+                        </select>
+                        @error('vehicle_type')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div>
                         <label for="service_type" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Service Type</label>
                         <select name="service_type" id="service_type" 
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('service_type') ring-2 ring-red-500 @enderror" required>
                             <option value="">Select Service</option>
                             <option value="General Service" {{ old('service_type') == 'General Service' ? 'selected' : '' }}>General Service</option>
-                            <option value="Full Wash" {{ old('service_type') == 'Full Wash' ? 'selected' : '' }}>Full Wash & Shine</option>
+                            <option value="Engine Repair" {{ old('service_type') == 'Engine Repair' ? 'selected' : '' }}>Engine Repair</option>
+                            <option value="Brake Service" {{ old('service_type') == 'Brake Service' ? 'selected' : '' }}>Brake Service</option>
                             <option value="Oil Change" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
-                            <option value="Engine Tuning" {{ old('service_type') == 'Engine Tuning' ? 'selected' : '' }}>Engine Tuning</option>
-                            <option value="Brake Inspection" {{ old('service_type') == 'Brake Inspection' ? 'selected' : '' }}>Brake Inspection & Repair</option>
-                            <option value="Battery Check" {{ old('service_type') == 'Battery Check' ? 'selected' : '' }}>Battery Check & Replacement</option>
-                            <option value="AC Service" {{ old('service_type') == 'AC Service' ? 'selected' : '' }}>AC Service & Gas Top-up</option>
-                            <option value="Repair" {{ old('service_type') == 'Repair' ? 'selected' : '' }}>Other Repair</option>
+                            <option value="Electrical Repair" {{ old('service_type') == 'Electrical Repair' ? 'selected' : '' }}>Electrical Repair</option>
+                            <option value="Inspection" {{ old('service_type') == 'Inspection' ? 'selected' : '' }}>Inspection</option>
+                            <option value="Custom Service" {{ old('service_type') == 'Custom Service' ? 'selected' : '' }}>Custom Service</option>
                         </select>
                         @error('service_type')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div>
+                    <label for="custom_service" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Custom Service (If Selected)</label>
+                    <input type="text" name="custom_service" id="custom_service" value="{{ old('custom_service') }}" 
+                           class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('custom_service') ring-2 ring-red-500 @enderror" 
+                           placeholder="Describe custom service">
+                    @error('custom_service')
+                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="preferred_date" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Preferred Date</label>
+                        <input type="date" name="preferred_date" id="preferred_date" value="{{ old('preferred_date', date('Y-m-d')) }}" 
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('preferred_date') ring-2 ring-red-500 @enderror" required>
+                        @error('preferred_date')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="preferred_time_slot" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Preferred Time Slot</label>
+                        <select name="preferred_time_slot" id="preferred_time_slot" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('preferred_time_slot') ring-2 ring-red-500 @enderror" required>
+                            <option value="">Select Slot</option>
+                            <option value="Morning" {{ old('preferred_time_slot') == 'Morning' ? 'selected' : '' }}>Morning</option>
+                            <option value="Afternoon" {{ old('preferred_time_slot') == 'Afternoon' ? 'selected' : '' }}>Afternoon</option>
+                            <option value="Evening" {{ old('preferred_time_slot') == 'Evening' ? 'selected' : '' }}>Evening</option>
+                        </select>
+                        @error('preferred_time_slot')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="service_priority" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Service Priority</label>
+                        <select name="service_priority" id="service_priority" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('service_priority') ring-2 ring-red-500 @enderror" required>
+                            <option value="Normal" {{ old('service_priority', 'Normal') == 'Normal' ? 'selected' : '' }}>Normal</option>
+                            <option value="Urgent" {{ old('service_priority') == 'Urgent' ? 'selected' : '' }}>Urgent</option>
+                        </select>
+                        @error('service_priority')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="service_location_type" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Service Location</label>
+                        <select name="service_location_type" id="service_location_type" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('service_location_type') ring-2 ring-red-500 @enderror" required>
+                            <option value="">Select Location</option>
+                            <option value="Customer Address" {{ old('service_location_type') == 'Customer Address' ? 'selected' : '' }}>Customer Address</option>
+                            <option value="Service Center Pickup" {{ old('service_location_type') == 'Service Center Pickup' ? 'selected' : '' }}>Service Center Pickup</option>
+                        </select>
+                        @error('service_location_type')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="location" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Customer Address (Optional)</label>
+                        <input type="text" name="location" id="location" value="{{ old('location') }}" 
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('location') ring-2 ring-red-500 @enderror" 
+                               placeholder="e.g. Kathmandu, Pokhara">
+                        @error('location')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -119,13 +214,30 @@
                     </div>
                 </div>
 
-                <div>
-                    <label for="preferred_date" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Preferred Date</label>
-                    <input type="date" name="preferred_date" id="preferred_date" value="{{ old('preferred_date', date('Y-m-d')) }}" 
-                           class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('preferred_date') ring-2 ring-red-500 @enderror" required>
-                    @error('preferred_date')
-                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                    @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="rental_required" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Require Car Rental?</label>
+                        <select name="rental_required" id="rental_required" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('rental_required') ring-2 ring-red-500 @enderror" required>
+                            <option value="0" {{ old('rental_required') == '0' ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ old('rental_required') == '1' ? 'selected' : '' }}>Yes</option>
+                        </select>
+                        @error('rental_required')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="pickup_drop" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Pickup & Drop Service?</label>
+                        <select name="pickup_drop" id="pickup_drop" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('pickup_drop') ring-2 ring-red-500 @enderror" required>
+                            <option value="0" {{ old('pickup_drop') == '0' ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ old('pickup_drop') == '1' ? 'selected' : '' }}>Yes</option>
+                        </select>
+                        @error('pickup_drop')
+                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div>
@@ -134,6 +246,16 @@
                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('problem_description') ring-2 ring-red-500 @enderror" 
                               placeholder="Describe any specific issues you've been having...">{{ old('problem_description') }}</textarea>
                     @error('problem_description')
+                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="notes" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Additional Notes (Optional)</label>
+                    <textarea name="notes" id="notes" rows="3" 
+                              class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('notes') ring-2 ring-red-500 @enderror" 
+                              placeholder="Any extra details or requests...">{{ old('notes') }}</textarea>
+                    @error('notes')
                         <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                     @enderror
                 </div>

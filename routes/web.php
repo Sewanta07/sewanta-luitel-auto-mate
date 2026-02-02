@@ -73,6 +73,9 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         // Customer static pages
         Route::view('/services', 'customer.services')->name('customer.services');
         Route::resource('bookings', \App\Http\Controllers\ServiceBookingController::class);
+        Route::post('bookings/{id}/cancel', [\App\Http\Controllers\ServiceBookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::post('bookings/{id}/reschedule', [\App\Http\Controllers\ServiceBookingController::class, 'reschedule'])->name('bookings.reschedule');
+        Route::get('bookings/{id}/invoice', [\App\Http\Controllers\ServiceBookingController::class, 'invoice'])->name('bookings.invoice');
         Route::view('/vehicles', 'customer.vehicles.index')->name('customer.vehicles');
         Route::view('/history', 'customer.history')->name('customer.history');
         Route::view('/rentals', 'customer.rentals')->name('customer.rentals');
@@ -143,6 +146,8 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::get('/services', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'index'])->name('admin.services');
         Route::post('/services/{id}/assign', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'assign'])->name('admin.services.assign');
         Route::post('/services/{id}/status', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'updateStatus'])->name('admin.services.status');
+        Route::post('/services/{id}/approve', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'approve'])->name('admin.services.approve');
+        Route::post('/services/{id}/reject', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'reject'])->name('admin.services.reject');
         
         // NEW: Rental Management
         Route::view('/rentals', 'admin.rentals')->name('admin.rentals');

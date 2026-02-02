@@ -154,8 +154,13 @@
                                 @php
                                     $statusClasses = [
                                         'Pending' => 'bg-yellow-100 text-yellow-800',
-                                        'In Progress' => 'bg-blue-100 text-blue-800',
+                                        'Approved' => 'bg-indigo-100 text-indigo-800',
+                                        'Assigned' => 'bg-blue-100 text-blue-800',
+                                        'In Progress' => 'bg-purple-100 text-purple-800',
+                                        'Waiting for Parts' => 'bg-orange-100 text-orange-800',
                                         'Completed' => 'bg-green-100 text-green-800',
+                                        'Cancelled' => 'bg-gray-100 text-gray-800',
+                                        'Rejected' => 'bg-red-100 text-red-800',
                                     ];
                                     $class = $statusClasses[$booking->status] ?? 'bg-gray-100 text-gray-800';
                                 @endphp
@@ -170,6 +175,7 @@
                                     <select name="status" onchange="this.form.submit()" class="text-xs font-bold border-none bg-gray-50 rounded-lg px-2 py-1 focus:ring-2 focus:ring-orange-100 cursor-pointer">
                                         <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
                                         <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
                                     </select>
                                 </form>

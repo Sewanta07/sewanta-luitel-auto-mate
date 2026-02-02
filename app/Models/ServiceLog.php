@@ -12,6 +12,7 @@ class ServiceLog extends Model
         'user_type',
         'status',
         'notes',
+        'attachment_path',
     ];
 
     public function serviceBooking()

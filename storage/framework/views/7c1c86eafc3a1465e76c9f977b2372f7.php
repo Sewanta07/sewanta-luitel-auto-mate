@@ -1,24 +1,25 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-  @include('components.staff-navbar')
+  <?php echo $__env->make('components.staff-navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   
   <main class="flex-1 overflow-y-auto p-8">
     <div class="max-w-6xl mx-auto">
       <!-- Centered Header -->
       <div class="text-center mb-12">
         <h1 class="text-5xl font-black text-gray-900 mb-2">Service Details</h1>
-        <p class="text-gray-500 text-lg">Booking <span class="font-black text-gray-700">{{ $booking->booking_code }}</span></p>
+        <p class="text-gray-500 text-lg">Booking <span class="font-black text-gray-700"><?php echo e($booking->booking_code); ?></span></p>
         <div class="mt-6 flex justify-center">
           <span class="inline-block px-6 py-2 rounded-full font-black text-sm tracking-wider shadow-lg
-            @if($booking->status == 'Pending') bg-yellow-100 text-yellow-800 border-2 border-yellow-200
-            @elseif($booking->status == 'In Progress') bg-blue-100 text-blue-800 border-2 border-blue-200
-            @elseif($booking->status == 'Waiting for Parts') bg-purple-100 text-purple-800 border-2 border-purple-200
-            @elseif($booking->status == 'Completed') bg-green-100 text-green-800 border-2 border-green-200
-            @else bg-gray-100 text-gray-800 border-2 border-gray-200
-            @endif">
-            {{ $booking->status }}
+            <?php if($booking->status == 'Pending'): ?> bg-yellow-100 text-yellow-800 border-2 border-yellow-200
+            <?php elseif($booking->status == 'In Progress'): ?> bg-blue-100 text-blue-800 border-2 border-blue-200
+            <?php elseif($booking->status == 'Waiting for Parts'): ?> bg-purple-100 text-purple-800 border-2 border-purple-200
+            <?php elseif($booking->status == 'Completed'): ?> bg-green-100 text-green-800 border-2 border-green-200
+            <?php else: ?> bg-gray-100 text-gray-800 border-2 border-gray-200
+            <?php endif; ?>">
+            <?php echo e($booking->status); ?>
+
           </span>
         </div>
       </div>
@@ -27,19 +28,19 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
         <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-orange-500">
           <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Service Type</p>
-          <p class="text-lg font-black text-gray-900">{{ $booking->service_type }}</p>
+          <p class="text-lg font-black text-gray-900"><?php echo e($booking->service_type); ?></p>
         </div>
         <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-blue-500">
           <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Priority</p>
-          <p class="text-lg font-black text-gray-900">{{ $booking->service_priority ?? 'Standard' }}</p>
+          <p class="text-lg font-black text-gray-900"><?php echo e($booking->service_priority ?? 'Standard'); ?></p>
         </div>
         <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-green-500">
           <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Cost</p>
-          <p class="text-lg font-black text-gray-900">Rs. {{ $booking->estimated_cost ?? 'TBD' }}</p>
+          <p class="text-lg font-black text-gray-900">Rs. <?php echo e($booking->estimated_cost ?? 'TBD'); ?></p>
         </div>
         <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-purple-500">
           <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Booked Date</p>
-          <p class="text-lg font-black text-gray-900">{{ $booking->preferred_date }}</p>
+          <p class="text-lg font-black text-gray-900"><?php echo e($booking->preferred_date); ?></p>
         </div>
       </div>
 
@@ -56,19 +57,19 @@
             <div class="space-y-5 text-center">
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Full Name</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->customer->name ?? 'Unknown' }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->customer->name ?? 'Unknown'); ?></p>
               </div>
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Contact Number</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->phone_number ?? ($booking->customer->phone ?? 'N/A') }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->phone_number ?? ($booking->customer->phone ?? 'N/A')); ?></p>
               </div>
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Email Address</p>
-                <p class="font-black text-gray-900 text-sm break-all">{{ $booking->customer->email ?? 'N/A' }}</p>
+                <p class="font-black text-gray-900 text-sm break-all"><?php echo e($booking->customer->email ?? 'N/A'); ?></p>
               </div>
               <div>
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Service Location</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->location }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->location); ?></p>
               </div>
             </div>
           </div>
@@ -82,19 +83,19 @@
             <div class="space-y-5 text-center">
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Make & Model</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_model }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->vehicle_model); ?></p>
               </div>
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Registration Number</p>
-                <p class="font-black text-gray-900 text-xl bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 border-2 border-blue-200">{{ $booking->vehicle_number }}</p>
+                <p class="font-black text-gray-900 text-xl bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 border-2 border-blue-200"><?php echo e($booking->vehicle_number); ?></p>
               </div>
               <div class="pb-5 border-b border-gray-100">
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Vehicle Type</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_type }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->vehicle_type); ?></p>
               </div>
               <div>
                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Year of Manufacture</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_year ?? 'N/A' }}</p>
+                <p class="font-black text-gray-900 text-lg"><?php echo e($booking->vehicle_year ?? 'N/A'); ?></p>
               </div>
             </div>
           </div>
@@ -106,17 +107,17 @@
             <svg class="w-6 h-6 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             Update Service Progress
           </h3>
-          <form action="{{ route('staff.bookings.status', $booking->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data">
-              @csrf
+          <form action="<?php echo e(route('staff.bookings.status', $booking->id)); ?>" method="POST" class="space-y-6" enctype="multipart/form-data">
+              <?php echo csrf_field(); ?>
               
               <!-- Status Selector -->
               <div>
                   <label class="block text-xs font-black text-gray-600 uppercase tracking-wider mb-3 text-center">Select Status</label>
                   <select name="status" class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all appearance-none outline-none cursor-pointer hover:border-orange-300">
-                    <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }} disabled>Pending</option>
-                    <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                    <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
-                    <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="Pending" <?php echo e($booking->status == 'Pending' ? 'selected' : ''); ?> disabled>Pending</option>
+                    <option value="In Progress" <?php echo e($booking->status == 'In Progress' ? 'selected' : ''); ?>>In Progress</option>
+                    <option value="Waiting for Parts" <?php echo e($booking->status == 'Waiting for Parts' ? 'selected' : ''); ?>>Waiting for Parts</option>
+                    <option value="Completed" <?php echo e($booking->status == 'Completed' ? 'selected' : ''); ?>>Completed</option>
                   </select>
               </div>
 
@@ -150,58 +151,61 @@
               Service History & Updates
           </h2>
           <div class="space-y-8">
-              @forelse($booking->logs()->with('user')->latest()->get() as $log)
+              <?php $__empty_1 = true; $__currentLoopData = $booking->logs()->with('user')->latest()->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                   <div class="flex gap-6 relative pb-8">
-                      @if(!$loop->last)
+                      <?php if(!$loop->last): ?>
                           <div class="absolute left-[22px] top-16 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 to-transparent"></div>
-                      @endif
+                      <?php endif; ?>
                       
                       <!-- Status Badge -->
-                      <div class="flex-shrink-0 w-12 h-12 rounded-full {{ $log->status == 'Completed' ? 'bg-green-100 text-green-600 shadow-md' : 'bg-orange-100 text-orange-600 shadow-md' }} flex items-center justify-center font-black text-base z-10 flex-shrink-0 ring-4 ring-white">
-                          @if($log->status == 'Completed')
+                      <div class="flex-shrink-0 w-12 h-12 rounded-full <?php echo e($log->status == 'Completed' ? 'bg-green-100 text-green-600 shadow-md' : 'bg-orange-100 text-orange-600 shadow-md'); ?> flex items-center justify-center font-black text-base z-10 flex-shrink-0 ring-4 ring-white">
+                          <?php if($log->status == 'Completed'): ?>
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></path></svg>
-                          @else
-                            {{ substr($log->status, 0, 1) }}
-                          @endif
+                          <?php else: ?>
+                            <?php echo e(substr($log->status, 0, 1)); ?>
+
+                          <?php endif; ?>
                       </div>
 
                       <!-- Content -->
                       <div class="flex-1 min-w-0 pt-1">
                           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-2">
-                              <span class="text-base font-black text-gray-900">{{ $log->status }}</span>
-                              <span class="text-xs font-bold text-gray-400">{{ $log->created_at->format('M d, Y') }} • <span class="text-gray-600">{{ $log->created_at->format('H:i') }}</span></span>
+                              <span class="text-base font-black text-gray-900"><?php echo e($log->status); ?></span>
+                              <span class="text-xs font-bold text-gray-400"><?php echo e($log->created_at->format('M d, Y')); ?> • <span class="text-gray-600"><?php echo e($log->created_at->format('H:i')); ?></span></span>
                           </div>
                           
-                          @if($log->notes)
+                          <?php if($log->notes): ?>
                             <div class="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-4 mb-4">
-                              <p class="text-sm text-gray-700 leading-relaxed">{{ $log->notes }}</p>
+                              <p class="text-sm text-gray-700 leading-relaxed"><?php echo e($log->notes); ?></p>
                             </div>
-                          @endif
+                          <?php endif; ?>
 
                           <!-- Attachment -->
-                          @if($log->attachment_path)
+                          <?php if($log->attachment_path): ?>
                             <div class="mb-4">
-                              <a href="{{ asset('storage/' . $log->attachment_path) }}" target="_blank" class="inline-flex items-center gap-3 px-5 py-2 bg-orange-50 border-2 border-orange-200 rounded-lg hover:bg-orange-100 hover:border-orange-300 transition-all shadow-sm hover:shadow-md">
+                              <a href="<?php echo e(asset('storage/' . $log->attachment_path)); ?>" target="_blank" class="inline-flex items-center gap-3 px-5 py-2 bg-orange-50 border-2 border-orange-200 rounded-lg hover:bg-orange-100 hover:border-orange-300 transition-all shadow-sm hover:shadow-md">
                                 <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg>
                                 <span class="text-xs font-black text-orange-700">View Attachment</span>
                                 <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                               </a>
                             </div>
-                          @endif
+                          <?php endif; ?>
 
-                          <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">By <span class="text-gray-700">{{ $log->user->name ?? 'System' }}</span></p>
+                          <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">By <span class="text-gray-700"><?php echo e($log->user->name ?? 'System'); ?></span></p>
                       </div>
                   </div>
-              @empty
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                   <div class="text-center py-16">
                       <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                       <p class="text-gray-400 font-bold text-lg">No updates yet</p>
                       <p class="text-gray-400 text-sm mt-1">Start by updating the status above</p>
                   </div>
-              @endforelse
+              <?php endif; ?>
           </div>
         </div>
     </div>
   </main>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/staff/services/show.blade.php ENDPATH**/ ?>

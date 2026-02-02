@@ -129,10 +129,10 @@
             </thead>
             <tbody class="divide-y divide-gray-50">
               @forelse($bookings as $booking)
-              <tr class="group hover:bg-orange-50/10 transition-colors" x-data="{ openAssign: false, openLogs: false }">
+              <tr class="group hover:bg-orange-50/10 transition-colors" x-data="{ openAssign: false, openLogs: false, openReject: false }">
                 <td class="px-10 py-8">
-                  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-white font-black text-xs shadow-lg shadow-gray-200 mb-3 tracking-tighter">
-                    #{{ str_pad($booking->id, 3, '0', STR_PAD_LEFT) }}
+                  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-white font-black text-[10px] shadow-lg shadow-gray-200 mb-3 tracking-tighter">
+                    {{ $booking->booking_code ?? ('BK-' . str_pad($booking->id, 3, '0', STR_PAD_LEFT)) }}
                   </div>
                   <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($booking->created_at)->format('d M, Y') }}</div>
                 </td>
@@ -166,15 +166,15 @@
                         </button>
                     @endif
 
-                    <!-- Assignment Portal -->
+                    <!-- Approval & Assignment Portal -->
                     <div x-show="openAssign" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md" x-cloak>
                         <div @click.away="openAssign = false" class="bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl scale-in relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
                             
-                            <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Task <span class="text-[#ff5a1f]">Delegation</span></h3>
-                            <p class="text-gray-500 font-bold mb-10 leading-relaxed">Select a technician from the approved database to handle this specific service booking.</p>
+                        <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Approve <span class="text-[#ff5a1f]">Booking</span></h3>
+                        <p class="text-gray-500 font-bold mb-10 leading-relaxed">Approve this booking, assign a technician, and set expectations.</p>
                             
-                            <form action="{{ route('admin.services.assign', $booking->id) }}" method="POST" class="space-y-8">
+                        <form action="{{ route('admin.services.approve', $booking->id) }}" method="POST" class="space-y-8">
                                 @csrf
                                 <div class="space-y-3">
                                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Approved Personnel</label>
@@ -192,14 +192,45 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                      <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Estimated Cost (रू)</label>
+                                        <input type="number" name="estimated_cost" step="0.01" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none" placeholder="e.g. 5000">
+                                      </div>
+                                      <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Completion Date</label>
+                                        <input type="date" name="expected_completion_date" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none">
+                                      </div>
+                                    </div>
                                 
                                 <div class="grid grid-cols-2 gap-4">
                                     <button type="button" @click="openAssign = false" class="px-8 py-5 bg-gray-100 text-gray-400 font-black rounded-3xl hover:bg-gray-200 transition-all uppercase text-xs tracking-widest">Abort</button>
-                                    <button type="submit" class="px-8 py-5 bg-[#ff5a1f] text-white font-black rounded-3xl shadow-2xl shadow-orange-200 hover:bg-[#e44d18] transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Execute Assignment</button>
+                                      <button type="submit" class="px-8 py-5 bg-[#ff5a1f] text-white font-black rounded-3xl shadow-2xl shadow-orange-200 hover:bg-[#e44d18] transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Approve & Assign</button>
                                 </div>
                             </form>
                         </div>
                     </div>
+
+                              <!-- Reject Portal -->
+                              <div x-show="openReject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md" x-cloak>
+                                <div @click.away="openReject = false" class="bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl scale-in relative overflow-hidden">
+                                  <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
+                                  <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Reject <span class="text-red-500">Booking</span></h3>
+                                  <p class="text-gray-500 font-bold mb-10 leading-relaxed">Provide a reason for rejection to notify the customer.</p>
+                                  <form action="{{ route('admin.services.reject', $booking->id) }}" method="POST" class="space-y-6">
+                                    @csrf
+                                    <div>
+                                      <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Rejection Reason</label>
+                                      <textarea name="rejection_reason" rows="4" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-red-100 focus:bg-white transition-all outline-none resize-none" required></textarea>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                      <button type="button" @click="openReject = false" class="px-8 py-5 bg-gray-100 text-gray-400 font-black rounded-3xl hover:bg-gray-200 transition-all uppercase text-xs tracking-widest">Abort</button>
+                                      <button type="submit" class="px-8 py-5 bg-red-500 text-white font-black rounded-3xl shadow-2xl shadow-red-200 hover:bg-red-600 transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Reject</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
                 </td>
                 <td class="px-10 py-8 text-right">
                     <div class="flex items-center justify-end gap-4">
@@ -207,6 +238,8 @@
                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             History
                         </button>
+
+                          <button @click="openReject = true" class="text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition-colors">Reject</button>
                         
                         <form action="{{ route('admin.services.status', $booking->id) }}" method="POST" class="inline-block">
                             @csrf
@@ -214,8 +247,13 @@
                                 {{ $booking->status == 'Pending' ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 
                                    ($booking->status == 'In Progress' ? 'bg-blue-50 text-blue-500 hover:bg-blue-100' : 'bg-green-50 text-green-500 hover:bg-green-100') }}">
                                 <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="Approved" {{ $booking->status == 'Approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="Assigned" {{ $booking->status == 'Assigned' ? 'selected' : '' }}>Assigned</option>
                                 <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
                                 <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Cancelled" {{ $booking->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="Rejected" {{ $booking->status == 'Rejected' ? 'selected' : '' }}>Rejected</option>
                             </select>
                         </form>
                     </div>
