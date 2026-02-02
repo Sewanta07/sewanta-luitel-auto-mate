@@ -134,24 +134,24 @@
             <hr class="my-4">
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Labor Charges</span>
-              <span class="font-medium">रू 3,500</span>
+              <span class="font-medium">Rs. 3,500</span>
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Parts</span>
-              <span class="font-medium">रू 5,200</span>
+              <span class="font-medium">Rs. 5,200</span>
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Service Fee</span>
-              <span class="font-medium">रू 800</span>
+              <span class="font-medium">Rs. 800</span>
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Tax (13%)</span>
-              <span class="font-medium">रू 1,235</span>
+              <span class="font-medium">Rs. 1,235</span>
             </div>
             <hr class="my-4">
             <div class="flex justify-between">
               <span class="font-bold text-gray-900 text-lg">Total</span>
-              <span class="font-bold text-orange-600 text-xl">रू 10,735</span>
+              <span class="font-bold text-orange-600 text-xl">Rs. 10,735</span>
             </div>
           </div>
         </div>
@@ -171,7 +171,7 @@
 
         <!-- Pay Button -->
         <button class="w-full bg-orange-500 text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg">
-          Pay रू 10,735
+          Pay Rs. 10,735
         </button>
 
         <div class="text-center text-sm text-gray-500">

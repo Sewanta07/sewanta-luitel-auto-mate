@@ -40,7 +40,7 @@
             <div class="mt-8 border-t border-gray-100 pt-6">
                 <div class="flex items-center justify-between">
                     <p class="text-sm font-bold text-gray-500">Estimated Cost</p>
-                    <p class="text-xl font-black text-gray-900">{{ $booking->estimated_cost ? 'रू ' . number_format($booking->estimated_cost, 2) : 'TBD' }}</p>
+                    <p class="text-xl font-black text-gray-900">{{ $booking->estimated_cost ? 'Rs. ' . number_format($booking->estimated_cost, 2) : 'TBD' }}</p>
                 </div>
             </div>
 

@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Cost (रू)</label>
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Cost (Rs.)</label>
                     <input type="number" name="estimated_cost" step="0.01" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold focus:ring-2 focus:ring-green-100 outline-none" placeholder="e.g. 5000">
                 </div>
                 <div class="mb-4">

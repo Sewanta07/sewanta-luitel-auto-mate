@@ -14,48 +14,51 @@
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-4 gap-3 mb-4">
-          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+      <div class="grid grid-cols-4 gap-4 mb-4">
+          <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Vehicles</p>
-                <p class="text-lg font-black text-gray-900">12</p>
+              <div>
+                <p class="text-gray-500 text-sm">Total Vehicles</p>
+                <p class="text-2xl font-bold text-gray-900">12</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          
+          <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Active Rentals</p>
-                <p class="text-lg font-black text-blue-600">7</p>
+              <div>
+                <p class="text-gray-500 text-sm">Active Rentals</p>
+                <p class="text-2xl font-bold text-blue-600">7</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          
+          <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Available</p>
-                <p class="text-lg font-black text-green-600">5</p>
+              <div>
+                <p class="text-gray-500 text-sm">Available</p>
+                <p class="text-2xl font-bold text-green-600">5</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-sm p-2.5 border border-gray-100">
+          
+          <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Revenue</p>
-                <p class="text-lg font-black text-orange-600">रू 125K</p>
+              <div>
+                <p class="text-gray-500 text-sm">Revenue</p>
+                <p class="text-2xl font-bold text-orange-600">Rs. 125K</p>
               </div>
             </div>
           </div>
@@ -98,7 +101,7 @@
               </td>
               <td class="px-6 py-4 text-sm">Jan 18, 2026</td>
               <td class="px-6 py-4 text-sm">Jan 25, 2026</td>
-              <td class="px-6 py-4 text-sm font-semibold">रू 17,500</td>
+              <td class="px-6 py-4 text-sm font-semibold">Rs. 17,500</td>
               <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Active</span></td>
               <td class="px-6 py-4 text-right">
                 <button class="text-orange-600 hover:text-orange-900 font-semibold mr-3">View</button>
@@ -117,7 +120,7 @@
               </td>
               <td class="px-6 py-4 text-sm">Jan 20, 2026</td>
               <td class="px-6 py-4 text-sm">Jan 22, 2026</td>
-              <td class="px-6 py-4 text-sm font-semibold">रू 5,000</td>
+              <td class="px-6 py-4 text-sm font-semibold">Rs. 5,000</td>
               <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending Payment</span></td>
               <td class="px-6 py-4 text-right">
                 <button class="text-orange-600 hover:text-orange-900 font-semibold mr-3">View</button>
@@ -145,7 +148,7 @@
               <div class="mt-4 flex items-center justify-between">
                 <div>
                   <p class="text-xs text-gray-500">Rate/Day</p>
-                  <p class="font-bold text-orange-600">रू 2,500</p>
+                  <p class="font-bold text-orange-600">Rs. 2,500</p>
                 </div>
                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Rented</span>
               </div>
@@ -161,7 +164,7 @@
               <div class="mt-4 flex items-center justify-between">
                 <div>
                   <p class="text-xs text-gray-500">Rate/Day</p>
-                  <p class="font-bold text-orange-600">रू 2,500</p>
+                  <p class="font-bold text-orange-600">Rs. 2,500</p>
                 </div>
                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Available</span>
               </div>

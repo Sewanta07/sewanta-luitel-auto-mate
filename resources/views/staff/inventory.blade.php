@@ -48,7 +48,7 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <p class="text-sm font-black text-gray-400 uppercase tracking-widest">Inventory Value</p>
-        <p class="text-3xl font-black text-gray-900 mt-1">रू 2.4M</p>
+        <p class="text-3xl font-black text-gray-900 mt-1">Rs. 2.4M</p>
       </div>
     </div>
 
@@ -105,7 +105,7 @@
                     <span class="text-xs text-gray-400 font-bold">/ 20</span>
                 </div>
               </td>
-              <td class="px-8 py-6 font-black text-gray-900">रू 450</td>
+              <td class="px-8 py-6 font-black text-gray-900">Rs. 450</td>
               <td class="px-8 py-6">
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-wider">
                     <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></span> Healthy
@@ -138,7 +138,7 @@
                     <span class="text-xs text-gray-400 font-bold">/ 15</span>
                 </div>
               </td>
-              <td class="px-8 py-6 font-black text-gray-900">रू 2,800</td>
+              <td class="px-8 py-6 font-black text-gray-900">Rs. 2,800</td>
               <td class="px-8 py-6">
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-wider">
                     <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span> Low Stock

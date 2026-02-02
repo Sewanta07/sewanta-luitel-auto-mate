@@ -32,12 +32,18 @@ class ServiceBookingController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|string|in:Pending,In Progress,Waiting for Parts,Completed',
+            'status' => 'required|string|in:Customer Accepted,In Progress,Waiting for Parts,Completed',
             'notes' => 'nullable|string',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $booking = ServiceBooking::where('id', $id)->where('staff_id', Auth::id())->firstOrFail();
+        
+        // Staff can only progress if customer accepted
+        if ($booking->status === 'Assigned' && $request->status !== 'Customer Accepted') {
+            return redirect()->back()->with('error', 'Please wait for customer acceptance before starting work.');
+        }
+
         $booking->update(['status' => $request->status]);
 
         $attachmentPath = null;
@@ -59,7 +65,7 @@ class ServiceBookingController extends Controller
         try {
             if ($booking->customer && $booking->customer->email) {
                 Mail::raw(
-                    "Your service booking {$booking->booking_code} status is now '{$booking->status}'.",
+                    "Your service booking {$booking->booking_code} status is now '{$booking->status}'." . ($request->notes ? "\n\nUpdate: {$request->notes}" : ''),
                     function ($message) use ($booking) {
                         $message->to($booking->customer->email)
                             ->subject('Service Update - AutoMate');

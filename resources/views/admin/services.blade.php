@@ -35,63 +35,63 @@
       @endif
 
       <!-- Stats Grid - Compact One Line Layout -->
-      <div class="grid grid-cols-5 gap-2 mb-6">
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+      <div class="grid grid-cols-5 gap-3 mb-6">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:text-white transition-all flex-shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Total Active</p>
-              <p class="text-xl font-black text-gray-900">{{ $stats['total'] }}</p>
+            <div>
+              <p class="text-gray-500 text-xs">Total Active</p>
+              <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
             </div>
           </div>
         </div>
         
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-[#ff5a1f] group-hover:bg-[#ff5a1f] group-hover:text-white transition-all flex-shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Pending</p>
-              <p class="text-xl font-black text-[#ff5a1f]">{{ $stats['pending'] }}</p>
+            <div>
+              <p class="text-gray-500 text-xs">Pending</p>
+              <p class="text-2xl font-bold text-[#ff5a1f]">{{ $stats['pending'] }}</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all flex-shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">In Progress</p>
-              <p class="text-xl font-black text-blue-500">{{ $stats['in_progress'] }}</p>
+            <div>
+              <p class="text-gray-500 text-xs">In Progress</p>
+              <p class="text-2xl font-bold text-blue-600">{{ $stats['in_progress'] }}</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition-all flex-shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Completed</p>
-              <p class="text-xl font-black text-green-500">{{ $stats['completed'] }}</p>
+            <div>
+              <p class="text-gray-500 text-xs">Completed</p>
+              <p class="text-2xl font-bold text-green-600">{{ $stats['completed'] }}</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 group hover:shadow-md transition-all">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all flex-shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-wider truncate">Unassigned</p>
-              <p class="text-xl font-black text-red-500">{{ $stats['unassigned'] }}</p>
+            <div>
+              <p class="text-gray-500 text-xs">Unassigned</p>
+              <p class="text-2xl font-bold text-red-600">{{ $stats['unassigned'] }}</p>
             </div>
           </div>
         </div>
@@ -195,7 +195,7 @@
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <div>
-                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Estimated Cost (रू)</label>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Estimated Cost (Rs.)</label>
                                         <input type="number" name="estimated_cost" step="0.01" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none" placeholder="e.g. 5000">
                                       </div>
                                       <div>

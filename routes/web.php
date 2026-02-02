@@ -75,6 +75,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::resource('bookings', \App\Http\Controllers\ServiceBookingController::class);
         Route::post('bookings/{id}/cancel', [\App\Http\Controllers\ServiceBookingController::class, 'cancel'])->name('bookings.cancel');
         Route::post('bookings/{id}/reschedule', [\App\Http\Controllers\ServiceBookingController::class, 'reschedule'])->name('bookings.reschedule');
+        Route::post('bookings/{id}/accept', [\App\Http\Controllers\ServiceBookingController::class, 'accept'])->name('bookings.accept');
         Route::get('bookings/{id}/invoice', [\App\Http\Controllers\ServiceBookingController::class, 'invoice'])->name('bookings.invoice');
         Route::view('/vehicles', 'customer.vehicles.index')->name('customer.vehicles');
         Route::view('/history', 'customer.history')->name('customer.history');
@@ -162,18 +163,18 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
 
 // Additional customer UI routes (protected)
 Route::middleware(['auth', 'check.staff.status'])->group(function () {
-    // Requests
+    // Redirect old requests routes to new bookings routes
     Route::get('/customer/requests', function () {
-        return view('customer.requests.index');
+        return redirect()->route('bookings.index');
     })->name('customer.requests.index');
 
     Route::get('/customer/requests/create', function () {
-        return view('customer.requests.create');
+        return redirect()->route('bookings.create');
     })->name('customer.requests.create');
     
-    // NEW: Service request details
-    Route::get('/customer/requests/{id}', function () {
-        return view('customer.requests.show');
+    // Redirect old service request details to new bookings show
+    Route::get('/customer/requests/{id}', function ($id) {
+        return redirect()->route('bookings.show', $id);
     })->name('customer.requests.show');
     
     // NEW: Notifications

@@ -1,20 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-  @include('components.staff-navbar')
-  
-  <main class="flex-1 overflow-y-auto p-8">
-    <div class="max-w-6xl mx-auto">
-      <!-- Centered Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-5xl font-black text-gray-900 mb-2">Service Details</h1>
-        <p class="text-gray-500 text-lg">Booking <span class="font-black text-gray-700">{{ $booking->booking_code }}</span></p>
-        <div class="mt-6 flex justify-center">
+@include('components.staff-navbar')
+
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-12">
+  <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Centered Header -->
+    <div class="text-center mb-12 mt-4">
+      <h1 class="text-5xl font-black text-gray-900 mb-2">Service Details</h1>
+      <p class="text-gray-500 text-lg">Booking <span class="font-black text-gray-700">{{ $booking->booking_code }}</span></p>
+      <div class="mt-6 flex justify-center">
           <span class="inline-block px-6 py-2 rounded-full font-black text-sm tracking-wider shadow-lg
             @if($booking->status == 'Pending') bg-yellow-100 text-yellow-800 border-2 border-yellow-200
-            @elseif($booking->status == 'In Progress') bg-blue-100 text-blue-800 border-2 border-blue-200
-            @elseif($booking->status == 'Waiting for Parts') bg-purple-100 text-purple-800 border-2 border-purple-200
+            @elseif($booking->status == 'Assigned') bg-blue-100 text-blue-800 border-2 border-blue-200
+            @elseif($booking->status == 'Customer Accepted') bg-cyan-100 text-cyan-800 border-2 border-cyan-200
+            @elseif($booking->status == 'In Progress') bg-purple-100 text-purple-800 border-2 border-purple-200
+            @elseif($booking->status == 'Waiting for Parts') bg-orange-100 text-orange-800 border-2 border-orange-200
             @elseif($booking->status == 'Completed') bg-green-100 text-green-800 border-2 border-green-200
             @else bg-gray-100 text-gray-800 border-2 border-gray-200
             @endif">
@@ -46,98 +47,133 @@
       <!-- Main Content in Single Column -->
       <div class="space-y-8">
         <!-- Customer & Vehicle Info - Full Width -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Customer & Vehicle Cards - Better Alignment -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <!-- Customer Details Card -->
-          <div class="bg-white rounded-2xl shadow-md p-8 border-t-4 border-orange-500 hover:shadow-lg transition-shadow">
-            <h2 class="text-base font-black text-gray-900 mb-6 uppercase tracking-wider flex items-center justify-center">
-              <svg class="w-6 h-6 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              Customer
-            </h2>
-            <div class="space-y-5 text-center">
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Full Name</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->customer->name ?? 'Unknown' }}</p>
+          <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center mb-6 pb-4 border-b-2 border-gray-100">
+              <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
               </div>
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Contact Number</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->phone_number ?? ($booking->customer->phone ?? 'N/A') }}</p>
+              <h2 class="text-lg font-black text-gray-900 uppercase tracking-wide">Customer Details</h2>
+            </div>
+            <div class="space-y-4">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Full Name</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->customer->name ?? 'Unknown' }}</p>
+                </div>
               </div>
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Email Address</p>
-                <p class="font-black text-gray-900 text-sm break-all">{{ $booking->customer->email ?? 'N/A' }}</p>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Contact Number</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->phone_number ?? ($booking->customer->phone ?? 'N/A') }}</p>
+                </div>
               </div>
-              <div>
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Service Location</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->location }}</p>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Email Address</p>
+                  <p class="font-bold text-gray-900 text-sm break-all">{{ $booking->customer->email ?? 'N/A' }}</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Service Location</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->location }}</p>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Vehicle Details Card -->
-          <div class="bg-white rounded-2xl shadow-md p-8 border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
-            <h2 class="text-base font-black text-gray-900 mb-6 uppercase tracking-wider flex items-center justify-center">
-              <svg class="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              Vehicle
-            </h2>
-            <div class="space-y-5 text-center">
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Make & Model</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_model }}</p>
+          <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center mb-6 pb-4 border-b-2 border-gray-100">
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
               </div>
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Registration Number</p>
-                <p class="font-black text-gray-900 text-xl bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 border-2 border-blue-200">{{ $booking->vehicle_number }}</p>
+              <h2 class="text-lg font-black text-gray-900 uppercase tracking-wide">Vehicle Details</h2>
+            </div>
+            <div class="space-y-4">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Make & Model</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->vehicle_model }}</p>
+                </div>
               </div>
-              <div class="pb-5 border-b border-gray-100">
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Vehicle Type</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_type }}</p>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-2">Registration Number</p>
+                  <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg p-3 text-center">
+                    <p class="font-black text-gray-900 text-xl tracking-wider">{{ $booking->vehicle_number }}</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Year of Manufacture</p>
-                <p class="font-black text-gray-900 text-lg">{{ $booking->vehicle_year ?? 'N/A' }}</p>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Vehicle Type</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->vehicle_type }}</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-start pt-3 border-t border-gray-100">
+                <div class="flex-1">
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-1">Year of Manufacture</p>
+                  <p class="font-bold text-gray-900 text-base">{{ $booking->vehicle_year ?? 'N/A' }}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Status Update Form - Full Width, Centered -->
-        <div class="bg-white rounded-2xl shadow-md border-t-4 border-orange-500 p-10 hover:shadow-lg transition-shadow max-w-2xl mx-auto w-full">
-          <h3 class="font-black text-gray-900 mb-8 uppercase text-base tracking-wider flex items-center justify-center">
-            <svg class="w-6 h-6 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            Update Service Progress
-          </h3>
+        <!-- Status Update Form - Professional Layout -->
+        <div class="bg-white rounded-xl shadow-md border-l-4 border-orange-500 p-8 hover:shadow-lg transition-shadow">
+          <div class="flex items-center mb-8 pb-4 border-b-2 border-gray-100">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+              <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide">Update Service Progress</h3>
+          </div>
           <form action="{{ route('staff.bookings.status', $booking->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data">
               @csrf
               
               <!-- Status Selector -->
               <div>
-                  <label class="block text-xs font-black text-gray-600 uppercase tracking-wider mb-3 text-center">Select Status</label>
-                  <select name="status" class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all appearance-none outline-none cursor-pointer hover:border-orange-300">
-                    <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }} disabled>Pending</option>
-                    <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                    <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
-                    <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Select Status</label>
+                  <select name="status" class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all outline-none cursor-pointer hover:border-orange-400">
+                    @if($booking->status === 'Assigned')
+                      <option value="Assigned" selected disabled>Assigned (Waiting for Customer)</option>
+                    @else
+                      <option value="Customer Accepted" {{ $booking->status == 'Customer Accepted' ? 'selected' : '' }}>Customer Accepted</option>
+                      <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                      <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
+                      <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    @endif
                   </select>
+                  @if($booking->status === 'Assigned')
+                    <p class="text-xs text-orange-600 mt-2 font-bold flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      Waiting for customer to accept your assignment
+                    </p>
+                  @endif
               </div>
 
               <!-- Notes Input -->
               <div>
-                  <label class="block text-xs font-black text-gray-600 uppercase tracking-wider mb-3 text-center">Work Notes</label>
-                  <textarea name="notes" rows="5" class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all outline-none resize-none" placeholder="Describe what you've completed..."></textarea>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Work Notes</label>
+                  <textarea name="notes" rows="5" class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all outline-none resize-none hover:border-gray-400" placeholder="Describe what you've completed..."></textarea>
               </div>
 
               <!-- File Upload -->
               <div>
-                <label class="block text-xs font-black text-gray-600 uppercase tracking-wider mb-3 text-center">Attach Evidence</label>
-                <div class="relative">
-                  <input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf" class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all outline-none cursor-pointer file:mr-4 file:px-4 file:py-2 file:bg-orange-100 file:text-orange-700 file:font-black file:text-xs file:border-0 file:rounded-md file:cursor-pointer hover:border-orange-300">
-                  <p class="text-xs text-gray-500 mt-2 text-center font-bold">JPG, PNG, or PDF • Max 5MB</p>
+                <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Attach Evidence</label>
+                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-orange-400 transition-colors bg-gray-50">
+                  <input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf" class="w-full text-sm font-medium file:mr-4 file:px-4 file:py-2 file:bg-orange-500 file:text-white file:font-bold file:text-xs file:border-0 file:rounded-lg file:cursor-pointer hover:file:bg-orange-600 file:transition-colors cursor-pointer">
+                  <p class="text-xs text-gray-500 mt-2 font-bold">JPG, PNG, or PDF • Max 5MB</p>
                 </div>
               </div>
 
               <!-- Submit Button -->
-              <button type="submit" class="w-full px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black rounded-lg shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest mt-8">
-                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              <button type="submit" class="w-full px-6 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black rounded-lg shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transform hover:-translate-y-0.5 transition-all uppercase text-sm tracking-wider flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 Post Update
               </button>
           </form>
@@ -201,7 +237,7 @@
               @endforelse
           </div>
         </div>
-    </div>
-  </main>
+      </div>
+    </main>
 </div>
 @endsection

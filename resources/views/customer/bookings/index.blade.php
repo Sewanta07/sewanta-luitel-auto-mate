@@ -95,6 +95,11 @@
                                     </td>
                                     <td class="px-8 py-6 text-right">
                                         <div class="flex items-center justify-end gap-3">
+                                            <!-- View Details Button (Always visible) -->
+                                            <a href="{{ route('bookings.show', $booking->id) }}" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-xs font-black hover:bg-blue-100 transition-colors">
+                                              View Details
+                                            </a>
+
                                             @if($booking->status === 'Pending')
                                                 <details class="text-left">
                                                     <summary class="cursor-pointer text-xs font-black text-gray-400 uppercase tracking-widest hover:text-[#ff5a1f]">Reschedule</summary>

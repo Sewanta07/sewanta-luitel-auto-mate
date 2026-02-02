@@ -54,7 +54,28 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.' . $userRole);
         }
 
-        return view('dashboard.staff', compact('user'));
+        // Get staff bookings with dynamic stats
+        $bookings = \App\Models\ServiceBooking::where('staff_id', $user->id)
+            ->with('customer')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $stats = [
+            'total' => $bookings->count(),
+            'assigned' => $bookings->whereIn('status', ['Assigned'])->count(),
+            'in_progress' => $bookings->whereIn('status', ['Customer Accepted', 'In Progress'])->count(),
+            'waiting_parts' => $bookings->where('status', 'Waiting for Parts')->count(),
+            'completed' => $bookings->where('status', 'Completed')->count(),
+            'completed_today' => $bookings->where('status', 'Completed')
+                ->filter(function($booking) {
+                    return $booking->updated_at->isToday();
+                })->count(),
+        ];
+
+        // Recent bookings (last 5)
+        $recentBookings = $bookings->take(5);
+
+        return view('dashboard.staff', compact('user', 'stats', 'recentBookings'));
     }
 
     /**

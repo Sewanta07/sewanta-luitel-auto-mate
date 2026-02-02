@@ -141,7 +141,7 @@
               <div class="flex items-center gap-4 text-sm text-gray-500">
                 <span>Stock: 45 units</span>
                 <span>•</span>
-                <span>Price: रू 450</span>
+                <span>Price: Rs. 450</span>
                 <span>•</span>
                 <span class="text-green-600 font-semibold">In Stock</span>
               </div>

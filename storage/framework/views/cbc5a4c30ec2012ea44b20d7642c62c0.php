@@ -28,53 +28,57 @@
             </div>
 
             
-            <div class="grid grid-cols-4 gap-3 mb-5">
+            <div class="grid grid-cols-4 gap-4 mb-5">
                 
-                <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="p-2 bg-green-50 rounded-xl">
-                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         </div>
-                        <span class="text-[9px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">+6.5%</span>
+                        <div class="flex-1">
+                            <h3 class="text-gray-500 text-sm font-medium">Total Services</h3>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">245</p>
+                        </div>
                     </div>
-                    <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Total Revenue</h3>
-                    <p class="text-lg font-black text-gray-900">$12,450</p>
                 </div>
 
                 
-                <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="p-2 bg-blue-50 rounded-xl">
-                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="text-[9px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">+2.1%</span>
+                        <div class="flex-1">
+                            <h3 class="text-gray-500 text-sm font-medium">In Progress</h3>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">42</p>
+                        </div>
                     </div>
-                    <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">New Orders</h3>
-                    <p class="text-lg font-black text-gray-900">1,245</p>
                 </div>
 
                  
-                 <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="p-2 bg-orange-50 rounded-xl">
-                            <svg class="w-4 h-4 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="text-[9px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">+12</span>
+                        <div class="flex-1">
+                            <h3 class="text-gray-500 text-sm font-medium">Completed Today</h3>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">12</p>
+                        </div>
                     </div>
-                    <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Active Users</h3>
-                    <p class="text-lg font-black text-gray-900">8,500</p>
                 </div>
 
                 
-                <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="p-2 bg-red-50 rounded-xl">
-                            <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="text-[9px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">2 New</span>
+                        <div class="flex-1">
+                            <h3 class="text-gray-500 text-sm font-medium">Pending Review</h3>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">8</p>
+                        </div>
                     </div>
-                    <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Pending Alerts</h3>
-                    <p class="text-lg font-black text-gray-900">5</p>
                 </div>
             </div>
 

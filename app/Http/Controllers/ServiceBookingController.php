@@ -238,4 +238,58 @@ class ServiceBookingController extends Controller
 
         return view('customer.bookings.invoice', compact('booking'));
     }
+
+    /**
+     * Show booking details with logs.
+     */
+    public function show($id)
+    {
+        $booking = ServiceBooking::where('id', $id)
+            ->where('customer_id', Auth::id())
+            ->with(['logs.user', 'staff', 'customer'])
+            ->firstOrFail();
+
+        return view('customer.bookings.show', compact('booking'));
+    }
+
+    /**
+     * Customer accepts the assigned staff and allows work to start.
+     */
+    public function accept($id)
+    {
+        $booking = ServiceBooking::where('id', $id)
+            ->where('customer_id', Auth::id())
+            ->firstOrFail();
+
+        if ($booking->status !== 'Assigned') {
+            return redirect()->back()->with('error', 'Only assigned bookings can be accepted.');
+        }
+
+        $booking->update(['status' => 'Customer Accepted']);
+
+        \App\Models\ServiceLog::create([
+            'service_booking_id' => $booking->id,
+            'user_id' => Auth::id(),
+            'user_type' => get_class(Auth::user()),
+            'status' => 'Customer Accepted',
+            'notes' => 'Customer accepted the assigned staff and authorized work to begin.',
+        ]);
+
+        // Notify assigned staff
+        try {
+            if ($booking->staff && $booking->staff->email) {
+                Mail::raw(
+                    "Customer accepted booking {$booking->booking_code}. You may begin work.",
+                    function ($message) use ($booking) {
+                        $message->to($booking->staff->email)
+                            ->subject('Customer Accepted Service - AutoMate');
+                    }
+                );
+            }
+        } catch (\Throwable $e) {
+            // Suppress mail failures
+        }
+
+        return redirect()->back()->with('success', 'You have accepted the assigned staff. Work can now begin!');
+    }
 }

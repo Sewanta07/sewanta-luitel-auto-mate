@@ -54,7 +54,7 @@
           <div class="mt-6 flex items-end justify-between">
             <div>
               <p class="text-sm text-gray-500">Per Day</p>
-              <p class="text-2xl font-bold text-orange-600">रू 2,500</p>
+              <p class="text-2xl font-bold text-orange-600">Rs. 2,500</p>
             </div>
             <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">Book Now</button>
           </div>
@@ -80,7 +80,7 @@
           <div class="mt-6 flex items-end justify-between">
             <div>
               <p class="text-sm text-gray-500">Per Day</p>
-              <p class="text-2xl font-bold text-orange-600">रू 2,200</p>
+              <p class="text-2xl font-bold text-orange-600">Rs. 2,200</p>
             </div>
             <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">Book Now</button>
           </div>
@@ -106,7 +106,7 @@
           <div class="mt-6 flex items-end justify-between">
             <div>
               <p class="text-sm text-gray-500">Per Day</p>
-              <p class="text-2xl font-bold text-orange-600">रू 4,500</p>
+              <p class="text-2xl font-bold text-orange-600">Rs. 4,500</p>
             </div>
             <button class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">Book Now</button>
           </div>

@@ -12,15 +12,15 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Total Spent</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">रू 45,320</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 45,320</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">This Month</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">रू 10,735</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 10,735</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Last Payment</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">रू 8,500</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">Rs. 8,500</p>
       </div>
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <p class="text-sm text-gray-500">Total Transactions</p>
@@ -59,7 +59,7 @@
             <td class="px-6 py-4 text-sm font-medium">#INV-2026-012</td>
             <td class="px-6 py-4 text-sm text-gray-500">Jan 18, 2026</td>
             <td class="px-6 py-4 text-sm">Engine Repair</td>
-            <td class="px-6 py-4 text-sm font-semibold">रू 10,735</td>
+            <td class="px-6 py-4 text-sm font-semibold">Rs. 10,735</td>
             <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span></td>
             <td class="px-6 py-4 text-right text-sm"><button class="text-orange-600 font-semibold">View</button></td>
           </tr>
