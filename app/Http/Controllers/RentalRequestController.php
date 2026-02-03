@@ -32,12 +32,21 @@ class RentalRequestController extends Controller
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'notes' => 'nullable|string|max:1000',
+            'renter_contact' => 'nullable|string|max:20',
+            'pickup_location' => 'nullable|string|max:255',
+            'service_link' => 'nullable|string|max:500',
         ]);
 
         $vehicle = Vehicle::findOrFail($validated['vehicle_id']);
 
+        // Check if vehicle is available and approved
         if (!$vehicle->is_listed_for_rent || !empty($vehicle->rented_by_user_id)) {
             return redirect()->back()->with('error', 'This vehicle is not available for rent.');
+        }
+
+        // Check if vehicle listing is approved by admin
+        if ($vehicle->listing_status !== 'approved') {
+            return redirect()->back()->with('error', 'This vehicle listing is not yet approved.');
         }
 
         if ($vehicle->customer_id === Auth::id()) {
@@ -57,6 +66,9 @@ class RentalRequestController extends Controller
             'start_date' => $validated['start_date'] ?? null,
             'end_date' => $validated['end_date'] ?? null,
             'notes' => $validated['notes'] ?? null,
+            'renter_contact' => $validated['renter_contact'] ?? null,
+            'pickup_location' => $validated['pickup_location'] ?? null,
+            'service_link' => $validated['service_link'] ?? null,
             'status' => 'Pending',
             'total_cost' => $totalCost,
             'payment_status' => 'Unpaid',

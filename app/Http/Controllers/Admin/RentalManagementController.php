@@ -1,0 +1,332 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Vehicle;
+use App\Models\RentalRequest;
+use App\Models\StaffMember;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class RentalManagementController extends Controller
+{
+    /**
+     * Display rental dashboard
+     */
+    public function dashboard()
+    {
+        $stats = [
+            'total_vehicles' => Vehicle::where('is_listed_for_rent', true)->count(),
+            'active_rentals' => RentalRequest::whereIn('status', ['Approved', 'Ready for Pickup', 'Picked Up', 'In Use'])->count(),
+            'pending_requests' => RentalRequest::where('status', 'Pending')->count(),
+            'pending_listings' => Vehicle::where('listing_status', 'pending')->count(),
+            'total_revenue' => RentalRequest::where('payment_status', 'Paid')->sum('total_cost'),
+        ];
+
+        $recentRentals = RentalRequest::with(['vehicle', 'renter', 'owner'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('admin.rentals.dashboard', compact('stats', 'recentRentals'));
+    }
+
+    /**
+     * Manage service center rental vehicles
+     */
+    public function vehicles()
+    {
+        $vehicles = Vehicle::where('is_service_center_vehicle', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.rentals.vehicles', compact('vehicles'));
+    }
+
+    /**
+     * Store new service center rental vehicle
+     */
+    public function storeVehicle(Request $request)
+    {
+        $validated = $request->validate([
+            'vehicle_name' => 'required|string|max:100',
+            'brand' => 'required|string|max:100',
+            'model' => 'required|string|max:100',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'plate_number' => 'required|string|unique:vehicles,plate_number',
+            'vehicle_type' => 'required|string|in:Car,Bike,SUV',
+            'fuel_type' => 'required|string|in:Petrol,Diesel,Electric,Hybrid',
+            'transmission_type' => 'required|string|in:Automatic,Manual',
+            'daily_rate' => 'required|numeric|min:0',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'rental_rules' => 'nullable|string',
+            'vehicle_image' => 'nullable|image|max:2048',
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('vehicle_image')) {
+            $imagePath = $request->file('vehicle_image')->store('vehicles/rental', 'public');
+        }
+
+        Vehicle::create([
+            'customer_id' => null,
+            'is_service_center_vehicle' => true,
+            'vehicle_name' => $validated['vehicle_name'],
+            'brand' => $validated['brand'],
+            'model' => $validated['model'],
+            'year' => $validated['year'],
+            'plate_number' => strtoupper($validated['plate_number']),
+            'vehicle_type' => $validated['vehicle_type'],
+            'fuel_type' => $validated['fuel_type'],
+            'transmission_type' => $validated['transmission_type'],
+            'daily_rate' => $validated['daily_rate'],
+            'security_deposit' => $validated['security_deposit'] ?? null,
+            'rental_rules' => $validated['rental_rules'] ?? null,
+            'image_path' => $imagePath,
+            'is_listed_for_rent' => true,
+            'listing_status' => 'approved',
+        ]);
+
+        return back()->with('success', 'Rental vehicle added successfully!');
+    }
+
+    /**
+     * Update service center vehicle
+     */
+    public function updateVehicle(Request $request, Vehicle $vehicle)
+    {
+        if (!$vehicle->is_service_center_vehicle) {
+            abort(403, 'Cannot edit customer vehicles here');
+        }
+
+        $validated = $request->validate([
+            'vehicle_name' => 'required|string|max:100',
+            'daily_rate' => 'required|numeric|min:0',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'rental_rules' => 'nullable|string',
+            'is_listed_for_rent' => 'boolean',
+        ]);
+
+        $vehicle->update($validated);
+
+        return back()->with('success', 'Vehicle updated successfully!');
+    }
+
+    /**
+     * Delete service center vehicle
+     */
+    public function destroyVehicle(Vehicle $vehicle)
+    {
+        if (!$vehicle->is_service_center_vehicle) {
+            abort(403, 'Cannot delete customer vehicles here');
+        }
+
+        if ($vehicle->image_path && Storage::disk('public')->exists($vehicle->image_path)) {
+            Storage::disk('public')->delete($vehicle->image_path);
+        }
+
+        $vehicle->delete();
+
+        return back()->with('success', 'Vehicle removed successfully!');
+    }
+
+    /**
+     * Manage customer-listed vehicles awaiting approval
+     */
+    public function pendingListings()
+    {
+        $vehicles = Vehicle::with('customer')
+            ->where('is_service_center_vehicle', false)
+            ->where('listing_status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.rentals.pending-listings', compact('vehicles'));
+    }
+
+    /**
+     * Approve customer vehicle listing
+     */
+    public function approveVehicleListing(Vehicle $vehicle)
+    {
+        $vehicle->update([
+            'listing_status' => 'approved',
+            'listing_approved_at' => now(),
+            'is_listed_for_rent' => true,
+        ]);
+
+        // Notify owner
+        if ($vehicle->customer_id) {
+            $vehicleName = $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model);
+            createNotification(
+                $vehicle->customer_id,
+                'rental_update',
+                'Vehicle Listing Approved',
+                "Your vehicle {$vehicleName} has been approved for rental listing!",
+                'success',
+                route('customer.vehicles')
+            );
+        }
+
+        return back()->with('success', 'Vehicle listing approved!');
+    }
+
+    /**
+     * Reject customer vehicle listing
+     */
+    public function rejectVehicleListing(Request $request, Vehicle $vehicle)
+    {
+        $validated = $request->validate([
+            'rejection_reason' => 'required|string|max:500',
+        ]);
+
+        $vehicle->update([
+            'listing_status' => 'rejected',
+            'listing_rejection_reason' => $validated['rejection_reason'],
+            'is_listed_for_rent' => false,
+        ]);
+
+        // Notify owner
+        if ($vehicle->customer_id) {
+            $vehicleName = $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model);
+            createNotification(
+                $vehicle->customer_id,
+                'rental_update',
+                'Vehicle Listing Rejected',
+                "Your vehicle {$vehicleName} listing was rejected. Reason: {$validated['rejection_reason']}",
+                'error',
+                route('customer.vehicles')
+            );
+        }
+
+        return back()->with('success', 'Vehicle listing rejected.');
+    }
+
+    /**
+     * Quick approval dashboard for pending requests
+     */
+    public function quickApproval()
+    {
+        $pendingRequests = RentalRequest::with(['vehicle', 'renter', 'owner', 'assignedStaff'])
+            ->where('status', 'Pending')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $approvedWaitingStaff = RentalRequest::with(['vehicle', 'renter', 'assignedStaff'])
+            ->where('status', 'Approved')
+            ->whereNull('assigned_staff_id')
+            ->orderBy('approved_at', 'asc')
+            ->get();
+
+        $staff = StaffMember::where('status', 'Active')->get();
+
+        $stats = [
+            'pending_count' => $pendingRequests->count(),
+            'awaiting_staff' => $approvedWaitingStaff->count(),
+        ];
+
+        return view('admin.rentals.quick-approval', compact('pendingRequests', 'approvedWaitingStaff', 'staff', 'stats'));
+    }
+
+    /**
+     * Manage all rental requests
+     */
+    public function requests()
+    {
+        $requests = RentalRequest::with(['vehicle', 'renter', 'owner', 'assignedStaff'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $staff = StaffMember::where('status', 'Active')->get();
+
+        return view('admin.rentals.requests', compact('requests', 'staff'));
+    }
+
+    /**
+     * Approve rental request
+     */
+    public function approveRequest(RentalRequest $request)
+    {
+        $request->update([
+            'status' => 'Approved',
+            'approved_at' => now(),
+        ]);
+
+        // Notify renter
+        $vehicleName = $request->vehicle->vehicle_name ?: ($request->vehicle->brand . ' ' . $request->vehicle->model);
+        notifyRentalUpdate($request->renter_id, $request, 'Approved', $vehicleName);
+
+        return back()->with('success', 'Rental request approved!');
+    }
+
+    /**
+     * Reject rental request
+     */
+    public function rejectRequest(Request $requestData, RentalRequest $rental)
+    {
+        $validated = $requestData->validate([
+            'rejection_reason' => 'required|string|max:500',
+        ]);
+
+        $rental->update([
+            'status' => 'Rejected',
+            'rejection_reason' => $validated['rejection_reason'],
+        ]);
+
+        // Notify renter
+        $vehicleName = $rental->vehicle->vehicle_name ?: ($rental->vehicle->brand . ' ' . $rental->vehicle->model);
+        createNotification(
+            $rental->renter_id,
+            'rental_update',
+            'Rental Request Rejected',
+            "Your rental request for {$vehicleName} was rejected. Reason: {$validated['rejection_reason']}",
+            'error',
+            route('customer.rentals')
+        );
+
+        return back()->with('success', 'Rental request rejected.');
+    }
+
+    /**
+     * Assign staff to rental
+     */
+    public function assignStaff(Request $request, RentalRequest $rental)
+    {
+        $validated = $request->validate([
+            'staff_id' => 'required|exists:staff_members,id',
+        ]);
+
+        $rental->update([
+            'assigned_staff_id' => $validated['staff_id'],
+        ]);
+
+        return back()->with('success', 'Staff assigned to rental!');
+    }
+
+    /**
+     * Rental reports
+     */
+    public function reports()
+    {
+        $totalRentals = RentalRequest::count();
+        $completedRentals = RentalRequest::where('status', 'Completed')->count();
+        $activeRentals = RentalRequest::whereIn('status', ['Approved', 'Ready for Pickup', 'Picked Up', 'In Use'])->count();
+        $totalRevenue = RentalRequest::where('payment_status', 'Paid')->sum('total_cost');
+        $damageReports = RentalRequest::where('has_damage', true)->count();
+
+        $recentRentals = RentalRequest::with(['vehicle', 'renter', 'owner'])
+            ->orderBy('created_at', 'desc')
+            ->take(20)
+            ->get();
+
+        return view('admin.rentals.reports', compact(
+            'totalRentals',
+            'completedRentals',
+            'activeRentals',
+            'totalRevenue',
+            'damageReports',
+            'recentRentals'
+        ));
+    }
+}

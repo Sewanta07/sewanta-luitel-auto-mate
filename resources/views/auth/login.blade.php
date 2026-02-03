@@ -57,14 +57,14 @@
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
                     <div class="mt-2 relative rounded-md shadow-sm">
-                        <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-3 rounded-xl border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" value="{{ old('email') }}" placeholder="you@example.com">
+                        <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" value="{{ old('email') }}" placeholder="you@example.com">
                     </div>
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
                     <div class="mt-2 relative rounded-md shadow-sm">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full px-4 py-3 rounded-xl border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" placeholder="••••••••">
+                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" placeholder="••••••••">
                     </div>
                 </div>
 

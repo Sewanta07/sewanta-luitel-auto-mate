@@ -42,12 +42,16 @@ class VehicleController extends Controller
     {
         $user = Auth::user();
         
-        // Show ALL vehicles listed for rent (including own vehicles for testing)
-        // In production, uncomment the line: ->where('customer_id', '!=', $user->id)
+        // Show only APPROVED vehicles listed for rent
+        // Include admin-listed vehicles (customer_id = NULL) AND customer-listed vehicles (not owned by current user)
         $vehicles = Vehicle::with('customer')
             ->where('is_listed_for_rent', true)
+            ->where('listing_status', 'approved')
             ->whereNull('rented_by_user_id')
-            // ->where('customer_id', '!=', $user->id) // Uncomment to hide own vehicles
+            ->where(function ($query) use ($user) {
+                $query->whereNull('customer_id')  // Admin-listed vehicles
+                      ->orWhere('customer_id', '!=', $user->id); // Customer-listed vehicles (not own)
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -191,11 +195,23 @@ class VehicleController extends Controller
                 ->with('error', 'This vehicle is currently under service and cannot be listed for rent.');
         }
 
+        // Toggle listing status
         $vehicle->is_listed_for_rent = !$vehicle->is_listed_for_rent;
+        
+        // If listing for rent, set status to pending for admin approval
+        if ($vehicle->is_listed_for_rent && !$vehicle->is_service_center_vehicle) {
+            $vehicle->listing_status = 'pending';
+            $vehicle->listing_rejection_reason = null;
+        }
+        
         $vehicle->save();
 
+        $message = $vehicle->is_listed_for_rent 
+            ? 'Vehicle submitted for rental approval! Admin will review shortly.' 
+            : 'Vehicle unlisted from rent.';
+
         return redirect()->route('customer.vehicles')
-            ->with('success', $vehicle->is_listed_for_rent ? 'Vehicle listed for rent!' : 'Vehicle unlisted from rent.');
+            ->with('success', $message);
     }
 
     /**

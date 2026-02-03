@@ -21,6 +21,9 @@
         <a href="{{ route('staff.bookings') }}" class="px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('staff.bookings*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100' }} transition">
             Bookings
         </a>
+        <a href="{{ route('staff.rentals.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('staff.rentals*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            Rentals
+        </a>
         <a href="{{ route('staff.service.logs') }}" class="px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('staff.service.logs*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100' }} transition">
             Service Logs
         </a>

@@ -8,6 +8,7 @@ class Vehicle extends Model
 {
     protected $fillable = [
         'customer_id',
+        'is_service_center_vehicle',
         'vehicle_name',
         'brand',
         'model',
@@ -18,12 +19,19 @@ class Vehicle extends Model
         'transmission_type',
         'image_path',
         'daily_rate',
+        'security_deposit',
+        'rental_rules',
         'is_listed_for_rent',
+        'listing_status',
+        'listing_rejection_reason',
+        'listing_approved_at',
         'rented_by_user_id',
     ];
 
     protected $casts = [
         'is_listed_for_rent' => 'boolean',
+        'is_service_center_vehicle' => 'boolean',
+        'listing_approved_at' => 'datetime',
     ];
 
     protected $table = 'vehicles';

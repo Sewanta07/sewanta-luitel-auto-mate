@@ -61,10 +61,33 @@
             </a>
 
             {{-- NEW: Rental Management --}}
-            <a href="{{ route('admin.rentals') }}" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition {{ request()->routeIs('admin.rentals*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+            <a href="{{ route('admin.rentals.dashboard') }}" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition {{ request()->routeIs('admin.rentals*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                 <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.rentals*') ? 'text-[#ff5a1f]' : 'text-gray-400 group-hover:text-gray-500' }} transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 Rentals
+                @php
+                    $pendingRentalListings = \App\Models\Vehicle::where('listing_status', 'pending')->count();
+                    $pendingRentalRequests = \App\Models\RentalRequest::where('status', 'Pending')->count();
+                @endphp
+                @if($pendingRentalListings > 0 || $pendingRentalRequests > 0)
+                    <span class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-[#ff5a1f] rounded-full">
+                        {{ $pendingRentalListings + $pendingRentalRequests }}
+                    </span>
+                @endif
             </a>
+
+            {{-- Quick Approval Submenu --}}
+            @if(request()->routeIs('admin.rentals*'))
+                <div class="ml-4 space-y-1 mt-1">
+                    <a href="{{ route('admin.rentals.quick-approval') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.rentals.quick-approval') ? 'bg-orange-100 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-100' }} transition">
+                        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Quick Approval
+                    </a>
+                    <a href="{{ route('admin.rentals.dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.rentals.dashboard') ? 'bg-orange-100 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-100' }} transition">
+                        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 16l4-4m0 0l4 4m-4-4v4"></path></svg>
+                        Dashboard
+                    </a>
+                </div>
+            @endif
 
             {{-- NEW: Stock Management --}}
             <a href="{{ route('admin.stock') }}" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition {{ request()->routeIs('admin.stock*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">

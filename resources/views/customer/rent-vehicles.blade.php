@@ -87,7 +87,18 @@
                                         <input type="date" name="end_date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Contact Number</label>
+                                        <input type="tel" name="renter_contact" placeholder="Your contact number" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Pickup Location</label>
+                                        <input type="text" name="pickup_location" placeholder="Where to pickup" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                    </div>
+                                </div>
                                 <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Optional notes..."></textarea>
+                                <textarea name="service_link" rows="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Service booking link (if applicable)"></textarea>
                                 <button type="submit" class="w-full px-4 py-2.5 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100">
                                     Request to Rent
                                 </button>

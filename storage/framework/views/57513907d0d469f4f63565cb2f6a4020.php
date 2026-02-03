@@ -21,6 +21,9 @@
         <a href="<?php echo e(route('staff.bookings')); ?>" class="px-3 py-2 rounded-lg text-sm font-medium <?php echo e(request()->routeIs('staff.bookings*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100'); ?> transition">
             Bookings
         </a>
+        <a href="<?php echo e(route('staff.rentals.index')); ?>" class="px-3 py-2 rounded-lg text-sm font-medium <?php echo e(request()->routeIs('staff.rentals*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100'); ?> transition">
+            Rentals
+        </a>
         <a href="<?php echo e(route('staff.service.logs')); ?>" class="px-3 py-2 rounded-lg text-sm font-medium <?php echo e(request()->routeIs('staff.service.logs*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-700 hover:bg-gray-100'); ?> transition">
             Service Logs
         </a>

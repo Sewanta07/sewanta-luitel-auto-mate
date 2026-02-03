@@ -161,8 +161,21 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/services/{id}/approve', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'approve'])->name('admin.services.approve');
         Route::post('/services/{id}/reject', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'reject'])->name('admin.services.reject');
         
-        // NEW: Rental Management
-        Route::view('/rentals', 'admin.rentals')->name('admin.rentals');
+        // Rental Management (Admin)
+        Route::get('/rentals', [\App\Http\Controllers\Admin\RentalManagementController::class, 'dashboard'])->name('admin.rentals.dashboard');
+        Route::get('/rentals/quick-approval', [\App\Http\Controllers\Admin\RentalManagementController::class, 'quickApproval'])->name('admin.rentals.quick-approval');
+        Route::get('/rentals/vehicles', [\App\Http\Controllers\Admin\RentalManagementController::class, 'vehicles'])->name('admin.rentals.vehicles');
+        Route::post('/rentals/vehicles', [\App\Http\Controllers\Admin\RentalManagementController::class, 'storeVehicle'])->name('admin.rentals.vehicles.store');
+        Route::put('/rentals/vehicles/{vehicle}', [\App\Http\Controllers\Admin\RentalManagementController::class, 'updateVehicle'])->name('admin.rentals.vehicles.update');
+        Route::delete('/rentals/vehicles/{vehicle}', [\App\Http\Controllers\Admin\RentalManagementController::class, 'destroyVehicle'])->name('admin.rentals.vehicles.destroy');
+        Route::get('/rentals/pending-listings', [\App\Http\Controllers\Admin\RentalManagementController::class, 'pendingListings'])->name('admin.rentals.pending-listings');
+        Route::post('/rentals/pending-listings/{vehicle}/approve', [\App\Http\Controllers\Admin\RentalManagementController::class, 'approveVehicleListing'])->name('admin.rentals.pending-listings.approve');
+        Route::post('/rentals/pending-listings/{vehicle}/reject', [\App\Http\Controllers\Admin\RentalManagementController::class, 'rejectVehicleListing'])->name('admin.rentals.pending-listings.reject');
+        Route::get('/rentals/requests', [\App\Http\Controllers\Admin\RentalManagementController::class, 'requests'])->name('admin.rentals.requests');
+        Route::post('/rentals/requests/{rental}/approve', [\App\Http\Controllers\Admin\RentalManagementController::class, 'approveRequest'])->name('admin.rentals.requests.approve');
+        Route::post('/rentals/requests/{rental}/reject', [\App\Http\Controllers\Admin\RentalManagementController::class, 'rejectRequest'])->name('admin.rentals.requests.reject');
+        Route::post('/rentals/requests/{rental}/assign-staff', [\App\Http\Controllers\Admin\RentalManagementController::class, 'assignStaff'])->name('admin.rentals.requests.assign-staff');
+        Route::get('/rentals/reports', [\App\Http\Controllers\Admin\RentalManagementController::class, 'reports'])->name('admin.rentals.reports');
         
         // NEW: Stock Management
         Route::view('/stock', 'admin.stock')->name('admin.stock');
@@ -206,6 +219,16 @@ Route::middleware(['auth', 'check.staff.status'])->prefix('staff')->group(functi
          $booking = \App\Models\ServiceBooking::with('customer')->findOrFail($id);
          return view('staff.services.show', compact('booking'));
     })->name('staff.services.show');
+    
+    // Rental Operations (Staff)
+    Route::get('/rentals', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'index'])->name('staff.rentals.index');
+    Route::get('/rentals/{rental}/inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'showInspection'])->name('staff.rentals.inspection');
+    Route::post('/rentals/{rental}/pre-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePreInspection'])->name('staff.rentals.pre-inspection');
+    Route::post('/rentals/{rental}/pickup', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'markPickedUp'])->name('staff.rentals.pickup');
+    Route::post('/rentals/{rental}/status', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'updateStatus'])->name('staff.rentals.status');
+    Route::post('/rentals/{rental}/post-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePostInspection'])->name('staff.rentals.post-inspection');
+    Route::post('/rentals/{rental}/complete', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'completeRental'])->name('staff.rentals.complete');
+    Route::get('/rentals/history', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'history'])->name('staff.rentals.history');
 });
 
 // Staff status pages
