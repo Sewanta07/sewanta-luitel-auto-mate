@@ -41,6 +41,11 @@ class Vehicle extends Model
         return $this->belongsTo(User::class, 'customer_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(VehicleImage::class)->orderBy('sort_order');
+    }
+
     public function rentalRequests()
     {
         return $this->hasMany(RentalRequest::class);

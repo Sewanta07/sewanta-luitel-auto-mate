@@ -15,8 +15,8 @@
         </div>
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Service Center Rental Vehicles</h1>
-                <p class="text-gray-600">Manage vehicles owned by the service center for rental</p>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Manage Rental Vehicles</h1>
+                <p class="text-gray-600">Manage service center vehicles and approved customer-listed vehicles</p>
             </div>
             <button onclick="document.getElementById('addVehicleModal').classList.remove('hidden')" 
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition">
@@ -45,7 +45,18 @@
             @endif
             
             <div class="p-5">
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $vehicle->vehicle_name }}</h3>
+                <div class="flex items-center gap-2 mb-2">
+                    <h3 class="text-xl font-semibold text-gray-800">{{ $vehicle->vehicle_name }}</h3>
+                    @if($vehicle->customer_id)
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                            Customer Listed
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                            Service Center
+                        </span>
+                    @endif
+                </div>
                 <p class="text-gray-600 text-sm mb-4">{{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->year }})</p>
                 
                 <div class="space-y-2 mb-4">
@@ -69,20 +80,36 @@
                             <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">Inactive</span>
                         @endif
                     </div>
+                    @if($vehicle->customer_id)
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Owner:</span>
+                        <span class="font-medium text-gray-800">{{ $vehicle->customer->name ?? 'N/A' }}</span>
+                    </div>
+                    @endif
                 </div>
 
                 <div class="flex gap-2">
-                    <button onclick="editVehicle({{ $vehicle->id }}, '{{ $vehicle->vehicle_name }}', {{ $vehicle->daily_rate }}, {{ $vehicle->security_deposit ?? 0 }}, {{ $vehicle->is_listed_for_rent ? 'true' : 'false' }})" 
+                    @if(!$vehicle->customer_id)
+                    <button onclick="editVehicle({{ $vehicle->id }}, '{{ $vehicle->vehicle_name }}', {{ $vehicle->daily_rate }}, {{ $vehicle->security_deposit ?? 0 }}, {{ $vehicle->is_listed_for_rent ? 'true' : 'false' }});" 
                             class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition">
                         Edit
                     </button>
-                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="flex-1" onsubmit="return confirm('Delete this vehicle?')">
+                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="flex-1" onsubmit="return confirm('Delete this vehicle?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
                             Delete
                         </button>
                     </form>
+                    @else
+                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="w-full" onsubmit="return confirm('Delete this customer-listed vehicle?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
+                            Delete Listing
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
         </div>

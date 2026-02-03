@@ -35,15 +35,58 @@
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($vehicles as $vehicle)
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition duration-300 flex flex-col">
-                        <div class="relative h-44 bg-gray-100">
-                            @if($vehicle->image_path)
-                                <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_name ?? $vehicle->brand }}" class="w-full h-full object-cover">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition duration-300 flex flex-col group">
+                        <!-- Image Gallery Section -->
+                        <div class="relative h-48 bg-gray-100 overflow-hidden">
+                            <!-- Main Image -->
+                            @php
+                                $allImages = [];
+                                if ($vehicle->image_path) {
+                                    $allImages[] = $vehicle->image_path;
+                                }
+                                $allImages = array_merge($allImages, $vehicle->images->pluck('image_path')->toArray());
+                            @endphp
+
+                            @if(count($allImages) > 0)
+                                <div class="relative h-full" x-data="{ currentImage: 0, images: {{ json_encode($allImages) }} }">
+                                    <img :src="'{{ asset('storage') }}/' + images[currentImage]" 
+                                         class="w-full h-full object-cover transition-opacity duration-300"
+                                         alt="{{ $vehicle->vehicle_name ?? $vehicle->brand }}">
+                                    
+                                    <!-- Image Counter -->
+                                    @if(count($allImages) > 1)
+                                        <div class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                                            <span x-text="currentImage + 1"></span>/<span>{{ count($allImages) }}</span>
+                                        </div>
+
+                                        <!-- Image Navigation -->
+                                        <button @click="currentImage = (currentImage - 1 + images.length) % images.length"
+                                                class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                        </button>
+                                        <button @click="currentImage = (currentImage + 1) % images.length"
+                                                class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </button>
+
+                                        <!-- Thumbnail Strip -->
+                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-2 flex gap-1 overflow-x-auto">
+                                            <template x-for="(img, idx) in images" :key="idx">
+                                                <button @click="currentImage = idx"
+                                                        :class="currentImage === idx ? 'ring-2 ring-white' : 'opacity-60 hover:opacity-100'"
+                                                        class="flex-shrink-0 w-10 h-10 rounded border border-white/50 overflow-hidden transition">
+                                                    <img :src="'{{ asset('storage') }}/' + img" class="w-full h-full object-cover">
+                                                </button>
+                                            </template>
+                                        </div>
+                                    @endif
+                                </div>
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-gray-400">
                                     <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"/></svg>
                                 </div>
                             @endif
+
                             <span class="absolute top-3 left-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 shadow-sm">
                                 <span class="w-1.5 h-1.5 rounded-full bg-green-600 mr-2"></span>
                                 Available

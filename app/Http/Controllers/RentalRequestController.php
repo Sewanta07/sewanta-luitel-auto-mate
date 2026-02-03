@@ -14,8 +14,9 @@ class RentalRequestController extends Controller
      */
     public function index()
     {
+        $customerId = Auth::guard('customer')->id() ?? Auth::id();
         $requests = RentalRequest::with('vehicle')
-            ->where('renter_id', Auth::id())
+            ->where('renter_id', $customerId)
             ->orderByDesc('created_at')
             ->get();
 
@@ -49,7 +50,8 @@ class RentalRequestController extends Controller
             return redirect()->back()->with('error', 'This vehicle listing is not yet approved.');
         }
 
-        if ($vehicle->customer_id === Auth::id()) {
+        $renterId = Auth::guard('customer')->id() ?? Auth::id();
+        if ($vehicle->customer_id === $renterId) {
             return redirect()->back()->with('error', 'You cannot rent your own vehicle.');
         }
 
@@ -59,10 +61,17 @@ class RentalRequestController extends Controller
             $totalCost = $days * $vehicle->daily_rate;
         }
 
+        if (!$renterId) {
+            return redirect()->route('login');
+        }
+
+        // Determine owner_id: customer-listed vehicles use customer_id, admin vehicles are null
+        $ownerId = $vehicle->customer_id;
+
         $rentalRequest = RentalRequest::create([
             'vehicle_id' => $vehicle->id,
-            'renter_id' => Auth::id(),
-            'owner_id' => $vehicle->customer_id,
+            'renter_id' => $renterId,
+            'owner_id' => $ownerId,
             'start_date' => $validated['start_date'] ?? null,
             'end_date' => $validated['end_date'] ?? null,
             'notes' => $validated['notes'] ?? null,
@@ -76,7 +85,7 @@ class RentalRequestController extends Controller
 
         // Notify renter
         $vehicleName = $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model);
-        notifyRentalUpdate(Auth::id(), $rentalRequest, 'Pending', $vehicleName);
+        notifyRentalUpdate($renterId, $rentalRequest, 'Pending', $vehicleName);
 
         return redirect()->back()->with('success', 'Rental request sent!');
     }
@@ -86,7 +95,8 @@ class RentalRequestController extends Controller
      */
     public function approve(RentalRequest $request)
     {
-        if ($request->owner_id !== Auth::id()) {
+        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
 
@@ -119,7 +129,8 @@ class RentalRequestController extends Controller
      */
     public function reject(RentalRequest $request)
     {
-        if ($request->owner_id !== Auth::id()) {
+        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
 
@@ -138,7 +149,8 @@ class RentalRequestController extends Controller
      */
     public function pay(RentalRequest $request)
     {
-        if ($request->renter_id !== Auth::id()) {
+        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        if ($request->renter_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
 
@@ -157,7 +169,8 @@ class RentalRequestController extends Controller
      */
     public function markReturned(RentalRequest $request)
     {
-        if ($request->owner_id !== Auth::id()) {
+        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
 

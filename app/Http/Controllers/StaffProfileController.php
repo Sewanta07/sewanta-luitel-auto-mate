@@ -15,7 +15,7 @@ class StaffProfileController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('multi.auth');
     }
 
     /**
@@ -35,7 +35,7 @@ class StaffProfileController extends Controller
             return redirect()->route('dashboard.' . $role);
         }
 
-        return view('staff.profile', ['user' => $user]);
+        return view('staff.profile', ['user' => $user, 'staff' => $user]);
     }
 
     /**

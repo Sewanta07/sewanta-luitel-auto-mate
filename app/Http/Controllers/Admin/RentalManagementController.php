@@ -33,13 +33,22 @@ class RentalManagementController extends Controller
     }
 
     /**
-     * Manage service center rental vehicles
+     * Manage service center rental vehicles + approved customer-listed vehicles
      */
     public function vehicles()
     {
-        $vehicles = Vehicle::where('is_service_center_vehicle', true)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Get both admin-owned vehicles and approved customer-listed vehicles
+        $vehicles = Vehicle::where(function ($query) {
+            $query->where('is_service_center_vehicle', true)  // Admin-owned
+                  ->orWhere(function ($q) {
+                      // Customer-listed that are approved
+                      $q->where('is_listed_for_rent', true)
+                        ->where('listing_status', 'approved')
+                        ->whereNotNull('customer_id');
+                  });
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
 
         return view('admin.rentals.vehicles', compact('vehicles'));
     }
@@ -248,6 +257,11 @@ class RentalManagementController extends Controller
      */
     public function approveRequest(RentalRequest $request)
     {
+        // Check if vehicle still exists
+        if (!$request->vehicle) {
+            return back()->with('error', 'Cannot approve: vehicle no longer exists.');
+        }
+
         $request->update([
             'status' => 'Approved',
             'approved_at' => now(),

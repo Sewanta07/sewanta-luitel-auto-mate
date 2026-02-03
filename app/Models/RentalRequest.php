@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CustomerUser;
 
 class RentalRequest extends Model
 {
@@ -46,12 +47,12 @@ class RentalRequest extends Model
 
     public function renter()
     {
-        return $this->belongsTo(User::class, 'renter_id');
+        return $this->belongsTo(CustomerUser::class, 'renter_id');
     }
 
     public function owner()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(CustomerUser::class, 'owner_id');
     }
 
     public function assignedStaff()

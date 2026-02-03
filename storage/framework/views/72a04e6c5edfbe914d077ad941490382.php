@@ -68,7 +68,7 @@
                             <?php if($rental->vehicle->is_service_center_vehicle): ?>
                                 <span class="font-semibold text-blue-600">Service Center</span>
                             <?php else: ?>
-                                <?php echo e($rental->owner->name); ?>
+                                <?php echo e($rental->owner->name ?? 'Customer'); ?>
 
                             <?php endif; ?>
                         </td>

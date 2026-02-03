@@ -74,8 +74,8 @@ class RegisterController extends Controller
                 'status' => $status,
             ]);
             
-            // Customers are logged in immediately
-            Auth::login($user);
+            // Customers are logged in immediately using the customer guard
+            Auth::guard('customer')->login($user);
             return redirect()->route('dashboard.customer')->with('success', 'Registration successful! Welcome to AutoMate.');
         }
     }

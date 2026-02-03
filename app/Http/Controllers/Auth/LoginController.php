@@ -30,93 +30,45 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->filled('remember');
 
-        // Try to authenticate with Admin first
-        $admin = \App\Models\Admin::where('email', $credentials['email'])->first();
-        if ($admin && \Illuminate\Support\Facades\Hash::check($credentials['password'], $admin->password)) {
+        // Try to authenticate with Admin guard
+        if (Auth::guard('admin')->attempt($credentials, $remember)) {
+            $admin = Auth::guard('admin')->user();
             if ($admin->status === 'active') {
-                Auth::login($admin, $remember);
-                // Regenerate session AFTER login to prevent session fixation attacks
                 $request->session()->regenerate();
-                // Clear any intended URL
-                $request->session()->forget('url.intended');
-                // Store user type in session for fallback detection
-                $request->session()->put('auth_user_type', 'admin');
-                
-                return redirect()->route('dashboard.admin');
+                return redirect()->intended(route('dashboard.admin'));
             } else {
+                Auth::guard('admin')->logout();
                 throw ValidationException::withMessages([
                     'email' => ['Your admin account is not active. Please contact support.'],
                 ]);
             }
         }
 
-        // Try to authenticate with StaffMember
-        $staffMember = \App\Models\StaffMember::where('email', $credentials['email'])->first();
-        if ($staffMember && \Illuminate\Support\Facades\Hash::check($credentials['password'], $staffMember->password)) {
+        // Try to authenticate with Staff guard
+        if (Auth::guard('staff')->attempt($credentials, $remember)) {
+            $staffMember = Auth::guard('staff')->user();
             if ($staffMember->status === 'active') {
-                Auth::login($staffMember, $remember);
-                // Regenerate session AFTER login to prevent session fixation attacks
                 $request->session()->regenerate();
-                // Clear any intended URL
-                $request->session()->forget('url.intended');
-                // Store user type in session for fallback detection
-                $request->session()->put('auth_user_type', 'staff');
-                
-                return redirect()->route('dashboard.staff');
+                return redirect()->intended(route('dashboard.staff'));
             } else {
+                Auth::guard('staff')->logout();
                 throw ValidationException::withMessages([
                     'email' => ['Your account is pending approval. Please wait for admin approval.'],
                 ]);
             }
         }
 
-        // Try to authenticate with CustomerUser
-        $customer = \App\Models\CustomerUser::where('email', $credentials['email'])->first();
-        if ($customer && \Illuminate\Support\Facades\Hash::check($credentials['password'], $customer->password)) {
+        // Try to authenticate with Customer guard
+        if (Auth::guard('customer')->attempt($credentials, $remember)) {
+            $customer = Auth::guard('customer')->user();
             if ($customer->status === 'active') {
-                Auth::login($customer, $remember);
-                // Regenerate session AFTER login to prevent session fixation attacks
                 $request->session()->regenerate();
-                // Clear any intended URL
-                $request->session()->forget('url.intended');
-                // Store user type in session for fallback detection
-                $request->session()->put('auth_user_type', 'customer');
-                
-                return redirect()->route('dashboard.customer');
+                return redirect()->intended(route('dashboard.customer'));
             } else {
+                Auth::guard('customer')->logout();
                 throw ValidationException::withMessages([
                     'email' => ['Your account is not active. Please contact support.'],
                 ]);
-            }
-        }
-
-        // Try default User model (for backward compatibility) - ONLY if not found in other tables
-        if (!\App\Models\Admin::where('email', $credentials['email'])->exists() &&
-            !\App\Models\StaffMember::where('email', $credentials['email'])->exists() &&
-            !\App\Models\CustomerUser::where('email', $credentials['email'])->exists()) {
-            
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            
-                // Clear any intended URL
-                $request->session()->forget('url.intended');
-                
-                // Redirect based on role - use direct redirect, not intended
-                if (isset($user->role)) {
-            switch ($user->role) {
-                case 'admin':
-                            return redirect()->route('dashboard.admin');
-                case 'staff':
-                            return redirect()->route('dashboard.staff');
-                case 'customer':
-                default:
-                            return redirect()->route('dashboard.customer');
-                    }
-                }
-                
-                // Default fallback
-                return redirect()->route('dashboard.customer');
             }
         }
 
@@ -130,7 +82,11 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Logout from all guards
+        Auth::guard('admin')->logout();
+        Auth::guard('staff')->logout();
+        Auth::guard('customer')->logout();
+        Auth::logout(); // Default guard
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

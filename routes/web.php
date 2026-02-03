@@ -10,28 +10,11 @@ use App\Http\Controllers\ContactController;
 
 // Landing Page - Redirect authenticated users to their dashboard
 Route::get('/', function () {
-    if (auth()->check()) {
-        $user = auth()->user();
-        
-        // Get user role - prioritize instance check
-        $role = 'customer'; // default
-        
-        // Check user type by class FIRST (most reliable)
-        if ($user instanceof \App\Models\Admin) {
-            $role = 'admin';
-        } elseif ($user instanceof \App\Models\StaffMember) {
-            $role = 'staff';
-        } elseif ($user instanceof \App\Models\CustomerUser) {
-            $role = 'customer';
-        } elseif (method_exists($user, 'getRoleAttribute')) {
-            $role = $user->getRoleAttribute() ?? 'customer';
-        } elseif (isset($user->role)) {
-            $role = $user->role ?? 'customer';
-        }
-        
+    $role = getAuthenticatedUserRole();
+    if ($role) {
         return redirect()->route('dashboard.' . $role);
     }
-    
+
     return view('index');
 })->name('index');
 
@@ -50,7 +33,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout Route
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('multi.auth');
 
 // Contact Form Route
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -59,7 +42,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::view('/test-pages', 'test-pages')->name('test.pages');
 
 // Protected Routes
-Route::middleware(['auth', 'check.staff.status'])->group(function () {
+Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     Route::get('/customer/dashboard', [DashboardController::class, 'customer'])->name('dashboard.customer');
     Route::get('/staff/dashboard', [DashboardController::class, 'staff'])->name('dashboard.staff');
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('dashboard.admin');
@@ -132,12 +115,12 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
         Route::get('/vehicles', function () {
-            abort_unless(auth()->user()?->role === 'admin', 403);
+            abort_unless(getAuthenticatedUserRole() === 'admin', 403);
             return view('admin.vehicles');
         })->name('admin.vehicles');
 
         Route::get('/analytics', function () {
-            abort_unless(auth()->user()?->role === 'admin', 403);
+            abort_unless(getAuthenticatedUserRole() === 'admin', 403);
             return view('admin.analytics');
         })->name('admin.analytics');
 
@@ -172,7 +155,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
         Route::post('/rentals/pending-listings/{vehicle}/approve', [\App\Http\Controllers\Admin\RentalManagementController::class, 'approveVehicleListing'])->name('admin.rentals.pending-listings.approve');
         Route::post('/rentals/pending-listings/{vehicle}/reject', [\App\Http\Controllers\Admin\RentalManagementController::class, 'rejectVehicleListing'])->name('admin.rentals.pending-listings.reject');
         Route::get('/rentals/requests', [\App\Http\Controllers\Admin\RentalManagementController::class, 'requests'])->name('admin.rentals.requests');
-        Route::post('/rentals/requests/{rental}/approve', [\App\Http\Controllers\Admin\RentalManagementController::class, 'approveRequest'])->name('admin.rentals.requests.approve');
+        Route::post('/rentals/requests/{request}/approve', [\App\Http\Controllers\Admin\RentalManagementController::class, 'approveRequest'])->name('admin.rentals.requests.approve');
         Route::post('/rentals/requests/{rental}/reject', [\App\Http\Controllers\Admin\RentalManagementController::class, 'rejectRequest'])->name('admin.rentals.requests.reject');
         Route::post('/rentals/requests/{rental}/assign-staff', [\App\Http\Controllers\Admin\RentalManagementController::class, 'assignStaff'])->name('admin.rentals.requests.assign-staff');
         Route::get('/rentals/reports', [\App\Http\Controllers\Admin\RentalManagementController::class, 'reports'])->name('admin.rentals.reports');
@@ -186,7 +169,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
 });
 
 // Additional customer UI routes (protected)
-Route::middleware(['auth', 'check.staff.status'])->group(function () {
+Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     // Redirect old requests routes to new bookings routes
     Route::get('/customer/requests', function () {
         return redirect()->route('bookings.index');
@@ -212,7 +195,7 @@ Route::middleware(['auth', 'check.staff.status'])->group(function () {
 });
 
 // Staff context
-Route::middleware(['auth', 'check.staff.status'])->prefix('staff')->group(function () {
+Route::middleware(['multi.auth', 'check.staff.status'])->prefix('staff')->group(function () {
     Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
     Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
     Route::get('/services/{id}', function ($id) {
@@ -232,5 +215,5 @@ Route::middleware(['auth', 'check.staff.status'])->prefix('staff')->group(functi
 });
 
 // Staff status pages
-Route::view('/staff/pending', 'staff.pending')->name('staff.pending')->middleware('auth');
+Route::view('/staff/pending', 'staff.pending')->name('staff.pending')->middleware('multi.auth');
 Route::view('/staff/rejected', 'staff.rejected')->name('staff.rejected');

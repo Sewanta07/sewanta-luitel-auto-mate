@@ -74,7 +74,7 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $rental->renter->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ $rental->vehicle->is_service_center_vehicle ? 'Service Center' : $rental->owner->name }}
+                            {{ $rental->vehicle->is_service_center_vehicle ? 'Service Center' : ($rental->owner->name ?? 'Customer') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ \Carbon\Carbon::parse($rental->start_date)->format('M d') }} - 

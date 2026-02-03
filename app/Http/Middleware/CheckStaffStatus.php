@@ -10,7 +10,7 @@ class CheckStaffStatus
 {
     public function handle(Request $request, Closure $next)
     {
-        $user = Auth::user();
+        $user = getAuthenticatedUser();
 
         if (!$user) {
             return $next($request);
@@ -19,20 +19,15 @@ class CheckStaffStatus
         // Check if user is a StaffMember
         $isStaff = $user instanceof \App\Models\StaffMember;
         
-        // Also check by role attribute for backward compatibility
-        $userRole = method_exists($user, 'getRoleAttribute') || isset($user->role) 
-            ? ($user->role ?? null) 
-            : null;
-        
-        if ($isStaff || $userRole === 'staff') {
+        if ($isStaff) {
             if (isset($user->status)) {
-            if ($user->status === 'pending') {
-                return redirect()->route('staff.pending');
-            }
+                if ($user->status === 'pending') {
+                    return redirect()->route('staff.pending');
+                }
 
-            if ($user->status === 'rejected') {
-                Auth::logout();
-                return redirect()->route('staff.rejected');
+                if ($user->status === 'rejected') {
+                    Auth::guard('staff')->logout();
+                    return redirect()->route('staff.rejected');
                 }
             }
         }

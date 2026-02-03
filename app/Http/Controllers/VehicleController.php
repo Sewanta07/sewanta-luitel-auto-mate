@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\VehicleImage;
 use App\Models\ServiceBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,14 +81,17 @@ class VehicleController extends Controller
             'transmission_type' => 'required|string|in:Automatic,Manual',
             'daily_rate' => 'nullable|numeric|min:0',
             'vehicle_image' => 'nullable|image|max:2048',
+            'vehicle_images' => 'nullable|array|max:10',
+            'vehicle_images.*' => 'image|max:2048',
         ]);
 
+        // Use first single image as primary if no multiple images uploaded
         $imagePath = null;
         if ($request->hasFile('vehicle_image')) {
             $imagePath = $request->file('vehicle_image')->store('vehicles', 'public');
         }
 
-        Vehicle::create([
+        $vehicle = Vehicle::create([
             'customer_id' => $user->id,
             'vehicle_name' => $validated['vehicle_name'] ?? null,
             'brand' => $validated['brand'],
@@ -100,6 +104,17 @@ class VehicleController extends Controller
             'image_path' => $imagePath,
             'daily_rate' => $validated['daily_rate'] ?? null,
         ]);
+
+        // Store multiple images if provided
+        if ($request->hasFile('vehicle_images')) {
+            foreach ($request->file('vehicle_images') as $index => $image) {
+                $path = $image->store('vehicles', 'public');
+                $vehicle->images()->create([
+                    'image_path' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
 
         return redirect()->route('customer.vehicles')
             ->with('success', 'Vehicle added successfully!');

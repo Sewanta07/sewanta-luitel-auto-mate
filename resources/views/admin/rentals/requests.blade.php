@@ -64,7 +64,7 @@
                             @if($rental->vehicle->is_service_center_vehicle)
                                 <span class="font-semibold text-blue-600">Service Center</span>
                             @else
-                                {{ $rental->owner->name }}
+                                {{ $rental->owner->name ?? 'Customer' }}
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

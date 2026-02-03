@@ -114,8 +114,35 @@
                         </select>
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vehicle Image (Optional)</label>
-                        <input type="file" name="vehicle_image" accept="image/*" class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Vehicle Images (Professional Gallery)</label>
+                        <div class="space-y-3">
+                            <!-- Primary Image -->
+                            <div class="border-2 border-dashed border-[#ff5a1f] rounded-xl p-6 text-center hover:bg-orange-50 transition cursor-pointer" onclick="document.getElementById('primary-image').click()">
+                                <svg class="w-10 h-10 mx-auto text-[#ff5a1f] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p class="text-sm font-semibold text-gray-700">Primary Image (Thumbnail)</p>
+                                <p class="text-xs text-gray-500 mt-1">Click to upload main vehicle image</p>
+                                <input type="file" id="primary-image" name="vehicle_image" accept="image/*" class="hidden">
+                                <div id="primary-preview" class="mt-3 hidden">
+                                    <img id="primary-img" class="h-32 object-cover rounded-lg mx-auto">
+                                </div>
+                            </div>
+
+                            <!-- Multiple Images Gallery -->
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Additional Images (Up to 10)</p>
+                                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition cursor-pointer" onclick="document.getElementById('gallery-images').click()">
+                                    <svg class="w-10 h-10 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    <p class="text-sm font-semibold text-gray-700">Add Gallery Images</p>
+                                    <p class="text-xs text-gray-500 mt-1">Drag multiple images or click to upload</p>
+                                    <input type="file" id="gallery-images" name="vehicle_images[]" accept="image/*" multiple class="hidden">
+                                </div>
+                                <div id="gallery-preview" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Daily Rate (Optional)</label>
@@ -161,6 +188,85 @@
             backdrop.classList.add('hidden');
             backdrop.classList.remove('flex');
         }, 300);
+    }
+
+    // Primary image preview
+    document.getElementById('primary-image').addEventListener('change', function(e) {
+        const preview = document.getElementById('primary-preview');
+        const img = document.getElementById('primary-img');
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                img.src = event.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Multiple gallery images preview
+    document.getElementById('gallery-images').addEventListener('change', function(e) {
+        const preview = document.getElementById('gallery-preview');
+        preview.innerHTML = '';
+        const files = e.target.files;
+        
+        Array.from(files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const container = document.createElement('div');
+                container.className = 'relative group';
+                container.innerHTML = `
+                    <img src="${event.target.result}" class="w-full h-32 object-cover rounded-lg">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-lg transition flex items-center justify-center">
+                        <span class="text-white text-xs font-bold bg-black bg-opacity-50 px-2 py-1 rounded hidden group-hover:block">${index + 1}</span>
+                    </div>
+                `;
+                preview.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // Drag and drop for gallery
+    const galleryArea = document.querySelector('[onclick="document.getElementById(\'gallery-images\').click()"]');
+    if (galleryArea) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            galleryArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            galleryArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            galleryArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            galleryArea.classList.add('bg-orange-50', 'border-[#ff5a1f]');
+        }
+
+        function unhighlight(e) {
+            galleryArea.classList.remove('bg-orange-50', 'border-[#ff5a1f]');
+        }
+
+        galleryArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('gallery-images').files = files;
+            
+            const event = new Event('change', { bubbles: true });
+            document.getElementById('gallery-images').dispatchEvent(event);
+        }
     }
 
     // Close on backdrop click

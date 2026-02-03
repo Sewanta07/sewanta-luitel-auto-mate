@@ -1,19 +1,56 @@
 <?php
 
+if (!function_exists('getAuthenticatedUser')) {
+    /**
+     * Get the currently authenticated user from any guard.
+     */
+    function getAuthenticatedUser()
+    {
+        // Check each guard in order
+        if (Auth::guard('admin')->check()) {
+            return Auth::guard('admin')->user();
+        }
+        
+        if (Auth::guard('staff')->check()) {
+            return Auth::guard('staff')->user();
+        }
+        
+        if (Auth::guard('customer')->check()) {
+            return Auth::guard('customer')->user();
+        }
+        
+        // Fallback to default guard
+        return Auth::user();
+    }
+}
+
 if (!function_exists('getAuthenticatedUserRole')) {
     /**
      * Get the role of the currently authenticated user.
-     * This function ensures we always get the correct user type.
      */
     function getAuthenticatedUserRole(): ?string
     {
+        // Check guards in order
+        if (Auth::guard('admin')->check()) {
+            return 'admin';
+        }
+        
+        if (Auth::guard('staff')->check()) {
+            return 'staff';
+        }
+        
+        if (Auth::guard('customer')->check()) {
+            return 'customer';
+        }
+
+        // Fallback: try to determine from user instance
         $user = Auth::user();
         
         if (!$user) {
             return null;
         }
 
-        // Check user type by class FIRST (most reliable)
+        // Check user type by class
         if ($user instanceof \App\Models\Admin) {
             return 'admin';
         }
@@ -26,20 +63,7 @@ if (!function_exists('getAuthenticatedUserRole')) {
             return 'customer';
         }
 
-        // Fallback: Check session for stored user type
-        $sessionUserType = session('auth_user_type');
-        if ($sessionUserType && in_array($sessionUserType, ['admin', 'staff', 'customer'])) {
-            return $sessionUserType;
-        }
-
         // Check role attribute for User model (backward compatibility)
-        if (method_exists($user, 'getRoleAttribute')) {
-            $role = $user->getRoleAttribute();
-            if ($role && in_array($role, ['admin', 'staff', 'customer'])) {
-                return $role;
-            }
-        }
-        
         if (isset($user->role) && in_array($user->role, ['admin', 'staff', 'customer'])) {
             return $user->role;
         }
