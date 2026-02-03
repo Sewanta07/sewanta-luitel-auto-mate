@@ -64,7 +64,13 @@
                 <div>
                     <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
                     <div class="mt-2 relative rounded-md shadow-sm">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" placeholder="••••••••">
+                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('password', 'password-toggle')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition">
+                            <svg id="password-toggle" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -99,4 +105,19 @@
         </div>
     </div>
 </div>
+
+<script>
+function togglePasswordVisibility(fieldId, iconId) {
+    const field = document.getElementById(fieldId);
+    const icon = document.getElementById(iconId);
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.add('text-[#ff5a1f]');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('text-[#ff5a1f]');
+    }
+}
+</script>
 @endsection

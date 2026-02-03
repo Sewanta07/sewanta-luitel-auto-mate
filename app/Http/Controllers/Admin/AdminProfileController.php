@@ -3,51 +3,71 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 use Illuminate\Validation\Rules\Password;
 
 class AdminProfileController extends Controller
 {
-    use AuthorizesAdmin;
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('multi.auth');
+    }
 
     /**
      * Show the admin profile page.
      */
-    public function index(Request $request): View
+    public function index()
     {
-        $this->authorizeAdmin($request);
+        $user = Auth::user();
         
-        $admin = Auth::user();
-        return view('admin.profile', compact('admin'));
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
+        // Ensure user is admin
+        if (!($user instanceof \App\Models\Admin)) {
+            $role = $this->getUserRole($user);
+            return redirect()->route('dashboard.' . $role);
+        }
+
+        return view('admin.profile', ['user' => $user, 'admin' => $user]);
     }
 
     /**
      * Update the admin profile.
      */
-    public function updateProfile(Request $request): RedirectResponse
+    public function updateProfile(Request $request)
     {
-        $this->authorizeAdmin($request);
+        $user = Auth::user();
         
-        $admin = Auth::user();
+        // Ensure user is admin
+        if (!($user instanceof \App\Models\Admin)) {
+            return redirect()->route('dashboard.' . $this->getUserRole($user));
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins,email,' . $admin->id,
+            'email' => 'required|string|email|max:255|unique:admins,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'current_address' => 'nullable|string|max:500',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        if (is_null($user->email_verified_at)) {
+            $validated['email_verified_at'] = now();
+        }
+
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
             // Delete old profile image if exists
-            if ($admin->profile_image && Storage::disk('public')->exists($admin->profile_image)) {
-                Storage::disk('public')->delete($admin->profile_image);
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
             }
 
             // Store new image
@@ -58,11 +78,7 @@ class AdminProfileController extends Controller
             unset($validated['profile_image']);
         }
 
-        $admin->update($validated);
-
-        // Refresh the authenticated admin so updated data shows immediately
-        $admin->refresh();
-        Auth::setUser($admin);
+        $user->update($validated);
 
         return back()->with('success', 'Profile updated successfully!');
     }
@@ -70,11 +86,14 @@ class AdminProfileController extends Controller
     /**
      * Update the admin password.
      */
-    public function updatePassword(Request $request): RedirectResponse
+    public function updatePassword(Request $request)
     {
-        $this->authorizeAdmin($request);
+        $user = Auth::user();
         
-        $admin = Auth::user();
+        // Ensure user is admin
+        if (!($user instanceof \App\Models\Admin)) {
+            return redirect()->route('dashboard.' . $this->getUserRole($user));
+        }
 
         $validated = $request->validate([
             'current_password' => 'required',
@@ -82,19 +101,32 @@ class AdminProfileController extends Controller
         ]);
 
         // Check current password
-        if (!Hash::check($validated['current_password'], $admin->password)) {
+        if (!Hash::check($validated['current_password'], $user->password)) {
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
 
-        $admin->update([
+        $user->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Refresh the authenticated admin so changes reflect immediately
-        $admin->refresh();
-        Auth::setUser($admin);
-
         return back()->with('success', 'Password updated successfully!');
+    }
+
+    /**
+     * Get the role of the authenticated user.
+     */
+    private function getUserRole($user): string
+    {
+        if ($user instanceof \App\Models\Admin) {
+            return 'admin';
+        }
+        if ($user instanceof \App\Models\StaffMember) {
+            return 'staff';
+        }
+        if ($user instanceof \App\Models\CustomerUser) {
+            return 'customer';
+        }
+        return 'customer';
     }
 }
 
