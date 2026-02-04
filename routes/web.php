@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StaffApplicationController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SearchController;
 
 // Landing Page - Redirect authenticated users to their dashboard
 Route::get('/', function () {
@@ -202,8 +203,8 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
     
-    // NEW: Search
-    Route::view('/search', 'search.index')->name('search.index');
+    // Search
+    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 });
 
 // Staff context

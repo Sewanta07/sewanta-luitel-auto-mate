@@ -228,16 +228,94 @@
                                     @endif
 
                                     <!-- Action Buttons -->
-                                    <div class="lg:col-span-3 flex gap-3 justify-end">
-                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition">
-                                            View Full Details
-                                        </button>
-                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition">
-                                            Manage Booking
-                                        </button>
-                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-400 transition">
-                                            Close
-                                        </button>
+                                    <div class="lg:col-span-3 bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Actions</h3>
+                                        <div class="flex flex-wrap gap-3">
+                                            @if($booking->status === 'Pending')
+                                                <!-- Approve Form -->
+                                                <form action="{{ route('admin.services.approve', $booking->id) }}" method="POST" class="inline-block" onclick="event.stopPropagation()">
+                                                    @csrf
+                                                    <div class="flex gap-2 items-end">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Assign Staff</label>
+                                                            <select name="staff_id" required class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                                                <option value="">Select Staff</option>
+                                                                @foreach($staffMembers as $staff)
+                                                                    <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Estimated Cost (Rs.)</label>
+                                                            <input type="number" name="estimated_cost" step="0.01" class="border border-gray-300 rounded px-3 py-2 text-sm w-32">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Completion Date</label>
+                                                            <input type="date" name="expected_completion_date" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                                        </div>
+                                                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition">
+                                                            Approve & Assign
+                                                        </button>
+                                                    </div>
+                                                </form>
+
+                                                <!-- Reject Form -->
+                                                <button onclick="event.stopPropagation(); toggleRejectForm('reject-{{ $booking->id }}')" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition">
+                                                    Reject
+                                                </button>
+                                                <div id="reject-{{ $booking->id }}" class="hidden mt-3 w-full">
+                                                    <form action="{{ route('admin.services.reject', $booking->id) }}" method="POST" onclick="event.stopPropagation()">
+                                                        @csrf
+                                                        <textarea name="rejection_reason" required placeholder="Rejection reason..." class="w-full border border-gray-300 rounded px-3 py-2 text-sm mb-2" rows="2"></textarea>
+                                                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition">
+                                                            Confirm Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            @elseif($booking->status !== 'Completed' && $booking->status !== 'Rejected' && $booking->status !== 'Cancelled')
+                                                <!-- Assign Staff (for already approved bookings) -->
+                                                @if(!$booking->staff_id)
+                                                <form action="{{ route('admin.services.assign', $booking->id) }}" method="POST" class="inline-block" onclick="event.stopPropagation()">
+                                                    @csrf
+                                                    <div class="flex gap-2 items-end">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Assign Staff</label>
+                                                            <select name="staff_id" required class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                                                <option value="">Select Staff</option>
+                                                                @foreach($staffMembers as $staff)
+                                                                    <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition">
+                                                            Assign
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                                @endif
+
+                                                <!-- Update Status -->
+                                                <form action="{{ route('admin.services.status', $booking->id) }}" method="POST" class="inline-block" onclick="event.stopPropagation()">
+                                                    @csrf
+                                                    <div class="flex gap-2 items-end">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Update Status</label>
+                                                            <select name="status" required class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                                                <option value="Approved" {{ $booking->status === 'Approved' ? 'selected' : '' }}>Approved</option>
+                                                                <option value="Assigned" {{ $booking->status === 'Assigned' ? 'selected' : '' }}>Assigned</option>
+                                                                <option value="Customer Accepted" {{ $booking->status === 'Customer Accepted' ? 'selected' : '' }}>Customer Accepted</option>
+                                                                <option value="In Progress" {{ $booking->status === 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                                                <option value="Waiting for Parts" {{ $booking->status === 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
+                                                                <option value="Completed" {{ $booking->status === 'Completed' ? 'selected' : '' }}>Completed</option>
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -257,6 +335,15 @@
 
 <script>
 function toggleBookingDetails(elementId) {
+    const element = document.getElementById(elementId);
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
+}
+
+function toggleRejectForm(elementId) {
     const element = document.getElementById(elementId);
     if (element.classList.contains('hidden')) {
         element.classList.remove('hidden');
