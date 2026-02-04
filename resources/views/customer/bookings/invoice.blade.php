@@ -37,6 +37,44 @@
                 </div>
             </div>
 
+            @php($partsTotal = $booking->parts->sum('pivot.total_cost'))
+
+            <div class="mt-8 border-t border-gray-100 pt-6">
+                <h3 class="text-sm font-bold text-gray-700 mb-4">Parts Used</h3>
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100">
+                            <tr>
+                                <th class="px-4 py-3">Part</th>
+                                <th class="px-4 py-3 text-center">Qty</th>
+                                <th class="px-4 py-3 text-right">Unit Price</th>
+                                <th class="px-4 py-3 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse($booking->parts as $part)
+                                <tr>
+                                    <td class="px-4 py-3 text-gray-900">{{ $part->part_name }}</td>
+                                    <td class="px-4 py-3 text-center text-gray-500">{{ $part->pivot->quantity }}</td>
+                                    <td class="px-4 py-3 text-right text-gray-500">Rs. {{ number_format($part->pivot->unit_price, 2) }}</td>
+                                    <td class="px-4 py-3 text-right text-gray-900 font-medium">Rs. {{ number_format($part->pivot->total_cost, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">No parts recorded.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="bg-gray-50 font-bold text-gray-900">
+                            <tr>
+                                <td colspan="3" class="px-4 py-3 text-right">Parts Total</td>
+                                <td class="px-4 py-3 text-right text-[#ff5a1f]">Rs. {{ number_format($partsTotal, 2) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
             <div class="mt-8 border-t border-gray-100 pt-6">
                 <div class="flex items-center justify-between">
                     <p class="text-sm font-bold text-gray-500">Estimated Cost</p>

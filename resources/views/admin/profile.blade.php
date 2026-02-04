@@ -55,11 +55,11 @@
                  <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 text-center">
                         <div class="inline-block relative">
-                            <div class="w-16 h-16 rounded-full border-4 border-white shadow-lg overflow-hidden mx-auto mb-4 bg-gray-100 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full border-4 border-white shadow-lg overflow-hidden mx-auto mb-4 bg-gray-100 flex items-center justify-center">
                                 @if($admin->profile_image)
                                     <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="Profile" class="w-full h-full object-cover">
                                 @else
-                                    <span class="text-2xl font-bold text-[#ff5a1f]">{{ strtoupper(substr($admin->name, 0, 1)) }}</span>
+                                    <span class="text-xl font-bold text-[#ff5a1f]">{{ strtoupper(substr($admin->name, 0, 1)) }}</span>
                                 @endif
                             </div>
                         </div>
@@ -144,11 +144,11 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Profile Picture</label>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                                <div class="w-12 h-12 rounded-full overflow-hidden border-4 border-orange-100 bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border-4 border-orange-100 bg-gray-100 flex items-center justify-center flex-shrink-0">
                                     @if($admin->profile_image)
-                                        <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="Profile" class="w-12 h-12 object-cover rounded-full" id="profile-preview">
+                                        <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="Profile" class="w-10 h-10 object-cover rounded-full" id="profile-preview">
                                     @else
-                                        <span class="text-xl font-bold text-gray-300">{{ strtoupper(substr($admin->name, 0, 1)) }}</span>
+                                        <span class="text-lg font-bold text-gray-300">{{ strtoupper(substr($admin->name, 0, 1)) }}</span>
                                     @endif
                                 </div>
                                 <div>
@@ -210,7 +210,7 @@ function previewProfileImage(input) {
             if (!preview) {
                 const container = input.closest('div')?.previousElementSibling;
                 if (container) {
-                    container.innerHTML = '<img id="profile-preview" class="w-12 h-12 object-cover rounded-full" alt="Profile">';
+                    container.innerHTML = '<img id="profile-preview" class="w-10 h-10 object-cover rounded-full" alt="Profile">';
                     preview = document.getElementById('profile-preview');
                 }
             }

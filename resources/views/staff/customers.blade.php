@@ -10,24 +10,110 @@
         {{-- Page Header --}}
         <div class="sm:flex sm:items-center sm:justify-between mb-8 mt-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Customer Interaction</h1>
-                <p class="mt-2 text-lg text-gray-600">View customer details and manage communications for assigned bookings.</p>
+                <h1 class="text-3xl font-bold text-gray-900">My Customers</h1>
+                <p class="mt-2 text-lg text-gray-600">Customers with bookings assigned to you ({{ $customers->count() }} total)</p>
             </div>
             <div class="mt-4 sm:mt-0">
                 <div class="relative rounded-xl shadow-sm">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
                     </div>
-                    <input type="text" name="search" id="search" class="block w-full rounded-xl border border-gray-300 pl-10 underline focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3" placeholder="Search customers...">
+                    <input type="text" name="search" id="customer-search" class="block w-full rounded-xl border border-gray-300 pl-10 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3" placeholder="Search customers...">
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <!-- Customer List -->
-            <div class="space-y-6">
-                {{-- Placeholder Customer Card 1 --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 hover:shadow-md transition-shadow">
+        @if($customers->isEmpty())
+            <div class="bg-white rounded-3xl border border-gray-100 p-12 text-center">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">No customers yet</h3>
+                <p class="text-gray-500">You'll see customers here once bookings are assigned to you.</p>
+            </div>
+        @else
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3" id="customer-list">
+            @foreach($customers as $customer)
+                @php
+                    $latestBooking = $customer->bookings->first();
+                    $initials = strtoupper(substr($customer->name, 0, 2));
+                    $colors = ['orange', 'purple', 'blue', 'green', 'pink', 'indigo'];
+                    $color = $colors[ord($customer->name[0]) % count($colors)];
+                @endphp
+                <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 hover:shadow-md transition-shadow customer-card" data-customer-name="{{ strtolower($customer->name) }}">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center">
+                                <div class="h-12 w-12 rounded-full bg-{{ $color }}-100 flex items-center justify-center text-{{ $color }}-600 font-bold text-lg">
+                                    {{ $initials }}
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">{{ $customer->name }}</h3>
+                                    @if($latestBooking)
+                                        <p class="text-sm text-gray-500">{{ $latestBooking->vehicle_model }} ({{ $latestBooking->vehicle_number }})</p>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($latestBooking)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    @if($latestBooking->status == 'In Progress') bg-blue-100 text-blue-800
+                                    @elseif($latestBooking->status == 'Completed') bg-green-100 text-green-800
+                                    @elseif($latestBooking->status == 'Pending') bg-yellow-100 text-yellow-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ $latestBooking->status }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="mt-4 border-t border-gray-100 pt-4">
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Phone</span>
+                                    <span class="block text-gray-900 font-medium">{{ $customer->phone ?? 'N/A' }}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-gray-500 text-xs uppercase tracking-wide">Email</span>
+                                    <span class="block text-gray-900 font-medium truncate" title="{{ $customer->email }}">{{ $customer->email }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="block text-gray-500 text-xs uppercase tracking-wide mb-1">Bookings</span>
+                                <span class="block text-gray-900 font-medium">{{ $customer->bookings->count() }} service(s)</span>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <a href="{{ route('staff.customers.messages', $customer->id) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition-colors relative">
+                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" /></svg>
+                                Message
+                                @if($customer->unread_count > 0)
+                                    <span class="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{{ $customer->unread_count }}</span>
+                                @endif
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        @endif
+    </main>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('customer-search')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.customer-card');
+        
+        cards.forEach(card => {
+            const customerName = card.getAttribute('data-customer-name');
+            if (customerName.includes(searchTerm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
                     <div class="p-6">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center">

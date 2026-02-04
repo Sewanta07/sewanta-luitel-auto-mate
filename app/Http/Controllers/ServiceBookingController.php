@@ -241,6 +241,7 @@ class ServiceBookingController extends Controller
     {
         $booking = ServiceBooking::where('id', $id)
             ->where('customer_id', Auth::id())
+            ->with('parts')
             ->firstOrFail();
 
         if ($booking->status !== 'Completed') {
@@ -257,7 +258,7 @@ class ServiceBookingController extends Controller
     {
         $booking = ServiceBooking::where('id', $id)
             ->where('customer_id', Auth::id())
-            ->with(['logs.user', 'staff', 'customer'])
+            ->with(['logs.user', 'staff', 'customer', 'parts'])
             ->firstOrFail();
 
         return view('customer.bookings.show', compact('booking'));

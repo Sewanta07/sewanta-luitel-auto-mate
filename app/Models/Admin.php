@@ -42,5 +42,21 @@ class Admin extends Authenticatable
     {
         return 'admin';
     }
+
+    /**
+     * Get messages sent by this admin.
+     */
+    public function sentMessages()
+    {
+        return $this->morphMany(Message::class, 'sender');
+    }
+
+    /**
+     * Get messages received by this admin.
+     */
+    public function receivedMessages()
+    {
+        return $this->morphMany(Message::class, 'receiver');
+    }
 }
 

@@ -45,5 +45,37 @@ class StaffMember extends Authenticatable
     {
         return 'staff';
     }
+
+    /**
+     * Get service bookings assigned to this staff member.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(ServiceBooking::class, 'staff_id');
+    }
+
+    /**
+     * Get messages sent by this staff member.
+     */
+    public function sentMessages()
+    {
+        return $this->morphMany(Message::class, 'sender');
+    }
+
+    /**
+     * Get messages received by this staff member.
+     */
+    public function receivedMessages()
+    {
+        return $this->morphMany(Message::class, 'receiver');
+    }
+
+    /**
+     * Get all messages (sent or received) for this staff member.
+     */
+    public function messages()
+    {
+        return $this->sentMessages()->union($this->receivedMessages()->toBase());
+    }
 }
 

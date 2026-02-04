@@ -133,21 +133,3 @@
     </main>
   </div>
 @endsection
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-2">Appointment Scheduled</h3>
-              <p class="text-gray-600 leading-relaxed max-w-2xl">Reminder: Your vehicle pickup is scheduled for tomorrow between <span class="text-gray-900 font-bold">10:00 AM - 12:00 PM</span>. Please ensure your keys are ready.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {{-- Load More Section --}}
-      <div class="mt-12 text-center">
-        <button class="inline-flex items-center space-x-2 text-gray-400 font-bold hover:text-gray-600 transition-colors">
-          <span>View past updates</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-      </div>
-    </main>
-  </div>
-@endsection

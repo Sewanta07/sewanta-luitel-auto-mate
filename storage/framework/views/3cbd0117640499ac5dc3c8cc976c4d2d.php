@@ -51,7 +51,13 @@
         
         <a href="<?php echo e(route('bookings.create')); ?>" 
            class="hidden md:flex items-center px-6 py-2.5 rounded-full text-sm font-black bg-[#ff5a1f] text-white shadow-lg shadow-orange-100 hover:bg-[#e44d18] hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-          Request Service
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Book Service
+        </a>
+
+        
+        <a href="<?php echo e(route('customer.messages') ?? '#'); ?>" class="p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative" title="Messages">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
         </a>
 
         
@@ -119,7 +125,9 @@
     
     <a href="<?php echo e(route('dashboard.customer')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
     <a href="<?php echo e(route('customer.vehicles')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>
-    <a href="<?php echo e(route('bookings.create')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Request Service</a>
+    <a href="<?php echo e(route('bookings.create')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Book Service</a>
+    <a href="<?php echo e(route('bookings.index')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Bookings</a>
+    <a href="<?php echo e(route('customer.messages')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Messages</a>
     <a href="<?php echo e(route('customer.rent-vehicles')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent Vehicles</a>
     <a href="<?php echo e(route('customer.rentals')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Rentals</a>
     <a href="<?php echo e(route('customer.profile')); ?>" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Profile</a>

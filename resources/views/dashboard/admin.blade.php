@@ -1,88 +1,70 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Admin Dashboard - AutoMate')
 
 @section('content')
-<div class="flex h-screen bg-gray-50 overflow-hidden">
-    {{-- Sidebar --}}
-    <aside class="w-64 flex-shrink-0 z-30">
-        @include('components.admin-sidebar')
-    </aside>
+<div class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
+            <p class="text-gray-600">Welcome back, here's your latest data</p>
+        </div>
 
-    {{-- Main Content --}}
-    <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50 h-full w-full"> 
-        
-        <main class="flex-1 max-w-7xl w-full mx-auto p-6">
-            {{-- Page Header --}}
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4 mt-4">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Admin Overview</h1>
-                    <p class="mt-2 text-lg text-gray-600">Monitor system performance, user activity, and fleet status.</p>
-                </div>
-                <div class="flex space-x-2 bg-white p-1 rounded-xl shadow-sm border border-gray-200">
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">Today</button>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition">Week</button>
-                    <button class="px-4 py-2 text-sm font-bold text-[#ff5a1f] bg-orange-50 rounded-lg shadow-sm">Month</button>
-                    <a href="{{ route('index') }}" target="_blank" class="px-3 py-2 text-gray-400 hover:text-[#ff5a1f] transition" title="View Site">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Stats Grid --}}
-            <div class="grid grid-cols-4 gap-4 mb-5">
-                {{-- Stat 1 --}}
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {{-- Stat 1 --}}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Total Services</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2">245</h3>
+                            </div>
+                            <div class="bg-orange-100 p-3 rounded-full">
+                                <svg class="w-8 h-8 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Total Services</p>
-                            <p class="text-2xl font-bold text-gray-900">245</p>
+                    </div>
+
+                    {{-- Stat 2 --}}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">In Progress</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2">42</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                     {{-- Stat 3 --}}
+                     <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Completed Today</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2">12</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Stat 4 --}}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Pending Review</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2">8</h3>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                {{-- Stat 2 --}}
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">In Progress</p>
-                            <p class="text-2xl font-bold text-gray-900">42</p>
-                        </div>
-                    </div>
-                </div>
-
-                 {{-- Stat 3 --}}
-                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Completed Today</p>
-                            <p class="text-2xl font-bold text-gray-900">12</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Stat 4 --}}
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Pending Review</p>
-                            <p class="text-2xl font-bold text-gray-900">8</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {{-- Main Chart / Panel --}}
@@ -126,9 +108,10 @@
                             <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
+                    </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 @endsection

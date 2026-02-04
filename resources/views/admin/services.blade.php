@@ -1,340 +1,268 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', 'Service Management')
 
 @section('content')
-<div class="flex h-screen bg-gray-50 overflow-hidden">
-  <aside class="w-64 flex-shrink-0 z-30">
-    @include('components.admin-sidebar')
-  </aside>
+<div class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Service Management</h1>
+            <p class="text-gray-600">Monitor and manage all service operations</p>
+        </div>
 
-  <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50/50">
-    <main class="max-w-7xl w-full mx-auto p-6">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
       
-      {{-- Brand & Header --}}
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
-        <div>
-          <h1 class="text-5xl font-black text-gray-900 tracking-tight leading-none">Service <span class="text-[#ff5a1f]">Management</span></h1>
-          <p class="text-gray-400 font-bold mt-4 flex items-center tracking-tight">
-            <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-            System online • Active monitoring enabled
-          </p>
-        </div>
-        <div class="flex gap-3">
-          <button class="px-6 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-black text-gray-900 shadow-sm hover:shadow-md transition-all flex items-center">
-            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Export All
-          </button>
-        </div>
-      </div>
-
-      {{-- Flash Messages --}}
-      @if(session('success'))
-        <div class="mb-10 p-5 bg-green-500 text-white rounded-[2rem] font-black text-sm shadow-xl shadow-green-100 flex items-center animate-bounce-in">
-          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          {{ session('success') }}
-        </div>
-      @endif
-
-      <!-- Stats Grid - Compact One Line Layout -->
-      <div class="grid grid-cols-5 gap-3 mb-6">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <!-- Total Active -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Total Active</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ $stats['total'] }}</h3>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
             </div>
-            <div>
-              <p class="text-gray-500 text-xs">Total Active</p>
-              <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-              <p class="text-gray-500 text-xs">Pending</p>
-              <p class="text-2xl font-bold text-[#ff5a1f]">{{ $stats['pending'] }}</p>
-            </div>
-          </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <!-- Pending -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Pending</p>
+                    <h3 class="text-3xl font-bold text-orange-600 mt-2">{{ $stats['pending'] }}</h3>
+                </div>
+                <div class="bg-orange-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
             </div>
-            <div>
-              <p class="text-gray-500 text-xs">In Progress</p>
-              <p class="text-2xl font-bold text-blue-600">{{ $stats['in_progress'] }}</p>
-            </div>
-          </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <!-- In Progress -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">In Progress</p>
+                    <h3 class="text-3xl font-bold text-blue-600 mt-2">{{ $stats['in_progress'] }}</h3>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
             </div>
-            <div>
-              <p class="text-gray-500 text-xs">Completed</p>
-              <p class="text-2xl font-bold text-green-600">{{ $stats['completed'] }}</p>
-            </div>
-          </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <!-- Completed -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Completed</p>
+                    <h3 class="text-3xl font-bold text-green-600 mt-2">{{ $stats['completed'] }}</h3>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                </div>
             </div>
-            <div>
-              <p class="text-gray-500 text-xs">Unassigned</p>
-              <p class="text-2xl font-bold text-red-600">{{ $stats['unassigned'] }}</p>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <!-- Advanced Filters -->
-      <div class="flex flex-wrap items-center gap-4 mb-8">
-          <div class="flex-1 min-w-[300px] relative group">
-              <input type="text" placeholder="Search by name, vehicle or request ID..." 
-                     class="w-full bg-white border border-gray-100 rounded-3xl pl-14 pr-8 py-5 text-sm font-bold shadow-sm focus:ring-4 focus:ring-orange-100 focus:border-[#ff5a1f] transition-all outline-none">
-              <svg class="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-hover:text-[#ff5a1f] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          </div>
-          <div class="flex gap-4">
-              <select class="px-8 py-5 bg-white border border-gray-100 rounded-3xl text-sm font-black tracking-tight shadow-sm hover:shadow-md transition-all appearance-none cursor-pointer outline-none min-w-[160px]">
-                  <option>All Status</option>
-                  <option>Pending</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
-              </select>
-          </div>
-      </div>
+        <!-- Unassigned -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Unassigned</p>
+                    <h3 class="text-3xl font-bold text-red-600 mt-2">{{ $stats['unassigned'] }}</h3>
+                </div>
+                <div class="bg-red-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+            </div>
+        </div>
+    </div>
 
-      <!-- Main Database Area -->
-      <div class="bg-white rounded-[3rem] shadow-2xl shadow-gray-100/50 border border-gray-50 overflow-hidden relative">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-50/30">
-                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Identity</th>
-                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Service Details</th>
-                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Ownership</th>
-                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">Technician</th>
-                <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50 text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-              @forelse($bookings as $booking)
-              <tr class="group hover:bg-orange-50/10 transition-colors" x-data="{ openAssign: false, openLogs: false, openReject: false }">
-                <td class="px-10 py-8">
-                  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-white font-black text-[10px] shadow-lg shadow-gray-200 mb-3 tracking-tighter">
-                    {{ $booking->booking_code ?? ('BK-' . str_pad($booking->id, 3, '0', STR_PAD_LEFT)) }}
-                  </div>
-                  <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($booking->created_at)->format('d M, Y') }}</div>
-                </td>
-                <td class="px-10 py-8">
-                  <div class="text-lg font-black text-gray-900 tracking-tight group-hover:text-[#ff5a1f] transition-colors">{{ $booking->service_type }}</div>
-                  <div class="text-xs font-bold text-gray-400 mt-1 flex items-center">
-                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    {{ $booking->location }}
-                  </div>
-                </td>
-                <td class="px-10 py-8">
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-[#ff5a1f] font-black text-sm mr-4">
-                      {{ substr($booking->customer->name ?? '?', 0, 1) }}
-                    </div>
-                    <div>
-                      <div class="text-sm font-black text-gray-900 leading-none">{{ $booking->customer->name ?? 'Unknown User' }}</div>
-                      <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">{{ $booking->vehicle_model }}</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-10 py-8 text-sm">
-                    @if($booking->staff)
-                        <button @click="openAssign = true" class="flex items-center group/staff bg-green-50/50 hover:bg-green-500 hover:text-white transition-all px-4 py-2 rounded-xl border border-green-100">
-                            <span class="text-sm font-black tracking-tight mr-2">{{ $booking->staff->name }}</span>
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    @else
-                        <button @click="openAssign = true" class="px-5 py-2.5 bg-red-50 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transform transition-all active:scale-95 shadow-sm">
-                            Assign Personnel
-                        </button>
-                    @endif
-
-                    <!-- Approval & Assignment Portal -->
-                    <div x-show="openAssign" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md" x-cloak>
-                        <div @click.away="openAssign = false" class="bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl scale-in relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
-                            
-                        <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Approve <span class="text-[#ff5a1f]">Booking</span></h3>
-                        <p class="text-gray-500 font-bold mb-10 leading-relaxed">Approve this booking, assign a technician, and set expectations.</p>
-                            
-                        <form action="{{ route('admin.services.approve', $booking->id) }}" method="POST" class="space-y-8">
-                                @csrf
-                                <div class="space-y-3">
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Approved Personnel</label>
-                                    <div class="relative">
-                                        <select name="staff_id" class="w-full px-8 py-5 bg-gray-50 border-none rounded-3xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none outline-none" required>
-                                            <option value="">Search technicians...</option>
-                                            @foreach($staffMembers as $staff)
-                                                <option value="{{ $staff->id }}" {{ $booking->staff_id == $staff->id ? 'selected' : '' }}>
-                                                    {{ $staff->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+    <!-- Recent Services -->
+    <div class="space-y-6">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800">Service Bookings Overview</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technician</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse($bookings as $booking)
+                        <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleBookingDetails('booking-{{ $booking->id }}')">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ $booking->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $booking->service_type }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $booking->customer->name ?? 'Unknown' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $booking->staff->name ?? 'Unassigned' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @php
+                                    $statusColors = [
+                                        'Pending' => 'bg-yellow-100 text-yellow-800',
+                                        'Approved' => 'bg-blue-100 text-blue-800',
+                                        'Assigned' => 'bg-indigo-100 text-indigo-800',
+                                        'In Progress' => 'bg-purple-100 text-purple-800',
+                                        'Waiting for Parts' => 'bg-orange-100 text-orange-800',
+                                        'Completed' => 'bg-green-100 text-green-800',
+                                        'Cancelled' => 'bg-gray-100 text-gray-800',
+                                        'Rejected' => 'bg-red-100 text-red-800',
+                                    ];
+                                @endphp
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $statusColors[$booking->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                    {{ $booking->status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($booking->created_at)->format('M d, Y') }}
+                            </td>
+                        </tr>
+                        <!-- Detailed Booking Information -->
+                        <tr id="booking-{{ $booking->id }}" class="hidden">
+                            <td colspan="6" class="px-6 py-6 bg-gray-50">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <!-- Customer Details -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Customer Information
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            <p><span class="font-medium text-gray-600">Name:</span> <span class="text-gray-900">{{ $booking->customer->name ?? 'N/A' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Phone:</span> <span class="text-gray-900">{{ $booking->phone_number ?? 'N/A' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Email:</span> <span class="text-gray-900">{{ $booking->customer->email ?? 'N/A' }}</span></p>
                                         </div>
+                                    </div>
+
+                                    <!-- Vehicle Details -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                            Vehicle Information
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            <p><span class="font-medium text-gray-600">Model:</span> <span class="text-gray-900">{{ $booking->vehicle_model ?? 'N/A' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Type:</span> <span class="text-gray-900">{{ $booking->vehicle_type ?? 'N/A' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Number:</span> <span class="text-gray-900">{{ $booking->vehicle_number ?? 'N/A' }}</span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Service Details -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            Service Details
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            <p><span class="font-medium text-gray-600">Service Type:</span> <span class="text-gray-900">{{ $booking->service_type ?? 'N/A' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Priority:</span> <span class="px-2 py-1 rounded text-xs font-medium {{ str_contains($booking->service_priority, 'High') ? 'bg-red-100 text-red-800' : (str_contains($booking->service_priority, 'Medium') ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">{{ $booking->service_priority ?? 'Normal' }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Location:</span> <span class="text-gray-900">{{ $booking->service_location_type ?? 'N/A' }}</span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Timeline & Status -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Timeline
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            <p><span class="font-medium text-gray-600">Created:</span> <span class="text-gray-900">{{ \Carbon\Carbon::parse($booking->created_at)->format('M d, Y h:i A') }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Preferred Date:</span> <span class="text-gray-900">{{ \Carbon\Carbon::parse($booking->preferred_date)->format('M d, Y') }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Expected Completion:</span> <span class="text-gray-900">{{ $booking->expected_completion_date ? \Carbon\Carbon::parse($booking->expected_completion_date)->format('M d, Y') : 'Not Set' }}</span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cost Information -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Cost Information
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            <p><span class="font-medium text-gray-600">Estimated Cost:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format($booking->estimated_cost, 2) }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Parts Used:</span> <span class="text-gray-900">{{ $booking->parts->count() ?? 0 }}</span></p>
+                                            @if($booking->parts->count() > 0)
+                                                <p><span class="font-medium text-gray-600">Parts Total:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format($booking->parts->sum('pivot.total_cost'), 2) }}</span></p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Assigned Staff -->
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                            Assigned Staff
+                                        </h3>
+                                        <div class="space-y-2 text-sm">
+                                            @if($booking->staff)
+                                                <p><span class="font-medium text-gray-600">Name:</span> <span class="text-gray-900">{{ $booking->staff->name ?? 'Unassigned' }}</span></p>
+                                                <p><span class="font-medium text-gray-600">Position:</span> <span class="text-gray-900">{{ $booking->staff->position ?? 'N/A' }}</span></p>
+                                                <p><span class="font-medium text-gray-600">Status:</span> <span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Available</span></p>
+                                            @else
+                                                <p class="text-gray-500">Not yet assigned</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Problem Description -->
+                                    @if($booking->problem_description)
+                                    <div class="lg:col-span-3 bg-white rounded-lg p-4 border border-gray-200">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Problem Description
+                                        </h3>
+                                        <p class="text-sm text-gray-700">{{ $booking->problem_description }}</p>
+                                    </div>
+                                    @endif
+
+                                    <!-- Action Buttons -->
+                                    <div class="lg:col-span-3 flex gap-3 justify-end">
+                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition">
+                                            View Full Details
+                                        </button>
+                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition">
+                                            Manage Booking
+                                        </button>
+                                        <button onclick="event.stopPropagation()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-400 transition">
+                                            Close
+                                        </button>
                                     </div>
                                 </div>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                      <div>
-                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Estimated Cost (Rs.)</label>
-                                        <input type="number" name="estimated_cost" step="0.01" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none" placeholder="e.g. 5000">
-                                      </div>
-                                      <div>
-                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Completion Date</label>
-                                        <input type="date" name="expected_completion_date" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-black focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all outline-none">
-                                      </div>
-                                    </div>
-                                
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button type="button" @click="openAssign = false" class="px-8 py-5 bg-gray-100 text-gray-400 font-black rounded-3xl hover:bg-gray-200 transition-all uppercase text-xs tracking-widest">Abort</button>
-                                      <button type="submit" class="px-8 py-5 bg-[#ff5a1f] text-white font-black rounded-3xl shadow-2xl shadow-orange-200 hover:bg-[#e44d18] transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Approve & Assign</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                              <!-- Reject Portal -->
-                              <div x-show="openReject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md" x-cloak>
-                                <div @click.away="openReject = false" class="bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl scale-in relative overflow-hidden">
-                                  <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
-                                  <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Reject <span class="text-red-500">Booking</span></h3>
-                                  <p class="text-gray-500 font-bold mb-10 leading-relaxed">Provide a reason for rejection to notify the customer.</p>
-                                  <form action="{{ route('admin.services.reject', $booking->id) }}" method="POST" class="space-y-6">
-                                    @csrf
-                                    <div>
-                                      <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Rejection Reason</label>
-                                      <textarea name="rejection_reason" rows="4" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-red-100 focus:bg-white transition-all outline-none resize-none" required></textarea>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                      <button type="button" @click="openReject = false" class="px-8 py-5 bg-gray-100 text-gray-400 font-black rounded-3xl hover:bg-gray-200 transition-all uppercase text-xs tracking-widest">Abort</button>
-                                      <button type="submit" class="px-8 py-5 bg-red-500 text-white font-black rounded-3xl shadow-2xl shadow-red-200 hover:bg-red-600 transform hover:-translate-y-1 transition-all uppercase text-xs tracking-widest">Reject</button>
-                                    </div>
-                                  </form>
-                                </div>
-                              </div>
-                </td>
-                <td class="px-10 py-8 text-right">
-                    <div class="flex items-center justify-end gap-4">
-                        <button @click="openLogs = true" class="text-[10px] font-black text-gray-400 hover:text-[#ff5a1f] uppercase tracking-widest transition-colors flex items-center">
-                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            History
-                        </button>
-
-                          <button @click="openReject = true" class="text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition-colors">Reject</button>
-                        
-                        <form action="{{ route('admin.services.status', $booking->id) }}" method="POST" class="inline-block">
-                            @csrf
-                            <select name="status" onchange="this.form.submit()" class="text-xs font-black border-none rounded-2xl px-6 py-3 tracking-tighter uppercase focus:ring-0 cursor-pointer transition-all
-                                {{ $booking->status == 'Pending' ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 
-                                   ($booking->status == 'In Progress' ? 'bg-blue-50 text-blue-500 hover:bg-blue-100' : 'bg-green-50 text-green-500 hover:bg-green-100') }}">
-                                <option value="Pending" {{ $booking->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Approved" {{ $booking->status == 'Approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="Assigned" {{ $booking->status == 'Assigned' ? 'selected' : '' }}>Assigned</option>
-                                <option value="In Progress" {{ $booking->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                <option value="Waiting for Parts" {{ $booking->status == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
-                                <option value="Completed" {{ $booking->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Cancelled" {{ $booking->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                <option value="Rejected" {{ $booking->status == 'Rejected' ? 'selected' : '' }}>Rejected</option>
-                            </select>
-                        </form>
-                    </div>
-
-                    <!-- History Log Modal -->
-                    <div x-show="openLogs" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md" x-cloak>
-                        <div @click.away="openLogs = false" class="bg-white rounded-[3rem] p-12 max-w-2xl w-full shadow-2xl scale-in relative overflow-hidden flex flex-col max-h-[80vh]">
-                            <h3 class="text-4xl font-black text-gray-900 tracking-tight mb-8">Service <span class="text-[#ff5a1f]">Timeline</span></h3>
-                            
-                            <div class="overflow-y-auto pr-4 -mr-4 flex-1 space-y-8">
-                                @forelse($booking->logs()->with('user')->latest()->get() as $log)
-                                    <div class="flex gap-6 relative">
-                                        @if(!$loop->last)
-                                            <div class="absolute left-6 top-12 bottom-0 w-1 bg-gray-50 rounded-full"></div>
-                                        @endif
-                                        <div class="flex-shrink-0 w-12 h-12 rounded-2xl {{ $log->status == 'Completed' ? 'bg-green-100 text-green-600' : ($log->status == 'Assigned' ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-[#ff5a1f]') }} flex items-center justify-center font-black text-sm z-10 shadow-lg shadow-white">
-                                            {{ substr($log->status, 0, 1) }}
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <span class="text-lg font-black text-gray-900">{{ $log->status }}</span>
-                                                <span class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ $log->created_at->diffForHumans() }}</span>
-                                            </div>
-                                            <div class="bg-gray-50/50 p-5 rounded-[1.5rem] border border-gray-50 text-gray-600 font-bold text-sm leading-relaxed">
-                                                {{ $log->notes }}
-                                            </div>
-                                            <div class="mt-3 flex items-center text-[10px] font-black text-gray-300 uppercase tracking-tighter">
-                                                <span class="w-1 h-1 rounded-full bg-gray-200 mr-2"></span>
-                                                Updated by {{ $log->user->name }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @empty
-                                    <div class="text-center py-20">
-                                        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-200">
-                                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                        </div>
-                                        <p class="text-gray-400 font-black tracking-tight">No events recorded for this request yet.</p>
-                                    </div>
-                                @endforelse
-                            </div>
-                            
-                            <button @click="openLogs = false" class="mt-10 w-full px-8 py-5 bg-gray-900 text-white font-black rounded-3xl hover:bg-gray-800 transition-all uppercase text-xs tracking-widest">Close Timeline</button>
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              @empty
-              <tr>
-                <td colspan="5" class="px-10 py-32 text-center">
-                  <div class="w-24 h-24 bg-gray-50 rounded-[3rem] flex items-center justify-center mx-auto mb-8 text-gray-200">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                  </div>
-                  <h3 class="text-2xl font-black text-gray-900 mb-2">No active requests</h3>
-                  <p class="text-gray-400 font-bold max-w-sm mx-auto">All systems clear. Check back later for new service bookings from customers.</p>
-                </td>
-              </tr>
-              @endforelse
-            </tbody>
-          </table>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No recent service bookings</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    </main>
-  </div>
+    </div>
+    </div>
 </div>
 
-<style>
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-@keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 50% { opacity: 0.9; transform: scale(1.1); } 70% { opacity: 1; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-.scale-in { animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-.animate-bounce-in { animation: bounceIn 0.5s ease-out; }
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.overflow-y-auto::-webkit-scrollbar {
-  display: none;
+<script>
+function toggleBookingDetails(elementId) {
+    const element = document.getElementById(elementId);
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.overflow-y-auto {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-</style>
+</script>
 @endsection

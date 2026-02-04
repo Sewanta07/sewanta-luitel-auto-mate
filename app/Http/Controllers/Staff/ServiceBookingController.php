@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\InventoryItem;
+use App\Models\InventoryMovement;
 use App\Models\ServiceBooking;
+use App\Models\ServiceLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -77,5 +80,84 @@ class ServiceBookingController extends Controller
         }
 
         return redirect()->back()->with('success', 'Booking status updated successfully!');
+    }
+
+    public function show($id)
+    {
+        $booking = ServiceBooking::where('id', $id)
+            ->where('staff_id', Auth::id())
+            ->with(['customer', 'parts'])
+            ->firstOrFail();
+
+        $inventoryItems = InventoryItem::where('status', 'active')
+            ->orderBy('part_name')
+            ->get();
+
+        return view('staff.services.show', compact('booking', 'inventoryItems'));
+    }
+
+    public function addPart(Request $request, $id)
+    {
+        $request->validate([
+            'inventory_item_id' => 'required|exists:inventory_items,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $booking = ServiceBooking::where('id', $id)
+            ->where('staff_id', Auth::id())
+            ->firstOrFail();
+
+        $item = InventoryItem::findOrFail($request->inventory_item_id);
+
+        if ($item->status !== 'active') {
+            return redirect()->back()->with('error', 'This item is inactive.');
+        }
+
+        if ($item->quantity < $request->quantity) {
+            return redirect()->back()->with('error', 'Insufficient stock for the selected part.');
+        }
+
+        $unitPrice = $item->unit_price;
+        $totalCost = $unitPrice * $request->quantity;
+
+        $existing = $booking->parts()->where('inventory_item_id', $item->id)->first();
+
+        if ($existing) {
+            $newQty = $existing->pivot->quantity + $request->quantity;
+            $booking->parts()->updateExistingPivot($item->id, [
+                'quantity' => $newQty,
+                'unit_price' => $unitPrice,
+                'total_cost' => $newQty * $unitPrice,
+            ]);
+        } else {
+            $booking->parts()->attach($item->id, [
+                'quantity' => $request->quantity,
+                'unit_price' => $unitPrice,
+                'total_cost' => $totalCost,
+            ]);
+        }
+
+        $item->decrement('quantity', $request->quantity);
+
+        InventoryMovement::create([
+            'inventory_item_id' => $item->id,
+            'service_booking_id' => $booking->id,
+            'user_id' => Auth::id(),
+            'user_type' => get_class(Auth::user()),
+            'change_type' => 'consume',
+            'quantity_change' => -1 * $request->quantity,
+            'unit_price' => $unitPrice,
+            'notes' => "Used in booking {$booking->booking_code}",
+        ]);
+
+        ServiceLog::create([
+            'service_booking_id' => $booking->id,
+            'user_id' => Auth::id(),
+            'user_type' => get_class(Auth::user()),
+            'status' => 'Parts Used',
+            'notes' => "Parts used: {$item->part_name} x{$request->quantity}",
+        ]);
+
+        return redirect()->back()->with('success', 'Part added to service and inventory updated.');
     }
 }

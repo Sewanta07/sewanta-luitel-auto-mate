@@ -134,6 +134,40 @@
         </div>
       </div>
 
+      <!-- Parts Used -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-8 mt-8">
+        <h2 class="text-lg font-black text-gray-900 mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V7a2 2 0 00-2-2h-4l-2-2H8a2 2 0 00-2 2v2H4a2 2 0 00-2 2v6a2 2 0 002 2h4"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          Parts Used
+        </h2>
+        <div class="border border-gray-100 rounded-xl overflow-hidden">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100">
+              <tr>
+                <th class="px-4 py-3">Part</th>
+                <th class="px-4 py-3 text-center">Qty</th>
+                <th class="px-4 py-3 text-right">Unit Price</th>
+                <th class="px-4 py-3 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              @forelse($booking->parts as $part)
+                <tr>
+                  <td class="px-4 py-3 text-gray-900">{{ $part->part_name }}</td>
+                  <td class="px-4 py-3 text-center text-gray-500">{{ $part->pivot->quantity }}</td>
+                  <td class="px-4 py-3 text-right text-gray-500">Rs. {{ number_format($part->pivot->unit_price, 2) }}</td>
+                  <td class="px-4 py-3 text-right text-gray-900 font-medium">Rs. {{ number_format($part->pivot->total_cost, 2) }}</td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="px-4 py-6 text-center text-gray-500">No parts recorded for this service.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Back Button -->
       <div class="text-center mt-8">
         <a href="{{ route('bookings.index') }}" class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition-colors">

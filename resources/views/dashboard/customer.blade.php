@@ -14,7 +14,7 @@
             <div class="p-6 rounded-2xl bg-white shadow-sm flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-semibold text-gray-900">Welcome back 👋</h2>
-                    <p class="text-sm text-gray-500 mt-1">Let's get your vehicle running smoothly — request a service when you're ready.</p>
+                    <p class="text-sm text-gray-600 mt-1">Let's get your vehicle running smoothly — request a service when you're ready.</p>
                 </div>
                 <div class="hidden sm:flex items-center space-x-4">
                     <div class="text-sm text-gray-500">Member since</div>
@@ -262,7 +262,7 @@
                      class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-[2.5rem] shadow-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-10 relative z-50">
                     
                     <div class="absolute top-0 right-0 pt-8 pr-8">
-                        <button type="button" @click="supportModalOpen = false" class="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all cursor-pointer">
+                        <button type="button" @click="supportModalOpen = false" class="p-2 rounded-xl bg-gray-100 text-gray-600 hover:text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
@@ -292,7 +292,7 @@
 
                                 <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Message Details</label>
-                                    <textarea name="message" rows="4" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none" placeholder="Explain your request in detail..." required></textarea>
+                                    <textarea name="message" rows="4" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none" placeholder="Explain your request in detail..." required></textarea>
                                 </div>
 
                                 <div class="pt-4">

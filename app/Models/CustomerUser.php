@@ -42,5 +42,29 @@ class CustomerUser extends Authenticatable
     {
         return 'customer';
     }
+
+    /**
+     * Get service bookings for this customer.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(ServiceBooking::class, 'customer_id');
+    }
+
+    /**
+     * Get messages sent by this customer.
+     */
+    public function sentMessages()
+    {
+        return $this->morphMany(Message::class, 'sender');
+    }
+
+    /**
+     * Get messages received by this customer.
+     */
+    public function receivedMessages()
+    {
+        return $this->morphMany(Message::class, 'receiver');
+    }
 }
 

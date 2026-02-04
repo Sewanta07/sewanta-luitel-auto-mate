@@ -31,12 +31,12 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Cost (Rs.)</label>
-                    <input type="number" name="estimated_cost" step="0.01" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold focus:ring-2 focus:ring-green-100 outline-none" placeholder="e.g. 5000">
+                    <label class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-2">Estimated Cost (Rs.)</label>
+                    <input type="number" name="estimated_cost" step="0.01" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold placeholder-gray-500 focus:ring-2 focus:ring-green-100 outline-none" placeholder="e.g. 5000">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Expected Completion Date</label>
-                    <input type="date" name="expected_completion_date" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold focus:ring-2 focus:ring-green-100 outline-none">
+                    <label class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-2">Expected Completion Date</label>
+                    <input type="date" name="expected_completion_date" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold text-gray-900 focus:ring-2 focus:ring-green-100 outline-none">
                 </div>
                 <div class="flex gap-3 mt-6">
                     <button type="button" @click="showApprove = false" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition">Cancel</button>

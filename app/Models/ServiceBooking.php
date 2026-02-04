@@ -64,5 +64,12 @@ class ServiceBooking extends Model
     {
         return $this->hasMany(ServiceLog::class);
     }
+
+    public function parts()
+    {
+        return $this->belongsToMany(InventoryItem::class, 'service_parts')
+            ->withPivot(['quantity', 'unit_price', 'total_cost'])
+            ->withTimestamps();
+    }
 }
 

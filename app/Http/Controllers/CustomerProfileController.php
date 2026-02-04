@@ -51,11 +51,11 @@ class CustomerProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:customers,email,' . $user->id,
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:customers,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'current_address' => 'nullable|string|max:500',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Handle profile image upload

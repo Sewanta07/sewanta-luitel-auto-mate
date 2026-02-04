@@ -76,6 +76,11 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
         
+        // Customer messaging
+        Route::get('/messages', [\App\Http\Controllers\CustomerMessageController::class, 'index'])->name('customer.messages');
+        Route::get('/messages/{staff}', [\App\Http\Controllers\CustomerMessageController::class, 'show'])->name('customer.messages.show');
+        Route::post('/messages/{staff}', [\App\Http\Controllers\CustomerMessageController::class, 'send'])->name('customer.messages.send');
+        
         // NEW: Customer payment pages
         Route::view('/payments', 'customer.payments')->name('customer.payments');
         Route::get('/payment-history', [\App\Http\Controllers\PaymentHistoryController::class, 'index'])->name('customer.payment-history');
@@ -88,13 +93,16 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/profile/password', [\App\Http\Controllers\StaffProfileController::class, 'updatePassword'])->name('staff.profile.password');
 
         // Staff static pages
-        Route::view('/service-logs', 'staff.service-logs')->name('staff.service.logs');
-        Route::view('/inventory', 'staff.inventory')->name('staff.inventory');
-        Route::view('/customers', 'staff.customers')->name('staff.customers');
+        Route::get('/service-logs', [\App\Http\Controllers\Staff\ServiceLogController::class, 'index'])->name('staff.service.logs');
+        Route::get('/inventory', [\App\Http\Controllers\Staff\InventoryController::class, 'index'])->name('staff.inventory');
+        Route::get('/customers', [\App\Http\Controllers\Staff\CustomerController::class, 'index'])->name('staff.customers');
+        Route::get('/customers/{customer}/messages', [\App\Http\Controllers\Staff\CustomerController::class, 'messages'])->name('staff.customers.messages');
+        Route::post('/customers/{customer}/messages', [\App\Http\Controllers\Staff\CustomerController::class, 'sendMessage'])->name('staff.customers.sendMessage');
         Route::view('/settings', 'staff.profile-settings')->name('staff.settings');
         
-        // NEW: Staff service details
-        Route::view('/services/{id}', 'staff.services.show')->name('staff.services.show');
+        // Staff service details
+        Route::get('/services/{id}', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'show'])->name('staff.services.show');
+        Route::post('/services/{id}/parts', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'addPart'])->name('staff.services.parts.add');
     });
 
     // Admin Staff Applications
@@ -113,11 +121,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::get('/users/{id}', [UserManagementController::class, 'show'])->name('admin.users.show');
         Route::post('/users/{id}/status', [UserManagementController::class, 'updateStatus'])->name('admin.users.updateStatus');
         Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
-
-        Route::get('/vehicles', function () {
-            abort_unless(getAuthenticatedUserRole() === 'admin', 403);
-            return view('admin.vehicles');
-        })->name('admin.vehicles');
 
         Route::get('/analytics', function () {
             abort_unless(getAuthenticatedUserRole() === 'admin', 403);
@@ -160,8 +163,17 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/rentals/requests/{rental}/assign-staff', [\App\Http\Controllers\Admin\RentalManagementController::class, 'assignStaff'])->name('admin.rentals.requests.assign-staff');
         Route::get('/rentals/reports', [\App\Http\Controllers\Admin\RentalManagementController::class, 'reports'])->name('admin.rentals.reports');
         
-        // NEW: Stock Management
-        Route::view('/stock', 'admin.stock')->name('admin.stock');
+        // Inventory Management
+        Route::get('/inventory', [\App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('admin.inventory.index');
+        Route::get('/inventory/create', [\App\Http\Controllers\Admin\InventoryController::class, 'create'])->name('admin.inventory.create');
+        Route::post('/inventory', [\App\Http\Controllers\Admin\InventoryController::class, 'store'])->name('admin.inventory.store');
+        Route::get('/inventory/{id}/edit', [\App\Http\Controllers\Admin\InventoryController::class, 'edit'])->name('admin.inventory.edit');
+        Route::put('/inventory/{id}', [\App\Http\Controllers\Admin\InventoryController::class, 'update'])->name('admin.inventory.update');
+        Route::delete('/inventory/{id}', [\App\Http\Controllers\Admin\InventoryController::class, 'destroy'])->name('admin.inventory.destroy');
+        Route::get('/inventory/reports', [\App\Http\Controllers\Admin\InventoryController::class, 'reports'])->name('admin.inventory.reports');
+        
+        // Message Monitoring
+        Route::get('/messages', [\App\Http\Controllers\Admin\MessageMonitorController::class, 'index'])->name('admin.messages');
         
         // NEW: Issues Management
         Route::view('/issues', 'admin.issues')->name('admin.issues');
@@ -198,10 +210,8 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
 Route::middleware(['multi.auth', 'check.staff.status'])->prefix('staff')->group(function () {
     Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
     Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
-    Route::get('/services/{id}', function ($id) {
-         $booking = \App\Models\ServiceBooking::with('customer')->findOrFail($id);
-         return view('staff.services.show', compact('booking'));
-    })->name('staff.services.show');
+        Route::get('/services/{id}', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'show'])->name('staff.services.show');
+        Route::post('/services/{id}/parts', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'addPart'])->name('staff.services.parts.add');
     
     // Rental Operations (Staff)
     Route::get('/rentals', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'index'])->name('staff.rentals.index');

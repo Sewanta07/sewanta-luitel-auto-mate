@@ -145,9 +145,9 @@
                 </div>
 
                 <div>
-                    <label for="custom_service" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Custom Service (If Selected)</label>
+                    <label for="custom_service" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Custom Service (If Selected)</label>
                     <input type="text" name="custom_service" id="custom_service" value="{{ old('custom_service') }}" 
-                           class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('custom_service') ring-2 ring-red-500 @enderror" 
+                           class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('custom_service') ring-2 ring-red-500 @enderror" 
                            placeholder="Describe custom service">
                     @error('custom_service')
                         <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
@@ -156,18 +156,18 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <label for="preferred_date" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Preferred Date</label>
+                        <label for="preferred_date" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Preferred Date</label>
                         <input type="date" name="preferred_date" id="preferred_date" value="{{ old('preferred_date', date('Y-m-d')) }}" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('preferred_date') ring-2 ring-red-500 @enderror" required>
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('preferred_date') ring-2 ring-red-500 @enderror" required>
                         @error('preferred_date')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="preferred_time_slot" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Preferred Time Slot</label>
+                        <label for="preferred_time_slot" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Preferred Time Slot</label>
                         <select name="preferred_time_slot" id="preferred_time_slot" 
-                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('preferred_time_slot') ring-2 ring-red-500 @enderror" required>
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('preferred_time_slot') ring-2 ring-red-500 @enderror" required>
                             <option value="">Select Slot</option>
                             <option value="Morning" {{ old('preferred_time_slot') == 'Morning' ? 'selected' : '' }}>Morning</option>
                             <option value="Afternoon" {{ old('preferred_time_slot') == 'Afternoon' ? 'selected' : '' }}>Afternoon</option>
@@ -255,9 +255,9 @@
                 </div>
 
                 <div>
-                    <label for="problem_description" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Problem Description (Optional)</label>
+                    <label for="problem_description" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Problem Description (Optional)</label>
                     <textarea name="problem_description" id="problem_description" rows="4" 
-                              class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('problem_description') ring-2 ring-red-500 @enderror" 
+                              class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('problem_description') ring-2 ring-red-500 @enderror" 
                               placeholder="Describe any specific issues you've been having...">{{ old('problem_description') }}</textarea>
                     @error('problem_description')
                         <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
