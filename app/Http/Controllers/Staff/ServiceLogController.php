@@ -11,7 +11,12 @@ class ServiceLogController extends Controller
 {
     public function index(Request $request)
     {
-        $staffMember = Auth::user()->staff_member;
+        $staffMember = Auth::guard('staff')->user();
+        
+        // Check if staff member is authenticated
+        if (!$staffMember) {
+            abort(403, 'Unauthorized: Staff details not found.');
+        }
         
         $query = ServiceLog::with(['booking', 'user'])
             ->whereHas('booking', function ($q) use ($staffMember) {

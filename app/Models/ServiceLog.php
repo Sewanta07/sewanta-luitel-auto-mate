@@ -21,6 +21,14 @@ class ServiceLog extends Model
     }
 
     /**
+     * Alias for serviceBooking() relationship
+     */
+    public function booking()
+    {
+        return $this->serviceBooking();
+    }
+
+    /**
      * Get the user that performed the action (Admin, Staff, or Customer)
      */
     public function user()

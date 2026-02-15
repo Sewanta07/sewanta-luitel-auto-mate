@@ -22,7 +22,8 @@
                         @forelse($staffMembers as $staff)
                             <a href="{{ route('customer.messages.show', $staff->id) }}" 
                                class="block p-4 hover:bg-orange-50 transition-colors border-l-4 {{ isset($selectedStaff) && $selectedStaff->id === $staff->id ? 'border-[#ff5a1f] bg-orange-50' : 'border-transparent' }}">
-                                <div class="flex items-start gap-3">
+                          
+                               <div class="flex items-start gap-3">
                                     @if($staff->profile_image)
                                         <img src="{{ asset('storage/' . $staff->profile_image) }}" 
                                              alt="{{ $staff->name }}"

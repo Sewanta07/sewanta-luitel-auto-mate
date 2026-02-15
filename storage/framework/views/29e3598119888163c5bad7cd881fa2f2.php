@@ -44,8 +44,9 @@
 
     <!-- Hero Section -->
     <div class="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="lg:w-1/2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <!-- Text Content -->
+            <div class="w-full lg:w-1/2 z-10">
                 <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight">
                     Vechiles Service, <br>
                     <span class="text-[#ff5a1f]">Smart Move.</span>
@@ -70,16 +71,19 @@
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
-        
-        
-        <div class="absolute top-0 right-0 w-full lg:w-3/5 h-full opacity-10 lg:opacity-100 pointer-events-none">
-            <svg class="absolute right-0 top-0 h-full w-auto text-gray-100 transform translate-x-1/4" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <polygon points="50,0 100,0 50,100 0,100" />
-            </svg>
-            <div class="absolute inset-y-0 right-0 w-full h-full bg-gradient-to-l from-white via-transparent to-transparent"></div>
-            
-            <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" alt="Car Service" class="absolute top-0 right-0 h-full w-full object-cover object-center lg:rounded-bl-[5rem] shadow-2xl">
+
+            <!-- Image Content -->
+            <div class="w-full lg:w-1/2 relative hidden lg:block">
+                
+                <svg class="absolute -top-20 -right-20 h-96 w-96 text-gray-100 opacity-20" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <polygon points="50,0 100,0 50,100 0,100" />
+                </svg>
+                
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" alt="Car Service" class="w-full h-auto object-cover object-center rounded-3xl">
+                    <div class="absolute inset-0 bg-gradient-to-l from-transparent to-transparent rounded-3xl"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -395,8 +399,8 @@ unset($__errorArgs, $__bag); ?>
                     <h4 class="text-lg font-bold mb-6">Contact</h4>
                     <ul class="space-y-4 text-gray-400">
                         <li>support@automate.com</li>
-                        <li>(555) 123-4567</li>
-                        <li>123 Service Lane, Auto City</li>
+                        <li>9852000987</li>
+                        <li>Itahari Sangit Chwok</li>
                     </ul>
                 </div>
             </div>
