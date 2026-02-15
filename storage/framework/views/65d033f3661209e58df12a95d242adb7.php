@@ -79,7 +79,7 @@
                     </div>
 
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">Forgot your password?</a>
+                        <a href="<?php echo e(route('password.request')); ?>" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">Forgot your password?</a>
                     </div>
                 </div>
 

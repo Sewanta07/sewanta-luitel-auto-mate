@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StaffApplicationController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -29,8 +30,15 @@ Route::middleware('guest')->group(function () {
         return view('auth.register-success');
     })->name('register.success');
     
-    // NEW: Forgot Password
-    Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
+    // Forgot Password Routes (Role-based authentication)
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])
+        ->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])
+        ->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
+        ->name('password.update');
 });
 
 // Logout Route

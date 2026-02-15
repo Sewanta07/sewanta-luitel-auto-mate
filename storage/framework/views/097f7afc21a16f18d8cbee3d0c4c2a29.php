@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Forgot Password - AutoMate')
 
-@section('content')
+<?php $__env->startSection('title', 'Forgot Password - AutoMate'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="min-h-screen flex bg-white">
     <!-- Left Side: Image/Branding (Hidden on mobile) -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-gray-900 overflow-hidden">
@@ -18,7 +18,7 @@
     <!-- Right Side: Forgot Password Form -->
     <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-12 lg:px-24 xl:px-32 py-12">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <a href="{{ route('index') }}" class="flex items-center mb-8">
+            <a href="<?php echo e(route('index')); ?>" class="flex items-center mb-8">
                 <span class="text-3xl font-extrabold tracking-tight text-[#ff5a1f]">AutoMate</span>
             </a>
             
@@ -29,8 +29,8 @@
         </div>
 
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            {{-- Session Status --}}
-            @if (session('status'))
+            
+            <?php if(session('status')): ?>
                 <div class="mb-6 rounded-xl bg-green-50 p-4 border border-green-200">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -40,14 +40,14 @@
                         </div>
                         <div class="ml-3">
                             <h3 class="text-sm font-medium text-green-800">Success!</h3>
-                            <p class="mt-1 text-sm text-green-700">{{ session('status') }} Please check your email for the password reset link.</p>
+                            <p class="mt-1 text-sm text-green-700"><?php echo e(session('status')); ?> Please check your email for the password reset link.</p>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            {{-- Validation Errors --}}
-            @if ($errors->any())
+            
+            <?php if($errors->any()): ?>
                 <div class="mb-6 rounded-xl bg-red-50 p-4 border border-red-100">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -59,18 +59,18 @@
                             <h3 class="text-sm font-medium text-red-800">There were errors with your request</h3>
                             <div class="mt-2 text-sm text-red-700">
                                 <ul class="list-disc pl-5 space-y-1">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
+                                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <li><?php echo e($error); ?></li>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
-                @csrf
+            <form method="POST" action="<?php echo e(route('password.email')); ?>" class="space-y-6">
+                <?php echo csrf_field(); ?>
 
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
@@ -81,14 +81,28 @@
                             type="email" 
                             autocomplete="email" 
                             required 
-                            class="block w-full px-4 py-3 rounded-xl border @error('email') border-red-500 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] @enderror sm:text-sm shadow-sm placeholder-gray-400" 
-                            value="{{ old('email') }}" 
+                            class="block w-full px-4 py-3 rounded-xl border <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 focus:ring-red-500 focus:border-red-500 <?php else: ?> border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> sm:text-sm shadow-sm placeholder-gray-400" 
+                            value="<?php echo e(old('email')); ?>" 
                             placeholder="you@example.com"
                         >
                     </div>
-                    @error('email')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     <p class="mt-1 text-xs text-gray-500">
                         💡 <strong>Tip:</strong> Make sure you enter the email address exactly as you registered it (including capitalization).
                     </p>
@@ -106,7 +120,7 @@
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
                         Remember your password? 
-                        <a href="{{ route('login') }}" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">Sign in here</a>
+                        <a href="<?php echo e(route('login')); ?>" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">Sign in here</a>
                     </p>
                 </div>
             </form>
@@ -147,4 +161,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/auth/forgot-password.blade.php ENDPATH**/ ?>

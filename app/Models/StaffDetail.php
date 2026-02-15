@@ -17,9 +17,9 @@ class StaffDetail extends Model
         'documents',
     ];
 
-    public function user()
+    public function staffMember()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(StaffMember::class);
     }
 }
 

@@ -258,7 +258,14 @@ class ServiceBookingController extends Controller
     {
         $booking = ServiceBooking::where('id', $id)
             ->where('customer_id', Auth::id())
-            ->with(['logs.user', 'staff', 'customer', 'parts'])
+            ->with([
+                'logs' => function($query) {
+                    $query->with('user')->orderBy('created_at', 'desc');
+                },
+                'staff',
+                'customer',
+                'parts'
+            ])
             ->firstOrFail();
 
         return view('customer.bookings.show', compact('booking'));
