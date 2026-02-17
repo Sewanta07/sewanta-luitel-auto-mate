@@ -22,6 +22,17 @@
             </div>
         @endif
 
+        @if($errors->any())
+            <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800">
+                <p class="font-semibold mb-2">Please fix the following:</p>
+                <ul class="list-disc pl-5 space-y-1 text-sm">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {{-- Left Column: Profile & Security (lg:col-span-1) --}}
@@ -63,15 +74,24 @@
                         @csrf
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Current Password</label>
-                            <input type="password" name="current_password" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                            <div class="relative">
+                                <input id="customer-current-password" type="password" name="current_password" required class="block w-full px-4 py-3 pr-20 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                                <button type="button" onclick="togglePasswordVisibility('customer-current-password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">New Password</label>
-                            <input type="password" name="password" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                            <div class="relative">
+                                <input id="customer-new-password" type="password" name="password" required class="block w-full px-4 py-3 pr-20 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                                <button type="button" onclick="togglePasswordVisibility('customer-new-password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Confirm New Password</label>
-                            <input type="password" name="password_confirmation" required class="block w-full px-4 py-3 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                            <div class="relative">
+                                <input id="customer-confirm-password" type="password" name="password_confirmation" required class="block w-full px-4 py-3 pr-20 rounded-xl border-gray-200 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] transition duration-200">
+                                <button type="button" onclick="togglePasswordVisibility('customer-confirm-password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                            </div>
                         </div>
                         <button type="submit" class="w-full py-3 rounded-xl bg-gray-900 text-white font-bold hover:bg-gray-800 transition shadow-lg shadow-gray-200">
                             Update Password
@@ -143,44 +163,38 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50">
-                                {{-- Mock Item 1 --}}
-                                <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="px-4 py-4">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center mr-3">
-                                                <svg class="w-4 h-4 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                                @forelse(($vehicles ?? collect()) as $vehicle)
+                                    <tr class="hover:bg-gray-50/50 transition">
+                                        <td class="px-4 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center mr-3">
+                                                    <svg class="w-4 h-4 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                                                </div>
+                                                <span class="text-sm font-bold text-gray-900">{{ $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model) }}</span>
                                             </div>
-                                            <span class="text-sm font-bold text-gray-900">Toyota Corolla</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-4 text-sm text-gray-600">Executive / 2018</td>
-                                    <td class="px-4 py-4 text-sm text-gray-600 font-mono">BA 2 PA 1234</td>
-                                    <td class="px-4 py-4 text-sm">
-                                        <div class="flex items-center space-x-3">
-                                            <button class="text-blue-600 hover:text-blue-800 transition font-medium">Edit</button>
-                                            <button class="text-red-500 hover:text-red-700 transition font-medium">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {{-- Mock Item 2 --}}
-                                <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="px-4 py-4">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
-                                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm text-gray-600">{{ $vehicle->model }} / {{ $vehicle->year }}</td>
+                                        <td class="px-4 py-4 text-sm text-gray-600 font-mono">{{ $vehicle->plate_number }}</td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <div class="flex items-center space-x-3">
+                                                <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="text-blue-600 hover:text-blue-800 transition font-medium">Edit</a>
+                                                <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this vehicle?');" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 transition font-medium" {{ $vehicle->rented_by_user_id ? 'disabled' : '' }}>
+                                                        Remove
+                                                    </button>
+                                                </form>
                                             </div>
-                                            <span class="text-sm font-bold text-gray-900">Honda CR-V</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-4 text-sm text-gray-600">Touring / 2021</td>
-                                    <td class="px-4 py-4 text-sm text-gray-600 font-mono">BAG 5 CHA 5678</td>
-                                    <td class="px-4 py-4 text-sm">
-                                        <div class="flex items-center space-x-3">
-                                            <button class="text-blue-600 hover:text-blue-800 transition font-medium">Edit</button>
-                                            <button class="text-red-500 hover:text-red-700 transition font-medium">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-8 text-center text-sm text-gray-500">
+                                            No registered vehicles yet. Click <span class="font-semibold text-[#ff5a1f]">Add New</span> to add your first vehicle.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -191,6 +205,15 @@
 </div>
 
 <script>
+    function togglePasswordVisibility(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        button.textContent = isPassword ? 'Hide' : 'Show';
+    }
+
     function previewProfileImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();

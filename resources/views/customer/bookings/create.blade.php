@@ -6,7 +6,7 @@
 @include('customer.navbar')
 
 <div class="min-h-screen bg-gray-50 pb-20">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         {{-- Back Link --}}
         <a href="{{ route('bookings.index') }}" class="inline-flex items-center text-sm font-bold text-gray-400 hover:text-[#ff5a1f] transition-colors mb-6 group">
@@ -21,7 +21,7 @@
         </div>
 
         {{-- Booking Form --}}
-        <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 sm:p-12 border border-gray-100">
+        <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-gray-100">
             <form action="{{ route('bookings.store') }}" method="POST" class="space-y-8">
                 @csrf
 
@@ -54,17 +54,7 @@
                 
                 {{-- Vehicle Details --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <label for="vehicle_name" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Name (Optional)</label>
-                        <input type="text" name="vehicle_name" id="vehicle_name" value="{{ $preFilledVehicle ? ($preFilledVehicle->vehicle_name ?? ($preFilledVehicle->brand . ' ' . $preFilledVehicle->model)) : old('vehicle_name') }}" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_name') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. Family Car">
-                        @error('vehicle_name')
-                            <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
+                    <div class="md:col-span-2">
                         <label for="vehicle_model" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Vehicle Model</label>
                         <input type="text" name="vehicle_model" id="vehicle_model" list="nepal-vehicles" value="{{ $preFilledVehicle ? $preFilledVehicle->model : old('vehicle_model') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_model') ring-2 ring-red-500 @enderror" 
@@ -90,10 +80,10 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <label for="vehicle_year" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Year (Optional)</label>
+                        <label for="vehicle_year" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Year <span class="text-red-500">*</span></label>
                         <input type="number" name="vehicle_year" id="vehicle_year" value="{{ $preFilledVehicle ? $preFilledVehicle->year : old('vehicle_year') }}" min="1980" max="{{ now()->year }}"
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('vehicle_year') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. 2022">
+                               placeholder="e.g. 2022" required>
                         @error('vehicle_year')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror

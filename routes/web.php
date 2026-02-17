@@ -81,7 +81,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/rentals/{request}/reject', [\App\Http\Controllers\RentalRequestController::class, 'reject'])->name('rentals.reject');
         Route::post('/rentals/{request}/pay', [\App\Http\Controllers\RentalRequestController::class, 'pay'])->name('rentals.pay');
         Route::post('/rentals/{request}/return', [\App\Http\Controllers\RentalRequestController::class, 'markReturned'])->name('rentals.return');
-        Route::view('/history', 'customer.history')->name('customer.history');
+        Route::get('/history', [\App\Http\Controllers\CustomerHistoryController::class, 'index'])->name('customer.history');
         Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
         

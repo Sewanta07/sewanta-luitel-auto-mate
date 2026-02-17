@@ -9,8 +9,7 @@
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div class="mb-6">
             <h1 class="text-3xl font-bold text-gray-900">Rent Vehicles</h1>
-            <p class="text-gray-500 mt-1">Browse customer-listed vehicles available for rent.</p>
-            <p class="text-xs text-gray-400 mt-2">Debug: Found <?php echo e($vehicles->count()); ?> vehicle(s) listed for rent.</p>
+            <p class="text-gray-500 mt-1">Browse available vehicles and request a rental when you find the right one.</p>
         </div>
 
         <?php if(session('success')): ?>
@@ -29,6 +28,17 @@
             </div>
         <?php endif; ?>
 
+        <?php if($errors->any()): ?>
+            <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 animate-fade-in">
+                <p class="font-semibold mb-2">Could not submit rental request:</p>
+                <ul class="list-disc pl-5 space-y-1 text-sm">
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <?php if($vehicles->count() === 0): ?>
             <div class="bg-white rounded-3xl border border-dashed border-gray-200 p-10 text-center">
                 <h3 class="text-xl font-semibold text-gray-900">No vehicles available right now</h3>
@@ -37,18 +47,27 @@
         <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
+                        $allImages = [];
+                        if ($vehicle->image_path) {
+                            $allImages[] = $vehicle->image_path;
+                        }
+                        $allImages = array_merge($allImages, $vehicle->images->pluck('image_path')->toArray());
+                        $primaryImage = count($allImages) > 0 ? asset('storage/' . $allImages[0]) : null;
+                        $vehiclePayload = [
+                            'id' => $vehicle->id,
+                            'name' => $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model),
+                            'details' => ($vehicle->vehicle_type ?? 'Vehicle') . ' • ' . ($vehicle->fuel_type ?? 'Fuel N/A') . ' • ' . ($vehicle->transmission_type ?? 'Transmission N/A'),
+                            'owner' => $vehicle->customer->name ?? 'N/A',
+                            'rate' => $vehicle->daily_rate !== null ? number_format($vehicle->daily_rate, 2) : 'N/A',
+                            'image' => $primaryImage,
+                        ];
+                    ?>
+
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition duration-300 flex flex-col group">
                         <!-- Image Gallery Section -->
                         <div class="relative h-48 bg-gray-100 overflow-hidden">
                             <!-- Main Image -->
-                            <?php
-                                $allImages = [];
-                                if ($vehicle->image_path) {
-                                    $allImages[] = $vehicle->image_path;
-                                }
-                                $allImages = array_merge($allImages, $vehicle->images->pluck('image_path')->toArray());
-                            ?>
-
                             <?php if(count($allImages) > 0): ?>
                                 <div class="relative h-full" x-data="{ currentImage: 0, images: <?php echo e(json_encode($allImages)); ?> }">
                                     <img :src="'<?php echo e(asset('storage')); ?>/' + images[currentImage]" 
@@ -122,42 +141,168 @@
                             </div>
                         </div>
                         <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-50">
-                            <form action="<?php echo e(route('rent-vehicles.request')); ?>" method="POST" class="space-y-3">
-                                <?php echo csrf_field(); ?>
-                                <input type="hidden" name="vehicle_id" value="<?php echo e($vehicle->id); ?>">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-                                        <input type="date" name="start_date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="<?php echo e(date('Y-m-d')); ?>">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs text-gray-600 mb-1">End Date</label>
-                                        <input type="date" name="end_date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="<?php echo e(date('Y-m-d')); ?>">
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-xs text-gray-600 mb-1">Contact Number</label>
-                                        <input type="tel" name="renter_contact" placeholder="Your contact number" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs text-gray-600 mb-1">Pickup Location</label>
-                                        <input type="text" name="pickup_location" placeholder="Where to pickup" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
-                                    </div>
-                                </div>
-                                <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Optional notes..."></textarea>
-                                <textarea name="service_link" rows="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Service booking link (if applicable)"></textarea>
-                                <button type="submit" class="w-full px-4 py-2.5 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100">
-                                    Request to Rent
-                                </button>
-                            </form>
+                            <button
+                                type="button"
+                                onclick="openRentModalFromButton(this)"
+                                data-vehicle-id="<?php echo e($vehiclePayload['id']); ?>"
+                                data-vehicle-name="<?php echo e($vehiclePayload['name']); ?>"
+                                data-vehicle-details="<?php echo e($vehiclePayload['details']); ?>"
+                                data-vehicle-owner="<?php echo e($vehiclePayload['owner']); ?>"
+                                data-vehicle-rate="<?php echo e($vehiclePayload['rate']); ?>"
+                                data-vehicle-image="<?php echo e($vehiclePayload['image'] ?? ''); ?>"
+                                class="w-full px-4 py-2.5 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100"
+                            >
+                                Request Rent
+                            </button>
                         </div>
                     </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
+
+            <div id="rent-modal-backdrop" class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm px-4 sm:px-6 pt-20 sm:pt-24 pb-6 hidden items-start justify-center overflow-y-auto">
+                <div id="rent-modal" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-8rem)] overflow-y-auto">
+                    <div class="p-5 sm:p-8">
+                        <div class="flex items-start justify-between mb-6">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">Request Vehicle Rent</h2>
+                                <p class="text-sm text-gray-500 mt-1">Provide rental details to send your request.</p>
+                            </div>
+                            <button type="button" onclick="closeRentModal()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-2xl p-4 sm:p-5 mb-6">
+                            <div class="flex items-start gap-4">
+                                <img id="modal-vehicle-image" src="" alt="Selected vehicle" class="w-24 h-20 rounded-xl object-cover border border-gray-200 hidden">
+                                <div class="min-w-0">
+                                    <h3 id="modal-vehicle-name" class="text-lg font-bold text-gray-900"></h3>
+                                    <p id="modal-vehicle-details" class="text-sm text-gray-600"></p>
+                                    <p class="text-xs text-gray-500 mt-1">Owner: <span id="modal-vehicle-owner"></span></p>
+                                    <p class="text-sm font-bold text-[#ff5a1f] mt-1">Rs. <span id="modal-vehicle-rate"></span> / day</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="<?php echo e(route('rent-vehicles.request')); ?>" method="POST" class="space-y-4">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" id="rent-vehicle-id" name="vehicle_id" value="">
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Start Date</label>
+                                    <input type="date" id="rent-start-date" name="start_date" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="<?php echo e(date('Y-m-d')); ?>">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">End Date</label>
+                                    <input type="date" id="rent-end-date" name="end_date" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="<?php echo e(date('Y-m-d')); ?>">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contact Number</label>
+                                    <input type="tel" name="renter_contact" value="<?php echo e(old('renter_contact')); ?>" placeholder="Your contact number" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pickup Location</label>
+                                    <input type="text" name="pickup_location" value="<?php echo e(old('pickup_location')); ?>" placeholder="Where to pickup" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Notes (Optional)</label>
+                                <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Any extra request details..."><?php echo e(old('notes')); ?></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Service Booking Link (Optional)</label>
+                                <input type="text" name="service_link" value="<?php echo e(old('service_link')); ?>" placeholder="Paste booking link if applicable" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                            </div>
+
+                            <div class="pt-2 flex flex-col sm:flex-row justify-end gap-3">
+                                <button type="button" onclick="closeRentModal()" class="px-6 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100">
+                                    Send Rent Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         <?php endif; ?>
     </main>
 </div>
+
+<script>
+    function openRentModalFromButton(button) {
+        const backdrop = document.getElementById('rent-modal-backdrop');
+        const vehicleIdInput = document.getElementById('rent-vehicle-id');
+        const nameEl = document.getElementById('modal-vehicle-name');
+        const detailsEl = document.getElementById('modal-vehicle-details');
+        const ownerEl = document.getElementById('modal-vehicle-owner');
+        const rateEl = document.getElementById('modal-vehicle-rate');
+        const imageEl = document.getElementById('modal-vehicle-image');
+        const startDateEl = document.getElementById('rent-start-date');
+        const endDateEl = document.getElementById('rent-end-date');
+
+        vehicleIdInput.value = button.dataset.vehicleId || '';
+        nameEl.textContent = button.dataset.vehicleName || '';
+        detailsEl.textContent = button.dataset.vehicleDetails || '';
+        ownerEl.textContent = button.dataset.vehicleOwner || '';
+        rateEl.textContent = button.dataset.vehicleRate || '';
+
+        if (button.dataset.vehicleImage) {
+            imageEl.src = button.dataset.vehicleImage;
+            imageEl.classList.remove('hidden');
+        } else {
+            imageEl.src = '';
+            imageEl.classList.add('hidden');
+        }
+
+        if (startDateEl) startDateEl.value = '';
+        if (endDateEl) endDateEl.value = '';
+
+        backdrop.classList.remove('hidden');
+        backdrop.classList.add('flex');
+    }
+
+    function closeRentModal() {
+        const backdrop = document.getElementById('rent-modal-backdrop');
+        if (!backdrop) return;
+
+        backdrop.classList.add('hidden');
+        backdrop.classList.remove('flex');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const backdrop = document.getElementById('rent-modal-backdrop');
+        const startDateEl = document.getElementById('rent-start-date');
+        const endDateEl = document.getElementById('rent-end-date');
+        const today = '<?php echo e(date('Y-m-d')); ?>';
+
+        if (backdrop) {
+            backdrop.addEventListener('click', function (event) {
+                if (event.target === backdrop) {
+                    closeRentModal();
+                }
+            });
+        }
+
+        if (startDateEl && endDateEl) {
+            startDateEl.addEventListener('change', function () {
+                endDateEl.min = this.value || today;
+                if (endDateEl.value && endDateEl.value < endDateEl.min) {
+                    endDateEl.value = endDateEl.min;
+                }
+            });
+        }
+    });
+</script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/customer/rent-vehicles.blade.php ENDPATH**/ ?>

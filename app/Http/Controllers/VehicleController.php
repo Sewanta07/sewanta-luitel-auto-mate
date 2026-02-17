@@ -11,14 +11,19 @@ use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends Controller
 {
+    protected function customerId(): ?int
+    {
+        return Auth::guard('customer')->id() ?? Auth::id();
+    }
+
     /**
      * Show customer vehicles page
      */
     public function index()
     {
-        $user = Auth::user();
+        $customerId = $this->customerId();
 
-        if (!$user) {
+        if (!$customerId) {
             return redirect()->route('login');
         }
 
@@ -29,9 +34,11 @@ class VehicleController extends Controller
                 },
                 'approvedRental',
             ])
-            ->where('customer_id', $user->id)
+            ->where('customer_id', $customerId)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $user = Auth::guard('customer')->user() ?? Auth::user();
 
         return view('customer.vehicles.index', compact('vehicles', 'user'));
     }
@@ -41,7 +48,7 @@ class VehicleController extends Controller
      */
     public function rentIndex()
     {
-        $user = Auth::user();
+        $customerId = $this->customerId();
         
         // Show only APPROVED vehicles listed for rent
         // Include admin-listed vehicles (customer_id = NULL) AND customer-listed vehicles (not owned by current user)
@@ -49,9 +56,9 @@ class VehicleController extends Controller
             ->where('is_listed_for_rent', true)
             ->where('listing_status', 'approved')
             ->whereNull('rented_by_user_id')
-            ->where(function ($query) use ($user) {
+            ->where(function ($query) use ($customerId) {
                 $query->whereNull('customer_id')  // Admin-listed vehicles
-                      ->orWhere('customer_id', '!=', $user->id); // Customer-listed vehicles (not own)
+                      ->orWhere('customer_id', '!=', $customerId); // Customer-listed vehicles (not own)
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -64,9 +71,9 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $customerId = $this->customerId();
 
-        if (!$user) {
+        if (!$customerId) {
             return redirect()->route('login');
         }
 
@@ -92,7 +99,7 @@ class VehicleController extends Controller
         }
 
         $vehicle = Vehicle::create([
-            'customer_id' => $user->id,
+            'customer_id' => $customerId,
             'vehicle_name' => $validated['vehicle_name'] ?? null,
             'brand' => $validated['brand'],
             'model' => $validated['model'],
@@ -125,7 +132,7 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle)
     {
-        if ($vehicle->customer_id !== Auth::id()) {
+        if ($vehicle->customer_id !== $this->customerId()) {
             abort(403, 'Unauthorized');
         }
 
@@ -137,7 +144,7 @@ class VehicleController extends Controller
      */
     public function update(Request $request, Vehicle $vehicle)
     {
-        if ($vehicle->customer_id !== Auth::id()) {
+        if ($vehicle->customer_id !== $this->customerId()) {
             abort(403, 'Unauthorized');
         }
 
@@ -182,7 +189,9 @@ class VehicleController extends Controller
      */
     public function toggleRent(Vehicle $vehicle)
     {
-        if ($vehicle->customer_id !== Auth::id()) {
+        $customerId = $this->customerId();
+
+        if ($vehicle->customer_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
 
@@ -200,7 +209,7 @@ class VehicleController extends Controller
             'Waiting for Parts',
         ];
 
-        $hasActiveService = ServiceBooking::where('customer_id', Auth::id())
+        $hasActiveService = ServiceBooking::where('customer_id', $customerId)
             ->where('vehicle_number', $vehicle->plate_number)
             ->whereIn('status', $activeStatuses)
             ->exists();
@@ -235,7 +244,7 @@ class VehicleController extends Controller
     public function destroy(Vehicle $vehicle)
     {
         // Ensure user owns this vehicle
-        if ($vehicle->customer_id !== Auth::id()) {
+        if ($vehicle->customer_id !== $this->customerId()) {
             abort(403, 'Unauthorized');
         }
 

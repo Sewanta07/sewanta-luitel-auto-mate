@@ -22,8 +22,8 @@
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
             Dashboard
           </a>
-          <a href="<?php echo e(route('bookings.create')); ?>" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('bookings.create') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
+           <a href="<?php echo e(route('bookings.index')); ?>" 
+             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('bookings.index') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
             Bookings
           </a>
           <a href="<?php echo e(route('customer.vehicles')); ?>" 

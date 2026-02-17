@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            // Drop the existing foreign key constraint
             $table->dropForeign(['customer_id']);
-            
-            // Modify the column to be nullable
-            $table->foreignId('customer_id')->nullable()->change()->constrained('customers')->onDelete('cascade');
+        });
+
+        Schema::table('vehicles', function (Blueprint $table) {
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->onDelete('cascade');
         });
     }
 
@@ -26,11 +29,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            // Drop the foreign key
             $table->dropForeign(['customer_id']);
-            
-            // Make customer_id NOT nullable again
-            $table->foreignId('customer_id')->change()->constrained('customers')->onDelete('cascade');
+        });
+
+        Schema::table('vehicles', function (Blueprint $table) {
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 };

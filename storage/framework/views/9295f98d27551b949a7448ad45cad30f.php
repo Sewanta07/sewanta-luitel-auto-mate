@@ -54,9 +54,9 @@
 </div>
 
 
-<div id="vehicle-modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-    <div id="vehicle-modal" class="bg-white rounded-3xl shadow-2xl max-w-lg w-full transform scale-95 opacity-0 transition-all duration-300">
-        <div class="p-6 sm:p-8">
+<div id="vehicle-modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden flex items-start sm:items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div id="vehicle-modal" class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 my-4 sm:my-0">
+        <div class="p-5 sm:p-8">
             <div class="flex items-center justify-between mb-8">
                 <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Add New Vehicle</h2>
                 <button onclick="closeVehicleModal()" class="p-2 rounded-lg hover:bg-gray-100 transition">

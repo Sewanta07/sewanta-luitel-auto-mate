@@ -10,6 +10,11 @@ use Illuminate\Validation\Rules\Password;
 
 class StaffProfileController extends Controller
 {
+    private function staffUser()
+    {
+        return Auth::guard('staff')->user() ?? Auth::user();
+    }
+
     /**
      * Create a new controller instance.
      */
@@ -23,7 +28,7 @@ class StaffProfileController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->staffUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -43,7 +48,7 @@ class StaffProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->staffUser();
         
         // Ensure user is staff
         if (!($user instanceof \App\Models\StaffMember)) {
@@ -85,7 +90,7 @@ class StaffProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->staffUser();
         
         // Ensure user is staff
         if (!($user instanceof \App\Models\StaffMember)) {
@@ -114,6 +119,10 @@ class StaffProfileController extends Controller
      */
     private function getUserRole($user): string
     {
+        if (!$user) {
+            return 'customer';
+        }
+
         if ($user instanceof \App\Models\Admin) {
             return 'admin';
         }

@@ -13,6 +13,17 @@
     </div>
 @endif
 
+@if($errors->any())
+    <div class="col-span-full mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 animate-fade-in">
+        <p class="font-semibold mb-2">Could not save vehicle:</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 @if($vehicles->count() > 0)
     @foreach($vehicles as $vehicle)
         @php

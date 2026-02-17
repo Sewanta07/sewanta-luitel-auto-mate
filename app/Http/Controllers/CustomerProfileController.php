@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,11 @@ use Illuminate\Validation\Rules\Password;
 
 class CustomerProfileController extends Controller
 {
+    private function customerUser()
+    {
+        return Auth::guard('customer')->user() ?? Auth::user();
+    }
+
     /**
      * Create a new controller instance.
      */
@@ -23,7 +29,7 @@ class CustomerProfileController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->customerUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -35,7 +41,11 @@ class CustomerProfileController extends Controller
             return redirect()->route('dashboard.' . $role);
         }
 
-        return view('customer.profile', ['user' => $user]);
+        $vehicles = Vehicle::where('customer_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('customer.profile', ['user' => $user, 'vehicles' => $vehicles]);
     }
 
     /**
@@ -43,7 +53,7 @@ class CustomerProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->customerUser();
         
         // Ensure user is a customer
         if (!($user instanceof \App\Models\CustomerUser)) {
@@ -83,7 +93,7 @@ class CustomerProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->customerUser();
         
         // Ensure user is a customer
         if (!($user instanceof \App\Models\CustomerUser)) {
@@ -112,6 +122,10 @@ class CustomerProfileController extends Controller
      */
     private function getUserRole($user): string
     {
+        if (!$user) {
+            return 'customer';
+        }
+
         if ($user instanceof \App\Models\Admin) {
             return 'admin';
         }

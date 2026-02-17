@@ -15,6 +15,17 @@
     </div>
 <?php endif; ?>
 
+<?php if($errors->any()): ?>
+    <div class="col-span-full mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 animate-fade-in">
+        <p class="font-semibold mb-2">Could not save vehicle:</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <li><?php echo e($error); ?></li>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <?php if($vehicles->count() > 0): ?>
     <?php $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <?php
