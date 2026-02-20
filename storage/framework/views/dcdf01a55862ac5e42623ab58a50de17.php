@@ -90,7 +90,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <a href="<?php echo e(route('admin.rentals.vehicles')); ?>" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 hover:from-blue-600 hover:to-blue-700 transition">
             <h3 class="text-lg font-semibold mb-2">Manage Vehicles</h3>
             <p class="text-sm opacity-90">Add or edit rental vehicles</p>
@@ -102,6 +102,14 @@
         <a href="<?php echo e(route('admin.rentals.pending-listings')); ?>" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition">
             <h3 class="text-lg font-semibold mb-2">Pending Listings</h3>
             <p class="text-sm opacity-90">Approve customer vehicles</p>
+        </a>
+        <a href="<?php echo e(route('admin.owner-vehicles.index')); ?>" class="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg p-6 hover:from-amber-600 hover:to-amber-700 transition">
+            <h3 class="text-lg font-semibold mb-2">Owner Listings</h3>
+            <p class="text-sm opacity-90">Approve marketplace entries</p>
+        </a>
+        <a href="<?php echo e(route('admin.earnings.payouts')); ?>" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg p-6 hover:from-emerald-600 hover:to-emerald-700 transition">
+            <h3 class="text-lg font-semibold mb-2">Owner Payouts</h3>
+            <p class="text-sm opacity-90">Mark owner withdrawals paid</p>
         </a>
         <a href="<?php echo e(route('admin.rentals.reports')); ?>" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-6 hover:from-purple-600 hover:to-purple-700 transition">
             <h3 class="text-lg font-semibold mb-2">Reports</h3>
@@ -125,6 +133,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Damage</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Damage Payment</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -163,10 +173,27 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Rs. <?php echo e(number_format($rental->total_cost, 2)); ?></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <?php if($rental->has_damage): ?>
+                                Rs. <?php echo e(number_format($rental->damage_charge ?? 0, 2)); ?>
+
+                            <?php else: ?>
+                                <span class="text-gray-400">None</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                <?php if(($rental->damage_payment_status ?? 'Unpaid') === 'Paid'): ?> bg-green-100 text-green-800
+                                <?php elseif(($rental->damage_payment_status ?? 'Unpaid') === 'Not Required'): ?> bg-gray-100 text-gray-700
+                                <?php else: ?> bg-yellow-100 text-yellow-800 <?php endif; ?>">
+                                <?php echo e($rental->damage_payment_status ?? 'Unpaid'); ?>
+
+                            </span>
+                        </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">No recent rental activity</td>
+                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">No recent rental activity</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>

@@ -113,6 +113,7 @@
                                         'Pending' => 'bg-yellow-100 text-yellow-800',
                                         'Approved' => 'bg-blue-100 text-blue-800',
                                         'Assigned' => 'bg-indigo-100 text-indigo-800',
+                                        'Paid' => 'bg-emerald-100 text-emerald-800',
                                         'In Progress' => 'bg-purple-100 text-purple-800',
                                         'Waiting for Parts' => 'bg-orange-100 text-orange-800',
                                         'Completed' => 'bg-green-100 text-green-800',
@@ -192,6 +193,10 @@
                                         </h3>
                                         <div class="space-y-2 text-sm">
                                             <p><span class="font-medium text-gray-600">Estimated Cost:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format($booking->estimated_cost, 2) }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Service Cost:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format((float) ($booking->service_cost ?? 0), 2) }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Spare Parts Cost:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format((float) ($booking->spare_parts_cost ?? 0), 2) }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Total Amount:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format((float) ($booking->total_amount ?? 0), 2) }}</span></p>
+                                            <p><span class="font-medium text-gray-600">Payment Status:</span> <span class="text-gray-900 font-semibold">{{ ucfirst($booking->payment_status ?? 'pending') }}</span></p>
                                             <p><span class="font-medium text-gray-600">Parts Used:</span> <span class="text-gray-900">{{ $booking->parts->count() ?? 0 }}</span></p>
                                             @if($booking->parts->count() > 0)
                                                 <p><span class="font-medium text-gray-600">Parts Total:</span> <span class="text-gray-900 font-semibold">Rs. {{ number_format($booking->parts->sum('pivot.total_cost'), 2) }}</span></p>
@@ -231,6 +236,30 @@
                                     <div class="lg:col-span-3 bg-white rounded-lg p-4 border border-gray-200">
                                         <h3 class="text-sm font-semibold text-gray-700 mb-3">Actions</h3>
                                         <div class="flex flex-wrap gap-3">
+                                            @if($booking->status === 'Completed')
+                                                <a href="{{ route('admin.services.invoice', $booking->id) }}" onclick="event.stopPropagation()" class="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-100 transition">
+                                                    View Invoice
+                                                </a>
+                                            @endif
+                                            @if($booking->status !== 'Completed' && $booking->status !== 'Rejected' && $booking->status !== 'Cancelled')
+                                                <form action="{{ route('admin.services.set-amount', $booking->id) }}" method="POST" class="inline-block" onclick="event.stopPropagation()">
+                                                    @csrf
+                                                    <div class="flex gap-2 items-end">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Service Cost (Rs.)</label>
+                                                            <input type="number" name="service_cost" step="0.01" min="0" required value="{{ old('service_cost', $booking->service_cost ?? $booking->estimated_cost ?? 0) }}" class="border border-gray-300 rounded px-3 py-2 text-sm w-36">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-700 mb-1">Spare Parts Cost (Rs.)</label>
+                                                            <input type="number" name="spare_parts_cost" step="0.01" min="0" value="{{ old('spare_parts_cost', $booking->spare_parts_cost ?? 0) }}" class="border border-gray-300 rounded px-3 py-2 text-sm w-40">
+                                                        </div>
+                                                        <button type="submit" class="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition">
+                                                            Set Amount
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            @endif
+
                                             @if($booking->status === 'Pending')
                                                 <!-- Approve Form -->
                                                 <form action="{{ route('admin.services.approve', $booking->id) }}" method="POST" class="inline-block" onclick="event.stopPropagation()">

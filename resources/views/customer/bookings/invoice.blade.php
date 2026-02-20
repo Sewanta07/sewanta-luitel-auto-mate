@@ -82,6 +82,54 @@
                 </div>
             </div>
 
+            @php($computedAmount = ($booking->service_cost ?? 0) + ($booking->spare_parts_cost ?? 0) + $partsTotal)
+            @php($payableAmount = ($booking->total_amount ?? 0) > 0 ? $booking->total_amount : $computedAmount)
+
+            <div class="mt-8 border-t border-gray-100 pt-6">
+                <h3 class="text-sm font-bold text-gray-700 mb-4">Payment Summary</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Total Payable</p>
+                        <p class="text-xl font-black text-[#ff5a1f]">Rs. {{ number_format($payableAmount, 2) }}</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Service Cost</p>
+                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($booking->service_cost ?? 0, 2) }}</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Spare Parts Cost</p>
+                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($booking->spare_parts_cost ?? 0, 2) }}</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Parts Total</p>
+                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($partsTotal, 2) }}</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Payment Status</p>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ ($booking->payment_status ?? 'pending') === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                            {{ ucfirst($booking->payment_status ?? 'pending') }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-gray-500">Payment Method</p>
+                        <p class="text-sm font-bold text-gray-900">eSewa</p>
+                    </div>
+
+                    @if(($booking->payment_status ?? 'pending') !== 'paid')
+                        @if($payableAmount > 0)
+                            <form action="{{ route('payments.service.pay', $booking->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full mt-2 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18] transition">
+                                    Pay with eSewa
+                                </button>
+                            </form>
+                        @else
+                            <p class="text-sm text-gray-500">Payment will be available once the service amount is set.</p>
+                        @endif
+                    @endif
+                </div>
+            </div>
+
             <div class="mt-8 flex gap-3">
                 <a href="{{ route('bookings.index') }}" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-center hover:bg-gray-200">Back to Bookings</a>
                 <button class="flex-1 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18]">Download PDF</button>

@@ -141,6 +141,16 @@
                         {{ $vehicle->is_listed_for_rent ? 'Unlist from Rent' : 'List for Rent' }}
                     </button>
                 </form>
+                @if(!$vehicle->rented_by_user_id && $vehicle->daily_rate)
+                    <form action="{{ route('owner-vehicles.list') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+                        <input type="hidden" name="daily_rate" value="{{ $vehicle->daily_rate }}">
+                        <button type="submit" class="w-full px-4 py-2 rounded-xl text-sm font-bold bg-orange-100 text-orange-700 hover:bg-orange-200 transition">
+                            Submit to Marketplace Approval
+                        </button>
+                    </form>
+                @endif
                 @if($vehicle->rented_by_user_id && $vehicle->approvedRental)
                     <form action="{{ route('rentals.return', $vehicle->approvedRental->id) }}" method="POST">
                         @csrf

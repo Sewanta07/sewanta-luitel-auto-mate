@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\Payment;
 
 class ServiceBooking extends Model
 {
@@ -31,10 +32,20 @@ class ServiceBooking extends Model
         'rental_required',
         'pickup_drop',
         'estimated_cost',
+        'service_cost',
+        'spare_parts_cost',
+        'total_amount',
+        'payment_status',
         'expected_completion_date',
         'rejection_reason',
         'staff_id',
         'status',
+    ];
+
+    protected $casts = [
+        'service_cost' => 'decimal:2',
+        'spare_parts_cost' => 'decimal:2',
+        'total_amount' => 'decimal:2',
     ];
 
     protected static function booted()
@@ -70,6 +81,13 @@ class ServiceBooking extends Model
         return $this->belongsToMany(InventoryItem::class, 'service_parts')
             ->withPivot(['quantity', 'unit_price', 'total_cost'])
             ->withTimestamps();
+    }
+
+    public function payments()
+    {
+        return Payment::where('type', 'service')
+            ->where('order_id', 'service_booking:' . $this->id)
+            ->orderByDesc('id');
     }
 }
 

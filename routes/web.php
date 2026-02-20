@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StaffApplicationController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SearchController;
 
 // Landing Page - Redirect authenticated users to their dashboard
@@ -50,6 +52,10 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // TEST ROUTE - Remove this after testing
 Route::view('/test-pages', 'test-pages')->name('test.pages');
 
+// Public payment gateway callbacks
+Route::match(['get', 'post'], '/payments/esewa/success', [PaymentController::class, 'esewaSuccess'])->name('payments.esewa.success');
+Route::match(['get', 'post'], '/payments/esewa/failure', [PaymentController::class, 'esewaFailure'])->name('payments.esewa.failure');
+
 // Protected Routes
 Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     Route::get('/customer/dashboard', [DashboardController::class, 'customer'])->name('dashboard.customer');
@@ -81,6 +87,12 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/rentals/{request}/reject', [\App\Http\Controllers\RentalRequestController::class, 'reject'])->name('rentals.reject');
         Route::post('/rentals/{request}/pay', [\App\Http\Controllers\RentalRequestController::class, 'pay'])->name('rentals.pay');
         Route::post('/rentals/{request}/return', [\App\Http\Controllers\RentalRequestController::class, 'markReturned'])->name('rentals.return');
+        Route::post('/rentals/{request}/pay-esewa', [PaymentController::class, 'payRentalRequest'])
+            ->middleware('role:customer')
+            ->name('payments.rental-requests.pay');
+        Route::post('/rentals/{request}/pay-damage', [PaymentController::class, 'payRentalDamage'])
+            ->middleware('role:customer')
+            ->name('payments.rental-requests.damage-pay');
         Route::get('/history', [\App\Http\Controllers\CustomerHistoryController::class, 'index'])->name('customer.history');
         Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
@@ -93,6 +105,33 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         // NEW: Customer payment pages
         Route::view('/payments', 'customer.payments')->name('customer.payments');
         Route::get('/payment-history', [\App\Http\Controllers\PaymentHistoryController::class, 'index'])->name('customer.payment-history');
+
+        // Service payment flow
+        Route::post('/bookings/{booking}/pay', [PaymentController::class, 'payService'])
+            ->middleware('role:customer')
+            ->name('payments.service.pay');
+
+        // Admin rental flow
+        Route::post('/rentals/admin', [RentalController::class, 'storeAdminRental'])
+            ->middleware('role:customer')
+            ->name('rentals.admin.store');
+
+        // Marketplace listing and rental flow
+        Route::post('/owner-vehicles/list', [RentalController::class, 'listOwnerVehicle'])
+            ->middleware('role:customer')
+            ->name('owner-vehicles.list');
+        Route::post('/rentals/marketplace', [RentalController::class, 'storeMarketplaceRental'])
+            ->middleware('role:customer')
+            ->name('rentals.marketplace.store');
+        Route::get('/owner/earnings-dashboard', [RentalController::class, 'ownerEarningsDashboard'])
+            ->middleware('role:customer')
+            ->name('owner.earnings.dashboard');
+        Route::get('/owner/rental-history', [RentalController::class, 'ownerRentalHistory'])
+            ->middleware('role:customer')
+            ->name('owner.rental.history');
+        Route::post('/owner/withdrawals/request', [RentalController::class, 'requestWithdrawal'])
+            ->middleware('role:customer')
+            ->name('owner.withdrawals.request');
     });
 
     // Staff Profile Routes
@@ -112,6 +151,16 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         // Staff service details
         Route::get('/services/{id}', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'show'])->name('staff.services.show');
         Route::post('/services/{id}/parts', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'addPart'])->name('staff.services.parts.add');
+        
+        // Rental Operations (Staff)
+        Route::get('/rentals', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'index'])->name('staff.rentals.index');
+        Route::get('/rentals/{rental}/inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'showInspection'])->name('staff.rentals.inspection');
+        Route::post('/rentals/{rental}/pre-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePreInspection'])->name('staff.rentals.pre-inspection');
+        Route::post('/rentals/{rental}/pickup', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'markPickedUp'])->name('staff.rentals.pickup');
+        Route::post('/rentals/{rental}/status', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'updateStatus'])->name('staff.rentals.status');
+        Route::post('/rentals/{rental}/post-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePostInspection'])->name('staff.rentals.post-inspection');
+        Route::post('/rentals/{rental}/complete', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'completeRental'])->name('staff.rentals.complete');
+        Route::get('/rentals/history', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'history'])->name('staff.rentals.history');
     });
 
     // Admin Staff Applications
@@ -151,6 +200,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         
         // Admin Service Management
         Route::get('/services', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'index'])->name('admin.services');
+        Route::get('/services/{id}/invoice', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'invoice'])->name('admin.services.invoice');
         Route::post('/services/{id}/assign', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'assign'])->name('admin.services.assign');
         Route::post('/services/{id}/status', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'updateStatus'])->name('admin.services.status');
         Route::post('/services/{id}/approve', [\App\Http\Controllers\Admin\ServiceBookingController::class, 'approve'])->name('admin.services.approve');
@@ -186,7 +236,37 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         
         // NEW: Issues Management
         Route::view('/issues', 'admin.issues')->name('admin.issues');
+
+        // Staff/admin service pricing
+        Route::post('/services/{booking}/set-amount', [PaymentController::class, 'setServiceAmount'])
+            ->middleware('role:admin,staff')
+            ->name('admin.services.set-amount');
+
+        // Marketplace approval + payout
+        Route::post('/owner-vehicles/{ownerVehicle}/approval', [RentalController::class, 'approveOwnerVehicle'])
+            ->middleware('role:admin')
+            ->name('admin.owner-vehicles.approval');
+        Route::post('/rentals/{rental}/complete', [RentalController::class, 'completeRental'])
+            ->middleware('role:admin')
+            ->name('admin.rentals.complete');
+        Route::post('/earnings/{earning}/payout-paid', [RentalController::class, 'markPayoutPaid'])
+            ->middleware('role:admin')
+            ->name('admin.earnings.payout-paid');
+        Route::get('/owner-vehicles', [RentalController::class, 'ownerListings'])
+            ->middleware('role:admin')
+            ->name('admin.owner-vehicles.index');
+        Route::get('/earnings/payouts', [RentalController::class, 'earningsPayouts'])
+            ->middleware('role:admin')
+            ->name('admin.earnings.payouts');
+        Route::post('/withdrawals/{withdrawalRequest}/process', [RentalController::class, 'processWithdrawalRequest'])
+            ->middleware('role:admin')
+            ->name('admin.withdrawals.process');
     });
+});
+
+Route::middleware(['multi.auth', 'check.staff.status', 'role:customer'])->group(function () {
+    Route::match(['get', 'post'], '/payments/rentals/{rental}/pay', [PaymentController::class, 'payRental'])->name('payments.rentals.pay');
+    Route::get('/payments/esewa/{payment}', [PaymentController::class, 'redirectToEsewa'])->name('payments.esewa.redirect');
 });
 
 // Additional customer UI routes (protected)
@@ -219,8 +299,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
 Route::middleware(['multi.auth', 'check.staff.status'])->prefix('staff')->group(function () {
     Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
     Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
-        Route::get('/services/{id}', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'show'])->name('staff.services.show');
-        Route::post('/services/{id}/parts', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'addPart'])->name('staff.services.parts.add');
     
     // Rental Operations (Staff)
     Route::get('/rentals', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'index'])->name('staff.rentals.index');

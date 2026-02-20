@@ -1,4 +1,11 @@
 <?php return array (
+  'dipesh79/laravel-esewa' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Dipesh79\\LaravelEsewa\\EsewaServiceProvider',
+    ),
+  ),
   'laravel/pail' => 
   array (
     'providers' => 

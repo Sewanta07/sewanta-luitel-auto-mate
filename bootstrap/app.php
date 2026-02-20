@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'multi.auth' => \App\Http\Middleware\CheckMultiGuardAuth::class,
             'check.staff.status' => \App\Http\Middleware\CheckStaffStatus::class,
+            'role' => \App\Http\Middleware\EnsureRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

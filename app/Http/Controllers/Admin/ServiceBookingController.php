@@ -28,6 +28,13 @@ class ServiceBookingController extends Controller
         return view('admin.services', compact('bookings', 'staffMembers', 'stats'));
     }
 
+    public function invoice($id)
+    {
+        $booking = ServiceBooking::with(['customer', 'staff', 'parts'])->findOrFail($id);
+
+        return view('admin.services.invoice', compact('booking'));
+    }
+
     public function assign(Request $request, $id)
     {
         $request->validate([

@@ -170,18 +170,27 @@
                             
                             <div>
                                 <label for="current_password" class="block text-sm font-medium text-gray-700">Current Password</label>
-                                <input type="password" id="current_password" name="current_password" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                <div class="relative mt-1">
+                                    <input type="password" id="current_password" name="current_password" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
+                                    <button type="button" onclick="togglePasswordVisibility('current_password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label for="password" class="block text-sm font-medium text-gray-700">New Password</label>
-                                    <input type="password" id="password" name="password" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <div class="relative mt-1">
+                                        <input type="password" id="password" name="password" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
+                                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                    </div>
                                 </div>
 
                                 <div>
                                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                                    <input type="password" id="password_confirmation" name="password_confirmation" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <div class="relative mt-1">
+                                        <input type="password" id="password_confirmation" name="password_confirmation" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
+                                        <button type="button" onclick="togglePasswordVisibility('password_confirmation', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -199,6 +208,15 @@
 </div>
 
 <script>
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? 'Hide' : 'Show';
+}
+
 function previewImage(input) {
     const container = document.getElementById('preview-container');
     const file = input.files[0];

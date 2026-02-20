@@ -63,6 +63,10 @@ class RentalOperationsController extends Controller
             abort(403, 'Not authorized');
         }
 
+        if ($rental->payment_status !== 'Paid') {
+            return back()->with('error', 'Payment must be completed before inspection.');
+        }
+
         $validated = $request->validate([
             'pre_inspection_notes' => 'required|string',
             'pre_inspection_images.*' => 'nullable|image|max:2048',
@@ -103,6 +107,10 @@ class RentalOperationsController extends Controller
     {
         if ($rental->assigned_staff_id !== Auth::id()) {
             abort(403, 'Not authorized');
+        }
+
+        if ($rental->payment_status !== 'Paid') {
+            return back()->with('error', 'Payment must be completed before pickup.');
         }
 
         $rental->update([
@@ -163,9 +171,12 @@ class RentalOperationsController extends Controller
             'post_inspection_notes' => 'required|string',
             'has_damage' => 'boolean',
             'damage_description' => 'required_if:has_damage,true|nullable|string',
-            'damage_charge' => 'nullable|numeric|min:0',
+            'damage_charge' => 'required_if:has_damage,true|nullable|numeric|min:0',
             'post_inspection_images.*' => 'nullable|image|max:2048',
         ]);
+
+        $hasDamage = (bool) ($validated['has_damage'] ?? false);
+        $damageCharge = $hasDamage ? (float) ($validated['damage_charge'] ?? 0) : 0.0;
 
         $imagePaths = [];
         if ($request->hasFile('post_inspection_images')) {
@@ -177,11 +188,24 @@ class RentalOperationsController extends Controller
         $rental->update([
             'post_inspection_notes' => $validated['post_inspection_notes'],
             'post_inspection_images' => json_encode($imagePaths),
-            'has_damage' => $validated['has_damage'] ?? false,
+            'has_damage' => $hasDamage,
             'damage_description' => $validated['damage_description'] ?? null,
-            'damage_charge' => $validated['damage_charge'] ?? null,
+            'damage_charge' => $hasDamage ? $damageCharge : null,
+            'damage_payment_status' => $hasDamage && $damageCharge > 0 ? 'Unpaid' : 'Not Required',
+            'damage_paid_at' => null,
             'status' => 'Returned',
+            'returned_at' => now(),
         ]);
+
+        $linkedRental = $rental->rental;
+
+        if ($linkedRental) {
+            $linkedRental->update([
+                'damage_charge' => $hasDamage ? $damageCharge : null,
+                'damage_notes' => $validated['damage_description'] ?? null,
+                'damage_invoice_generated_at' => $hasDamage ? now() : null,
+            ]);
+        }
 
         // Release vehicle
         $rental->vehicle->update([
@@ -195,7 +219,7 @@ class RentalOperationsController extends Controller
                 $rental->renter_id,
                 'rental_update',
                 'Vehicle Returned - Damage Noted',
-                "Your rental {$vehicleName} has been returned. Damage charges may apply. Please check your rental details.",
+                "Your rental {$vehicleName} has been returned with damage noted. Please pay the damage estimate to complete this rental.",
                 'warning',
                 route('customer.rentals')
             );
@@ -224,6 +248,10 @@ class RentalOperationsController extends Controller
 
         if ($rental->status !== 'Returned') {
             return back()->with('error', 'Vehicle must be returned before completing rental.');
+        }
+
+        if ($rental->has_damage && $rental->damage_payment_status !== 'Paid') {
+            return back()->with('error', 'Damage payment must be completed before closing this rental.');
         }
 
         $rental->update([

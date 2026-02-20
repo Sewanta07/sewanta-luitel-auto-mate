@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RentalRequest;
+use App\Models\Rental;
+use App\Models\Payment;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +17,46 @@ class RentalRequestController extends Controller
     public function index()
     {
         $customerId = Auth::guard('customer')->id() ?? Auth::id();
-        $requests = RentalRequest::with('vehicle')
+        
+        // Get rental requests with full details
+        $requests = RentalRequest::with(['vehicle', 'assignedStaff', 'owner'])
             ->where('renter_id', $customerId)
             ->orderByDesc('created_at')
             ->get();
 
-        return view('customer.rentals', compact('requests'));
+        // Calculate days for each request
+        $requests->each(function ($request) {
+            if ($request->start_date && $request->end_date) {
+                $request->number_of_days = $request->start_date->diffInDays($request->end_date) + 1;
+            }
+        });
+
+        // Get paid rentals from Rental table (only marketplace rentals, not linked to rental requests)
+        $rentals = Rental::with(['vehicle', 'owner'])
+            ->where('renter_id', $customerId)
+            ->whereNull('rental_request_id')
+            ->orderByDesc('created_at')
+            ->get();
+
+        $orderIds = $rentals->map(function ($rental) {
+            $prefix = $rental->owner_id ? 'marketplace_rental:' : 'admin_rental:';
+            return $prefix . $rental->id;
+        })->values();
+
+        $payments = Payment::whereIn('order_id', $orderIds)
+            ->get()
+            ->keyBy('order_id');
+
+        $rentals->each(function ($rental) use ($payments) {
+            $prefix = $rental->owner_id ? 'marketplace_rental:' : 'admin_rental:';
+            $orderId = $prefix . $rental->id;
+            $payment = $payments->get($orderId);
+
+            $rental->payment_status = $payment?->status ?? 'pending';
+            $rental->transaction_id = $payment?->transaction_id;
+        });
+
+        return view('customer.rentals', compact('requests', 'rentals'));
     }
 
     /**
@@ -113,7 +149,6 @@ class RentalRequestController extends Controller
         $request->approved_at = now();
         $request->save();
 
-        $vehicle->rented_by_user_id = $request->renter_id;
         $vehicle->is_listed_for_rent = false;
         $vehicle->save();
 

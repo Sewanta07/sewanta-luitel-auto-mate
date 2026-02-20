@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use App\Models\OwnerVehicle;
 use App\Models\RentalRequest;
+use App\Models\Payment;
 use App\Models\StaffMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,12 +18,16 @@ class RentalManagementController extends Controller
      */
     public function dashboard()
     {
+        $totalRevenue = Payment::whereIn('type', ['admin_rental', 'marketplace_rental'])
+            ->where('status', 'paid')
+            ->sum('amount');
+
         $stats = [
             'total_vehicles' => Vehicle::where('is_listed_for_rent', true)->count(),
             'active_rentals' => RentalRequest::whereIn('status', ['Approved', 'Ready for Pickup', 'Picked Up', 'In Use'])->count(),
             'pending_requests' => RentalRequest::where('status', 'Pending')->count(),
             'pending_listings' => Vehicle::where('listing_status', 'pending')->count(),
-            'total_revenue' => RentalRequest::where('payment_status', 'Paid')->sum('total_cost'),
+            'total_revenue' => $totalRevenue,
         ];
 
         $recentRentals = RentalRequest::with(['vehicle', 'renter', 'owner'])
@@ -159,11 +165,27 @@ class RentalManagementController extends Controller
      */
     public function approveVehicleListing(Vehicle $vehicle)
     {
+        if ((float) ($vehicle->daily_rate ?? 0) <= 0) {
+            return back()->with('error', 'Vehicle cannot be approved without a valid daily rate.');
+        }
+
         $vehicle->update([
             'listing_status' => 'approved',
             'listing_approved_at' => now(),
             'is_listed_for_rent' => true,
         ]);
+
+        OwnerVehicle::updateOrCreate(
+            ['vehicle_id' => $vehicle->id],
+            [
+                'owner_id' => $vehicle->customer_id,
+                'daily_rate' => $vehicle->daily_rate,
+                'approval_status' => 'approved',
+                'is_available' => true,
+                'approval_note' => null,
+                'approved_at' => now(),
+            ]
+        );
 
         // Notify owner
         if ($vehicle->customer_id) {
@@ -194,6 +216,13 @@ class RentalManagementController extends Controller
             'listing_status' => 'rejected',
             'listing_rejection_reason' => $validated['rejection_reason'],
             'is_listed_for_rent' => false,
+        ]);
+
+        OwnerVehicle::where('vehicle_id', $vehicle->id)->update([
+            'approval_status' => 'rejected',
+            'is_available' => false,
+            'approval_note' => $validated['rejection_reason'],
+            'approved_at' => null,
         ]);
 
         // Notify owner
@@ -228,7 +257,7 @@ class RentalManagementController extends Controller
             ->orderBy('approved_at', 'asc')
             ->get();
 
-        $staff = StaffMember::where('status', 'Active')->get();
+        $staff = StaffMember::where('status', 'active')->get();
 
         $stats = [
             'pending_count' => $pendingRequests->count(),
@@ -247,7 +276,7 @@ class RentalManagementController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $staff = StaffMember::where('status', 'Active')->get();
+        $staff = StaffMember::where('status', 'active')->get();
 
         return view('admin.rentals.requests', compact('requests', 'staff'));
     }

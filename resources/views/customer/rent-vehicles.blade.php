@@ -52,12 +52,16 @@
                         }
                         $allImages = array_merge($allImages, $vehicle->images->pluck('image_path')->toArray());
                         $primaryImage = count($allImages) > 0 ? asset('storage/' . $allImages[0]) : null;
+                        $isAdminVehicle = (bool) $vehicle->is_service_center_vehicle;
+                        $displayRate = $isAdminVehicle ? $vehicle->daily_rate : ($vehicle->owner_daily_rate ?? $vehicle->daily_rate);
                         $vehiclePayload = [
                             'id' => $vehicle->id,
+                            'owner_vehicle_id' => $vehicle->owner_vehicle_id,
+                            'rental_type' => $isAdminVehicle ? 'admin' : 'marketplace',
                             'name' => $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model),
                             'details' => ($vehicle->vehicle_type ?? 'Vehicle') . ' • ' . ($vehicle->fuel_type ?? 'Fuel N/A') . ' • ' . ($vehicle->transmission_type ?? 'Transmission N/A'),
-                            'owner' => $vehicle->customer->name ?? 'N/A',
-                            'rate' => $vehicle->daily_rate !== null ? number_format($vehicle->daily_rate, 2) : 'N/A',
+                            'owner' => $isAdminVehicle ? 'AutoMate Service Center' : ($vehicle->customer->name ?? 'N/A'),
+                            'rate' => $displayRate !== null ? number_format($displayRate, 2) : 'N/A',
                             'image' => $primaryImage,
                         ];
                     @endphp
@@ -121,12 +125,12 @@
                             <p class="text-xs text-gray-400 mb-3">
                                 <span class="inline-flex items-center">
                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                    Owner: {{ $vehicle->customer->name ?? 'N/A' }}
+                                    Owner: {{ $isAdminVehicle ? 'AutoMate Service Center' : ($vehicle->customer->name ?? 'N/A') }}
                                 </span>
                             </p>
                             <div class="flex items-center text-lg font-bold text-[#ff5a1f] mb-3">
                                 <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Rs. {{ $vehicle->daily_rate !== null ? number_format($vehicle->daily_rate, 2) : 'N/A' }} / day
+                                Rs. {{ $displayRate !== null ? number_format($displayRate, 2) : 'N/A' }} / day
                             </div>
                             <div class="flex items-center text-xs font-mono bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg w-fit">
                                 <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,6 +144,8 @@
                                 type="button"
                                 onclick="openRentModalFromButton(this)"
                                 data-vehicle-id="{{ $vehiclePayload['id'] }}"
+                                data-owner-vehicle-id="{{ $vehiclePayload['owner_vehicle_id'] }}"
+                                data-rental-type="{{ $vehiclePayload['rental_type'] }}"
                                 data-vehicle-name="{{ $vehiclePayload['name'] }}"
                                 data-vehicle-details="{{ $vehiclePayload['details'] }}"
                                 data-vehicle-owner="{{ $vehiclePayload['owner'] }}"
@@ -181,7 +187,7 @@
                             </div>
                         </div>
 
-                        <form action="{{ route('rent-vehicles.request') }}" method="POST" class="space-y-4">
+                        <form id="rent-request-form" action="{{ route('rent-vehicles.request') }}" method="POST" class="space-y-4">
                             @csrf
                             <input type="hidden" id="rent-vehicle-id" name="vehicle_id" value="">
 
@@ -237,6 +243,7 @@
     function openRentModalFromButton(button) {
         const backdrop = document.getElementById('rent-modal-backdrop');
         const vehicleIdInput = document.getElementById('rent-vehicle-id');
+        const formEl = document.getElementById('rent-request-form');
         const nameEl = document.getElementById('modal-vehicle-name');
         const detailsEl = document.getElementById('modal-vehicle-details');
         const ownerEl = document.getElementById('modal-vehicle-owner');
@@ -250,6 +257,8 @@
         detailsEl.textContent = button.dataset.vehicleDetails || '';
         ownerEl.textContent = button.dataset.vehicleOwner || '';
         rateEl.textContent = button.dataset.vehicleRate || '';
+
+        formEl.action = '{{ route('rent-vehicles.request') }}';
 
         if (button.dataset.vehicleImage) {
             imageEl.src = button.dataset.vehicleImage;

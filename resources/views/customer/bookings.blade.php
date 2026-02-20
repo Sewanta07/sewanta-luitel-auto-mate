@@ -80,6 +80,47 @@
                     <a href="#" class="btn btn-primary btn-sm">Download Receipt</a>
                 </div>
             </div>
+
+            <div class="mt-8 bg-white rounded-xl p-4" style="border: 1px solid #eee;">
+                <h3 style="margin-bottom: 12px;">Booking Payments</h3>
+                @if(isset($bookings) && $bookings->count() > 0)
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Booking</th>
+                                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Service</th>
+                                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Total</th>
+                                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Payment</th>
+                                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($bookings as $booking)
+                                    <tr>
+                                        <td style="padding:8px; border-bottom:1px solid #f1f1f1;">{{ $booking->booking_code ?? ('#' . $booking->id) }}</td>
+                                        <td style="padding:8px; border-bottom:1px solid #f1f1f1;">{{ $booking->service_type }}</td>
+                                        <td style="padding:8px; border-bottom:1px solid #f1f1f1;">Rs. {{ number_format((float) ($booking->total_amount ?? 0), 2) }}</td>
+                                        <td style="padding:8px; border-bottom:1px solid #f1f1f1;">{{ ucfirst($booking->payment_status ?? 'pending') }}</td>
+                                        <td style="padding:8px; border-bottom:1px solid #f1f1f1;">
+                                            @if((float) ($booking->total_amount ?? 0) > 0 && ($booking->payment_status ?? 'pending') !== 'paid')
+                                                <form action="{{ route('payments.service.pay', $booking->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary btn-sm">Pay Now</button>
+                                                </form>
+                                            @else
+                                                <span style="font-size: 12px; color: #666;">No action</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p style="color:#666;">No bookings found.</p>
+                @endif
+            </div>
         </div>
     </div>
 </div>

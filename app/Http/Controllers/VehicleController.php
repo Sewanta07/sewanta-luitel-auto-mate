@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use App\Models\VehicleImage;
 use App\Models\ServiceBooking;
+use App\Models\OwnerVehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -49,18 +50,61 @@ class VehicleController extends Controller
     public function rentIndex()
     {
         $customerId = $this->customerId();
-        
-        // Show only APPROVED vehicles listed for rent
-        // Include admin-listed vehicles (customer_id = NULL) AND customer-listed vehicles (not owned by current user)
-        $vehicles = Vehicle::with('customer')
+
+        // Backfill missing owner_vehicles rows for already approved customer listings.
+        $approvedCustomerVehicles = Vehicle::query()
+            ->where('is_service_center_vehicle', false)
+            ->whereNotNull('customer_id')
             ->where('is_listed_for_rent', true)
             ->where('listing_status', 'approved')
             ->whereNull('rented_by_user_id')
+            ->get();
+
+        foreach ($approvedCustomerVehicles as $approvedVehicle) {
+            if ((float) ($approvedVehicle->daily_rate ?? 0) <= 0) {
+                continue;
+            }
+
+            OwnerVehicle::updateOrCreate(
+                ['vehicle_id' => $approvedVehicle->id],
+                [
+                    'owner_id' => $approvedVehicle->customer_id,
+                    'daily_rate' => $approvedVehicle->daily_rate,
+                    'approval_status' => 'approved',
+                    'is_available' => true,
+                    'approved_at' => now(),
+                ]
+            );
+        }
+
+        // Show admin-owned rentals and approved marketplace listings.
+        $vehicles = Vehicle::query()
+            ->with(['customer', 'images'])
+            ->leftJoin('owner_vehicles as owner_listing', 'owner_listing.vehicle_id', '=', 'vehicles.id')
+            ->select('vehicles.*')
+            ->selectRaw('owner_listing.id as owner_vehicle_id')
+            ->selectRaw('owner_listing.daily_rate as owner_daily_rate')
+            ->where('vehicles.is_listed_for_rent', true)
+            ->where('vehicles.listing_status', 'approved')
+            ->whereNull('vehicles.rented_by_user_id')
             ->where(function ($query) use ($customerId) {
-                $query->whereNull('customer_id')  // Admin-listed vehicles
-                      ->orWhere('customer_id', '!=', $customerId); // Customer-listed vehicles (not own)
+                $query
+                    ->where(function ($adminVehicle) {
+                        $adminVehicle
+                            ->where('vehicles.is_service_center_vehicle', true)
+                            ->whereNull('vehicles.customer_id');
+                    })
+                    ->orWhere(function ($marketplaceVehicle) use ($customerId) {
+                        $marketplaceVehicle
+                            ->where('vehicles.is_service_center_vehicle', false)
+                            ->whereNotNull('vehicles.customer_id')
+                            ->where('vehicles.customer_id', '!=', $customerId)
+                            ->whereNotNull('owner_listing.id')
+                            ->where('owner_listing.approval_status', 'approved')
+                            ->where('owner_listing.is_available', true);
+                    });
             })
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('vehicles.created_at')
             ->get();
 
         return view('customer.rent-vehicles', compact('vehicles'));
@@ -219,6 +263,12 @@ class VehicleController extends Controller
                 ->with('error', 'This vehicle is currently under service and cannot be listed for rent.');
         }
 
+        // Listing a customer vehicle for rent requires a daily rate.
+        if (!$vehicle->is_service_center_vehicle && !$vehicle->is_listed_for_rent && (float) ($vehicle->daily_rate ?? 0) <= 0) {
+            return redirect()->route('customer.vehicles')
+                ->with('error', 'Please set a valid daily rate before listing for rent.');
+        }
+
         // Toggle listing status
         $vehicle->is_listed_for_rent = !$vehicle->is_listed_for_rent;
         
@@ -226,6 +276,26 @@ class VehicleController extends Controller
         if ($vehicle->is_listed_for_rent && !$vehicle->is_service_center_vehicle) {
             $vehicle->listing_status = 'pending';
             $vehicle->listing_rejection_reason = null;
+
+            OwnerVehicle::updateOrCreate(
+                ['vehicle_id' => $vehicle->id],
+                [
+                    'owner_id' => $vehicle->customer_id,
+                    'daily_rate' => $vehicle->daily_rate,
+                    'approval_status' => 'pending',
+                    'is_available' => true,
+                    'approval_note' => null,
+                    'approved_at' => null,
+                ]
+            );
+        }
+
+        if (!$vehicle->is_listed_for_rent && !$vehicle->is_service_center_vehicle) {
+            OwnerVehicle::where('vehicle_id', $vehicle->id)->update([
+                'is_available' => false,
+                'approval_status' => 'pending',
+                'approved_at' => null,
+            ]);
         }
         
         $vehicle->save();

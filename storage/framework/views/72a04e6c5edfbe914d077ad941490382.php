@@ -43,6 +43,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Owner</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dates</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cost</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Damage</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Damage Payment</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -82,6 +84,26 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                             Rs. <?php echo e(number_format($rental->total_cost, 2)); ?>
 
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <?php if($rental->has_damage): ?>
+                                Rs. <?php echo e(number_format($rental->damage_charge ?? 0, 2)); ?>
+
+                                <?php if($rental->damage_description): ?>
+                                    <div class="text-xs text-gray-500 mt-1"><?php echo e($rental->damage_description); ?></div>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <span class="text-gray-400">None</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                <?php if(($rental->damage_payment_status ?? 'Unpaid') === 'Paid'): ?> bg-green-100 text-green-800
+                                <?php elseif(($rental->damage_payment_status ?? 'Unpaid') === 'Not Required'): ?> bg-gray-100 text-gray-700
+                                <?php else: ?> bg-yellow-100 text-yellow-800 <?php endif; ?>">
+                                <?php echo e($rental->damage_payment_status ?? 'Unpaid'); ?>
+
+                            </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <?php
@@ -132,7 +154,7 @@
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="9" class="px-6 py-8 text-center text-gray-500">No rental requests found</td>
+                        <td colspan="11" class="px-6 py-8 text-center text-gray-500">No rental requests found</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
@@ -155,7 +177,7 @@
                 <select name="staff_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     <option value="">-- Choose Staff --</option>
                     <?php $__currentLoopData = $staff; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $member): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <option value="<?php echo e($member->id); ?>"><?php echo e($member->name); ?> - <?php echo e($member->role); ?></option>
+                    <option value="<?php echo e($member->id); ?>"><?php echo e($member->name); ?> - <?php echo e($member->position ?? 'Staff'); ?></option>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>

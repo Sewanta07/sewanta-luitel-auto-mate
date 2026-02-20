@@ -29,6 +29,8 @@ class RentalRequest extends Model
         'has_damage',
         'damage_description',
         'damage_charge',
+        'damage_payment_status',
+        'damage_paid_at',
         'rejection_reason',
     ];
 
@@ -38,6 +40,7 @@ class RentalRequest extends Model
         'has_damage' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
+        'damage_paid_at' => 'datetime',
     ];
 
     public function vehicle()
@@ -58,5 +61,10 @@ class RentalRequest extends Model
     public function assignedStaff()
     {
         return $this->belongsTo(StaffMember::class, 'assigned_staff_id');
+    }
+
+    public function rental()
+    {
+        return $this->hasOne(Rental::class, 'rental_request_id');
     }
 }

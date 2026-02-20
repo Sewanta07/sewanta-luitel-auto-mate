@@ -147,6 +147,16 @@
 
                     </button>
                 </form>
+                <?php if(!$vehicle->rented_by_user_id && $vehicle->daily_rate): ?>
+                    <form action="<?php echo e(route('owner-vehicles.list')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="vehicle_id" value="<?php echo e($vehicle->id); ?>">
+                        <input type="hidden" name="daily_rate" value="<?php echo e($vehicle->daily_rate); ?>">
+                        <button type="submit" class="w-full px-4 py-2 rounded-xl text-sm font-bold bg-orange-100 text-orange-700 hover:bg-orange-200 transition">
+                            Submit to Marketplace Approval
+                        </button>
+                    </form>
+                <?php endif; ?>
                 <?php if($vehicle->rented_by_user_id && $vehicle->approvedRental): ?>
                     <form action="<?php echo e(route('rentals.return', $vehicle->approvedRental->id)); ?>" method="POST">
                         <?php echo csrf_field(); ?>

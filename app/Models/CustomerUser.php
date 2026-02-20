@@ -66,5 +66,30 @@ class CustomerUser extends Authenticatable
     {
         return $this->morphMany(Message::class, 'receiver');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id');
+    }
+
+    public function rentalsAsOwner()
+    {
+        return $this->hasMany(Rental::class, 'owner_id');
+    }
+
+    public function rentalsAsRenter()
+    {
+        return $this->hasMany(Rental::class, 'renter_id');
+    }
+
+    public function ownerVehicles()
+    {
+        return $this->hasMany(OwnerVehicle::class, 'owner_id');
+    }
+
+    public function earnings()
+    {
+        return $this->hasMany(Earning::class, 'owner_id');
+    }
 }
 
