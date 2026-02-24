@@ -97,11 +97,6 @@
                 Messages
             </a>
 
-            
-            <a href="<?php echo e(route('admin.issues')); ?>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition <?php echo e(request()->routeIs('admin.issues*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'); ?>">
-                <svg class="mr-3 h-5 w-5 <?php echo e(request()->routeIs('admin.issues*') ? 'text-[#ff5a1f]' : 'text-gray-400 group-hover:text-gray-500'); ?> transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                Issues
-            </a>
 
              
             <a href="<?php echo e(route('admin.settings')); ?>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition <?php echo e(request()->routeIs('admin.settings*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'); ?>">

@@ -78,7 +78,7 @@ if (!function_exists('notifyPayment')) {
             $title,
             $message,
             $status === 'success' ? 'success' : 'warning',
-            route('customer.payments'),
+            route('bookings.index'),
             $status === 'success' ? 'View Receipt' : 'Pay Now'
         );
     }

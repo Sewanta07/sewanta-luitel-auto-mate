@@ -6,9 +6,9 @@
 @include('customer.navbar')
 
 <div class="min-h-screen bg-gray-50 pb-20">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-8 sm:p-10">
-            <div class="flex items-center justify-between mb-8">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 sm:p-7">
+            <div class="flex items-center justify-between mb-6">
                 <div>
                     <h1 class="text-3xl font-black text-gray-900">Service Invoice</h1>
                     <p class="text-gray-500 mt-1">Booking {{ $booking->booking_code }}</p>
@@ -16,7 +16,7 @@
                 <span class="px-3 py-1 text-xs font-black uppercase tracking-widest rounded-full bg-green-50 text-green-600">Completed</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Vehicle</p>
                     <p class="text-lg font-bold text-gray-900">{{ $booking->vehicle_model }}</p>
@@ -39,7 +39,7 @@
 
             @php($partsTotal = $booking->parts->sum('pivot.total_cost'))
 
-            <div class="mt-8 border-t border-gray-100 pt-6">
+            <div class="mt-6 border-t border-gray-100 pt-5">
                 <h3 class="text-sm font-bold text-gray-700 mb-4">Parts Used</h3>
                 <div class="border border-gray-100 rounded-xl overflow-hidden">
                     <table class="w-full text-sm text-left">
@@ -75,44 +75,27 @@
                 </div>
             </div>
 
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-bold text-gray-500">Estimated Cost</p>
-                    <p class="text-xl font-black text-gray-900">{{ $booking->estimated_cost ? 'Rs. ' . number_format($booking->estimated_cost, 2) : 'TBD' }}</p>
-                </div>
-            </div>
+            @php($payableAmount = ($booking->service_cost ?? 0) + ($booking->spare_parts_cost ?? 0) + $partsTotal)
 
-            @php($computedAmount = ($booking->service_cost ?? 0) + ($booking->spare_parts_cost ?? 0) + $partsTotal)
-            @php($payableAmount = ($booking->total_amount ?? 0) > 0 ? $booking->total_amount : $computedAmount)
-
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <h3 class="text-sm font-bold text-gray-700 mb-4">Payment Summary</h3>
-                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 space-y-4">
+            <div class="mt-6 border-t border-gray-100 pt-5">
+                <h3 class="text-sm font-bold text-gray-700 mb-3">Payment Summary</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3">
                     <div class="flex items-center justify-between">
                         <p class="text-sm font-bold text-gray-500">Total Payable</p>
                         <p class="text-xl font-black text-[#ff5a1f]">Rs. {{ number_format($payableAmount, 2) }}</p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <p class="text-sm font-bold text-gray-500">Service Cost</p>
-                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($booking->service_cost ?? 0, 2) }}</p>
+                        <p class="text-sm font-bold text-gray-500">Charges</p>
+                        <p class="text-sm font-bold text-gray-900 text-right">Service Rs. {{ number_format($booking->service_cost ?? 0, 2) }} + Spare Rs. {{ number_format($booking->spare_parts_cost ?? 0, 2) }} + Parts Rs. {{ number_format($partsTotal, 2) }}</p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <p class="text-sm font-bold text-gray-500">Spare Parts Cost</p>
-                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($booking->spare_parts_cost ?? 0, 2) }}</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-bold text-gray-500">Parts Total</p>
-                        <p class="text-sm font-bold text-gray-900">Rs. {{ number_format($partsTotal, 2) }}</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-bold text-gray-500">Payment Status</p>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ ($booking->payment_status ?? 'pending') === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                            {{ ucfirst($booking->payment_status ?? 'pending') }}
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-bold text-gray-500">Payment Method</p>
-                        <p class="text-sm font-bold text-gray-900">eSewa</p>
+                        <p class="text-sm font-bold text-gray-500">Status • Method</p>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ ($booking->payment_status ?? 'pending') === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                                {{ ucfirst($booking->payment_status ?? 'pending') }}
+                            </span>
+                            <p class="text-sm font-bold text-gray-900">eSewa</p>
+                        </div>
                     </div>
 
                     @if(($booking->payment_status ?? 'pending') !== 'paid')
@@ -130,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="mt-8 flex gap-3">
+            <div class="mt-6 flex gap-3">
                 <a href="{{ route('bookings.index') }}" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-center hover:bg-gray-200">Back to Bookings</a>
                 <button class="flex-1 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18]">Download PDF</button>
             </div>

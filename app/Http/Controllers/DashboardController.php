@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use App\Models\CustomerUser;
+use App\Models\InventoryItem;
+use App\Models\Payment;
+use App\Models\ServiceBooking;
 
 class DashboardController extends Controller
 {
@@ -121,7 +127,103 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.' . $userRole);
         }
 
-        return view('dashboard.admin', compact('user'));
+        $totalServices = ServiceBooking::count();
+        $inProgressServices = ServiceBooking::whereIn('status', ['Assigned', 'Customer Accepted', 'In Progress', 'Waiting for Parts'])->count();
+        $completedToday = ServiceBooking::where('status', 'Completed')
+            ->whereDate('updated_at', now()->toDateString())
+            ->count();
+        $pendingReview = ServiceBooking::where('status', 'Pending')->count();
+
+        $totalInventory = InventoryItem::where('status', 'active')->sum('quantity');
+        $totalServiceCharge = ServiceBooking::where('status', 'Completed')->sum('service_cost');
+
+        $startMonth = now()->subMonths(5)->startOfMonth();
+        $monthlyServiceTotals = ServiceBooking::selectRaw("DATE_FORMAT(updated_at, '%Y-%m') as month_key, COUNT(*) as total")
+            ->where('status', 'Completed')
+            ->where('updated_at', '>=', $startMonth)
+            ->groupBy('month_key')
+            ->pluck('total', 'month_key');
+
+        $monthlyCompletedServices = collect(range(5, 0))
+            ->map(function ($offset) use ($monthlyServiceTotals) {
+                $monthKey = now()->subMonths($offset)->format('Y-m');
+                $label = Carbon::createFromFormat('Y-m', $monthKey)->format('M Y');
+
+                return [
+                    'label' => $label,
+                    'total' => (int) ($monthlyServiceTotals[$monthKey] ?? 0),
+                ];
+            })
+            ->values()
+            ->all();
+
+        return view('dashboard.admin', compact(
+            'user',
+            'totalServices',
+            'inProgressServices',
+            'completedToday',
+            'pendingReview',
+            'totalInventory',
+            'totalServiceCharge',
+            'monthlyCompletedServices'
+        ));
+    }
+
+    /**
+     * Show the admin analytics dashboard.
+     */
+    public function analytics()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $userRole = $this->getUserRole($user);
+        if ($userRole !== 'admin') {
+            return redirect()->route('dashboard.' . $userRole);
+        }
+
+        $totalRevenue = Payment::where('status', 'paid')->sum('amount');
+        $servicesCompleted = ServiceBooking::where('status', 'Completed')->count();
+        $activeCustomers = CustomerUser::count();
+        $customerSatisfaction = null;
+
+        $startMonth = now()->subMonths(5)->startOfMonth();
+        $monthlyTotals = Payment::selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as month_key, SUM(amount) as total")
+            ->where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->where('paid_at', '>=', $startMonth)
+            ->groupBy('month_key')
+            ->pluck('total', 'month_key');
+
+        $monthlyRevenue = collect(range(5, 0))
+            ->map(function ($offset) use ($monthlyTotals) {
+                $monthKey = now()->subMonths($offset)->format('Y-m');
+                $label = Carbon::createFromFormat('Y-m', $monthKey)->format('M Y');
+
+                return [
+                    'label' => $label,
+                    'total' => (float) ($monthlyTotals[$monthKey] ?? 0),
+                ];
+            })
+            ->values()
+            ->all();
+
+        $serviceStatusCounts = ServiceBooking::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        return view('admin.analytics', compact(
+            'totalRevenue',
+            'servicesCompleted',
+            'activeCustomers',
+            'customerSatisfaction',
+            'monthlyRevenue',
+            'serviceStatusCounts'
+        ));
     }
 
     /**

@@ -47,6 +47,7 @@
                                 <th class="px-8 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Service Type</th>
                                 <th class="px-8 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Preferred Date</th>
                                 <th class="px-8 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                <th class="px-8 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">View Receipt</th>
                                 <th class="px-8 py-6 text-xs font-black text-gray-400 uppercase tracking-widest text-right">Actions</th>
                             </tr>
                         </thead>
@@ -92,6 +93,14 @@
                                             <span class="w-1.5 h-1.5 rounded-full mr-2 {{ str_replace('text', 'bg', $colors['text']) }}"></span>
                                             {{ $booking->status }}
                                         </span>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        @php($paymentStatus = strtolower((string) ($booking->payment_status ?? 'pending')))
+                                        @if($paymentStatus === 'paid' && isset($receiptPaymentIds[$booking->id]))
+                                            <a href="{{ route('payments.receipt', $receiptPaymentIds[$booking->id]) }}" class="px-3 py-2 bg-orange-50 text-[#ff5a1f] rounded-lg text-xs font-black hover:bg-orange-100 transition-colors inline-flex">View Receipt</a>
+                                        @else
+                                            <span class="text-xs font-bold text-gray-400">N/A</span>
+                                        @endif
                                     </td>
                                     <td class="px-8 py-6 text-right">
                                         <div class="flex items-center justify-end gap-3">

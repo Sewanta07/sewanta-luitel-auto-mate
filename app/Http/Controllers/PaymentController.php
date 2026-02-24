@@ -12,6 +12,7 @@ use App\Services\Payments\CommissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
@@ -30,9 +31,11 @@ class PaymentController extends Controller
             'spare_parts_cost' => 'nullable|numeric|min:0',
         ]);
 
+        $booking->loadMissing('parts');
+        $partsTotal = (float) $booking->parts->sum('pivot.total_cost');
         $sparePartsCost = (float) ($request->input('spare_parts_cost', 0));
         $serviceCost = (float) $request->input('service_cost');
-        $total = round($serviceCost + $sparePartsCost, 2);
+        $total = round($serviceCost + $sparePartsCost + $partsTotal, 2);
 
         $booking->update([
             'service_cost' => $serviceCost,
@@ -51,27 +54,33 @@ class PaymentController extends Controller
         $this->assertBookingOwner($booking);
 
         $booking->loadMissing('parts');
-        $partsTotal = $booking->parts->sum('pivot.total_cost');
-        $totalAmount = (float) ($booking->total_amount ?? 0);
-        if ($totalAmount <= 0) {
-            $serviceCost = (float) ($booking->service_cost ?? 0);
-            $sparePartsCost = (float) ($booking->spare_parts_cost ?? 0);
-            $totalAmount = round($serviceCost + $sparePartsCost + (float) $partsTotal, 2);
+        $partsTotal = (float) $booking->parts->sum('pivot.total_cost');
+        $serviceCost = (float) ($booking->service_cost ?? 0);
+        $sparePartsCost = (float) ($booking->spare_parts_cost ?? 0);
+        $totalAmount = round($serviceCost + $sparePartsCost + $partsTotal, 2);
+
+        if ((float) ($booking->total_amount ?? 0) !== $totalAmount) {
+            $booking->forceFill(['total_amount' => $totalAmount])->save();
         }
 
         if ($totalAmount <= 0) {
             return back()->with('error', 'Service amount is not ready for payment.');
         }
 
-        $payment = Payment::updateOrCreate(
-            ['order_id' => 'service_booking:' . $booking->id],
-            [
-                'user_id' => $booking->customer_id,
-                'type' => 'service',
-                'amount' => $totalAmount,
-                'status' => 'pending',
-            ]
-        );
+        if (($booking->payment_status ?? 'pending') === 'paid') {
+            return back()->with('error', 'This service booking is already paid.');
+        }
+
+        $baseOrderId = 'service_booking:' . $booking->id;
+        $this->closePreviousPendingAttempts($baseOrderId, (int) $booking->customer_id);
+
+        $payment = Payment::create([
+            'user_id' => $booking->customer_id,
+            'order_id' => $this->newOrderIdForAttempt($baseOrderId),
+            'type' => 'service',
+            'amount' => $totalAmount,
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('payments.esewa.redirect', $payment);
     }
@@ -86,16 +95,16 @@ class PaymentController extends Controller
         }
 
         $type = $rental->owner_id ? 'marketplace_rental' : 'admin_rental';
+        $baseOrderId = $type . ':' . $rental->id;
+        $this->closePreviousPendingAttempts($baseOrderId, (int) $rental->renter_id);
 
-        $payment = Payment::updateOrCreate(
-            ['order_id' => $type . ':' . $rental->id],
-            [
-                'user_id' => $rental->renter_id,
-                'type' => $type,
-                'amount' => $rental->total_amount,
-                'status' => 'pending',
-            ]
-        );
+        $payment = Payment::create([
+            'user_id' => $rental->renter_id,
+            'order_id' => $this->newOrderIdForAttempt($baseOrderId),
+            'type' => $type,
+            'amount' => $rental->total_amount,
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('payments.esewa.redirect', $payment);
     }
@@ -122,16 +131,16 @@ class PaymentController extends Controller
         }
 
         $type = $request->owner_id ? 'marketplace_rental' : 'admin_rental';
+        $baseOrderId = 'rental_request:' . $request->id;
+        $this->closePreviousPendingAttempts($baseOrderId, (int) $request->renter_id);
 
-        $payment = Payment::updateOrCreate(
-            ['order_id' => 'rental_request:' . $request->id],
-            [
-                'user_id' => $request->renter_id,
-                'type' => $type,
-                'amount' => $request->total_cost,
-                'status' => 'pending',
-            ]
-        );
+        $payment = Payment::create([
+            'user_id' => $request->renter_id,
+            'order_id' => $this->newOrderIdForAttempt($baseOrderId),
+            'type' => $type,
+            'amount' => $request->total_cost,
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('payments.esewa.redirect', $payment);
     }
@@ -157,15 +166,16 @@ class PaymentController extends Controller
             return back()->with('error', 'Damage charges are already paid.');
         }
 
-        $payment = Payment::updateOrCreate(
-            ['order_id' => 'rental_damage:' . $request->id],
-            [
-                'user_id' => $request->renter_id,
-                'type' => 'rental_damage',
-                'amount' => $request->damage_charge,
-                'status' => 'pending',
-            ]
-        );
+        $baseOrderId = 'rental_damage:' . $request->id;
+        $this->closePreviousPendingAttempts($baseOrderId, (int) $request->renter_id);
+
+        $payment = Payment::create([
+            'user_id' => $request->renter_id,
+            'order_id' => $this->newOrderIdForAttempt($baseOrderId),
+            'type' => 'rental_damage',
+            'amount' => $request->damage_charge,
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('payments.esewa.redirect', $payment);
     }
@@ -187,6 +197,45 @@ class PaymentController extends Controller
             'endpoint' => $payload['endpoint'],
             'fields' => $payload['fields'],
             'payment' => $payment,
+        ]);
+    }
+
+    public function receipt(Payment $payment)
+    {
+        $this->ensureCustomer();
+
+        $user = getAuthenticatedUser();
+        if ((int) $payment->user_id !== (int) $user?->id) {
+            abort(403, 'Unauthorized payment access.');
+        }
+
+        if (strtolower((string) $payment->status) !== 'paid') {
+            return redirect()->back()->with('error', 'Receipt is available only for paid transactions.');
+        }
+
+        [$prefix, $entityId] = $this->parseOrderEntity($payment->order_id);
+        $entity = null;
+
+        if ($prefix === 'service_booking' && $entityId > 0) {
+            $entity = ServiceBooking::with('parts')->find($entityId);
+        }
+
+        if ($prefix === 'rental_request' && $entityId > 0) {
+            $entity = RentalRequest::with(['vehicle', 'owner'])->find($entityId);
+        }
+
+        if (in_array($prefix, ['admin_rental', 'marketplace_rental'], true) && $entityId > 0) {
+            $entity = Rental::with(['vehicle', 'owner'])->find($entityId);
+        }
+
+        if ($prefix === 'rental_damage' && $entityId > 0) {
+            $entity = RentalRequest::with(['vehicle', 'owner'])->find($entityId);
+        }
+
+        return view('payments.receipt', [
+            'payment' => $payment,
+            'prefix' => $prefix,
+            'entity' => $entity,
         ]);
     }
 
@@ -409,5 +458,33 @@ class PaymentController extends Controller
         if ((int) $rental->renter_id !== (int) $user?->id) {
             abort(403, 'Unauthorized rental payment.');
         }
+    }
+
+    private function newOrderIdForAttempt(string $baseOrderId): string
+    {
+        return $baseOrderId . ':' . now()->format('YmdHis') . Str::upper(Str::random(6));
+    }
+
+    private function parseOrderEntity(string $orderId): array
+    {
+        $parts = explode(':', $orderId);
+        $prefix = (string) ($parts[0] ?? '');
+        $entityId = (int) ($parts[1] ?? 0);
+
+        return [$prefix, $entityId];
+    }
+
+    private function closePreviousPendingAttempts(string $baseOrderId, int $userId): void
+    {
+        Payment::where('user_id', $userId)
+            ->where('status', 'pending')
+            ->where(function ($query) use ($baseOrderId) {
+                $query->where('order_id', $baseOrderId)
+                    ->orWhere('order_id', 'like', $baseOrderId . ':%');
+            })
+            ->update([
+                'status' => 'failed',
+                'gateway_response' => ['message' => 'Replaced by a newer payment attempt.'],
+            ]);
     }
 }

@@ -85,8 +85,13 @@ class ServiceBooking extends Model
 
     public function payments()
     {
+        $baseOrderId = 'service_booking:' . $this->id;
+
         return Payment::where('type', 'service')
-            ->where('order_id', 'service_booking:' . $this->id)
+            ->where(function ($query) use ($baseOrderId) {
+                $query->where('order_id', $baseOrderId)
+                    ->orWhere('order_id', 'like', $baseOrderId . ':%');
+            })
             ->orderByDesc('id');
     }
 }

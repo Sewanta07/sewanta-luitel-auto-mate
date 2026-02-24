@@ -93,6 +93,9 @@
                     <button type="submit" class="px-4 py-2 rounded-lg text-sm font-bold bg-orange-500 text-white hover:bg-orange-600 transition">Pay Now</button>
                   </form>
                 @endif
+                @if(strtolower((string) ($request->payment_status ?? '')) === 'paid' && isset($requestPaymentIds[$request->id]))
+                  <a href="{{ route('payments.receipt', $requestPaymentIds[$request->id]) }}" class="px-4 py-2 rounded-lg text-sm font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition text-center">View Receipt</a>
+                @endif
                 @if($request->status === 'Returned' && $request->has_damage && ($request->damage_payment_status ?? 'Unpaid') !== 'Paid')
                   <form action="{{ route('payments.rental-requests.damage-pay', $request->id) }}" method="POST">
                     @csrf
@@ -172,6 +175,8 @@
                     @csrf
                     <button type="submit" class="px-4 py-2 rounded-lg text-sm font-bold bg-orange-500 text-white hover:bg-orange-600 transition">Pay Now</button>
                   </form>
+                @elseif(isset($rentalPaymentIds[$rental->id]))
+                  <a href="{{ route('payments.receipt', $rentalPaymentIds[$rental->id]) }}" class="px-4 py-2 rounded-lg text-sm font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition text-center">View Receipt</a>
                 @endif
               </div>
             </div>

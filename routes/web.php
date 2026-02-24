@@ -93,7 +93,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/rentals/{request}/pay-damage', [PaymentController::class, 'payRentalDamage'])
             ->middleware('role:customer')
             ->name('payments.rental-requests.damage-pay');
-        Route::get('/history', [\App\Http\Controllers\CustomerHistoryController::class, 'index'])->name('customer.history');
         Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
         Route::view('/settings', 'customer.settings')->name('customer.settings');
         
@@ -102,9 +101,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::get('/messages/{staff}', [\App\Http\Controllers\CustomerMessageController::class, 'show'])->name('customer.messages.show');
         Route::post('/messages/{staff}', [\App\Http\Controllers\CustomerMessageController::class, 'send'])->name('customer.messages.send');
         
-        // NEW: Customer payment pages
-        Route::view('/payments', 'customer.payments')->name('customer.payments');
-        Route::get('/payment-history', [\App\Http\Controllers\PaymentHistoryController::class, 'index'])->name('customer.payment-history');
+        // Customer payment details are merged into customer history
 
         // Service payment flow
         Route::post('/bookings/{booking}/pay', [PaymentController::class, 'payService'])
@@ -180,10 +177,8 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/users/{id}/status', [UserManagementController::class, 'updateStatus'])->name('admin.users.updateStatus');
         Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
-        Route::get('/analytics', function () {
-            abort_unless(getAuthenticatedUserRole() === 'admin', 403);
-            return view('admin.analytics');
-        })->name('admin.analytics');
+        Route::get('/analytics', [\App\Http\Controllers\DashboardController::class, 'analytics'])
+            ->name('admin.analytics');
 
         Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
         Route::post('/settings/general', [\App\Http\Controllers\Admin\SettingsController::class, 'updateGeneral'])->name('admin.settings.general');
@@ -234,8 +229,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         // Message Monitoring
         Route::get('/messages', [\App\Http\Controllers\Admin\MessageMonitorController::class, 'index'])->name('admin.messages');
         
-        // NEW: Issues Management
-        Route::view('/issues', 'admin.issues')->name('admin.issues');
 
         // Staff/admin service pricing
         Route::post('/services/{booking}/set-amount', [PaymentController::class, 'setServiceAmount'])
@@ -267,6 +260,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
 Route::middleware(['multi.auth', 'check.staff.status', 'role:customer'])->group(function () {
     Route::match(['get', 'post'], '/payments/rentals/{rental}/pay', [PaymentController::class, 'payRental'])->name('payments.rentals.pay');
     Route::get('/payments/esewa/{payment}', [PaymentController::class, 'redirectToEsewa'])->name('payments.esewa.redirect');
+    Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])->name('payments.receipt');
 });
 
 // Additional customer UI routes (protected)

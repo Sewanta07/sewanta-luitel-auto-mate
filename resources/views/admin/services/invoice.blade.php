@@ -47,7 +47,7 @@
 
             @php($partsTotal = $booking->parts->sum('pivot.total_cost'))
             @php($serviceTotal = (float) ($booking->service_cost ?? 0) + (float) ($booking->spare_parts_cost ?? 0) + (float) $partsTotal)
-            @php($displayTotal = $booking->total_amount ?? $serviceTotal)
+            @php($displayTotal = $serviceTotal)
 
             <div class="mt-8 border-t border-gray-100 pt-6">
                 <h3 class="text-sm font-bold text-gray-700 mb-4">Parts Used</h3>

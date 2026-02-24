@@ -126,22 +126,11 @@
                             <option value="Oil Change" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
                             <option value="Electrical Repair" {{ old('service_type') == 'Electrical Repair' ? 'selected' : '' }}>Electrical Repair</option>
                             <option value="Inspection" {{ old('service_type') == 'Inspection' ? 'selected' : '' }}>Inspection</option>
-                            <option value="Custom Service" {{ old('service_type') == 'Custom Service' ? 'selected' : '' }}>Custom Service</option>
                         </select>
                         @error('service_type')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
-                </div>
-
-                <div>
-                    <label for="custom_service" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Custom Service (If Selected)</label>
-                    <input type="text" name="custom_service" id="custom_service" value="{{ old('custom_service') }}" 
-                           class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('custom_service') ring-2 ring-red-500 @enderror" 
-                           placeholder="Describe custom service">
-                    @error('custom_service')
-                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -198,20 +187,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <label for="location" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Customer Address (Optional)</label>
+                        <label for="location" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Customer Address</label>
                         <input type="text" name="location" id="location" value="{{ old('location') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('location') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. Kathmandu, Pokhara">
+                               placeholder="e.g. Kathmandu, Pokhara" required>
                         @error('location')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="phone_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Contact Phone (Optional)</label>
+                        <label for="phone_number" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Contact Phone</label>
                         <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number', auth()->user()->phone ?? '') }}" 
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all @error('phone_number') ring-2 ring-red-500 @enderror" 
-                               placeholder="e.g. 98XXXXXXXX">
+                               placeholder="e.g. 98XXXXXXXX" required>
                         @error('phone_number')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
@@ -220,13 +209,11 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <label for="rental_required" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Require Car Rental?</label>
-                        <select name="rental_required" id="rental_required" 
-                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all appearance-none @error('rental_required') ring-2 ring-red-500 @enderror" required>
-                            <option value="0" {{ old('rental_required') == '0' ? 'selected' : '' }}>No</option>
-                            <option value="1" {{ old('rental_required') == '1' ? 'selected' : '' }}>Yes</option>
-                        </select>
-                        @error('rental_required')
+                        <label for="problem_description" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Problem Description</label>
+                        <textarea name="problem_description" id="problem_description" rows="4" 
+                                  class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('problem_description') ring-2 ring-red-500 @enderror" 
+                                  placeholder="Describe any specific issues you've been having..." required>{{ old('problem_description') }}</textarea>
+                        @error('problem_description')
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -242,26 +229,6 @@
                             <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
                         @enderror
                     </div>
-                </div>
-
-                <div>
-                    <label for="problem_description" class="block text-xs font-black text-gray-600 uppercase tracking-widest mb-3 ml-1">Problem Description (Optional)</label>
-                    <textarea name="problem_description" id="problem_description" rows="4" 
-                              class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium placeholder-gray-500 focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('problem_description') ring-2 ring-red-500 @enderror" 
-                              placeholder="Describe any specific issues you've been having...">{{ old('problem_description') }}</textarea>
-                    @error('problem_description')
-                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="notes" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Additional Notes (Optional)</label>
-                    <textarea name="notes" id="notes" rows="3" 
-                              class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-medium focus:ring-4 focus:ring-orange-100 focus:bg-white transition-all resize-none @error('notes') ring-2 ring-red-500 @enderror" 
-                              placeholder="Any extra details or requests...">{{ old('notes') }}</textarea>
-                    @error('notes')
-                        <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="pt-6">

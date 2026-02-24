@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\ServiceBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,27 @@ class ServiceBookingController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('customer.bookings.index', compact('bookings'));
+        $servicePayments = Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('type', 'service')
+            ->where('status', 'paid')
+            ->orderByDesc('id')
+            ->get();
+
+        $receiptPaymentIds = [];
+        foreach ($servicePayments as $payment) {
+            $parts = explode(':', (string) $payment->order_id);
+            if (($parts[0] ?? null) !== 'service_booking') {
+                continue;
+            }
+
+            $bookingId = (int) ($parts[1] ?? 0);
+            if ($bookingId > 0 && !array_key_exists($bookingId, $receiptPaymentIds)) {
+                $receiptPaymentIds[$bookingId] = $payment->id;
+            }
+        }
+
+        return view('customer.bookings.index', compact('bookings', 'receiptPaymentIds'));
     }
 
     /**
@@ -53,20 +74,18 @@ class ServiceBookingController extends Controller
     {
         $validated = $request->validate([
             'vehicle_number' => 'required|string|max:50',
-            'vehicle_type' => 'required|string|in:Car,Bike',
+            'vehicle_type' => 'required|string|in:Car,SUV,Bike',
             'vehicle_model' => 'required|string|max:100',
             'vehicle_year' => 'required|integer|min:1980|max:' . now()->year,
-            'service_type' => 'required|string|in:General Service,Engine Repair,Brake Service,Oil Change,Electrical Repair,Inspection,Custom Service',
-            'custom_service' => 'required_if:service_type,Custom Service|nullable|string|max:100',
+            'service_type' => 'required|string|in:General Service,Engine Repair,Brake Service,Oil Change,Electrical Repair,Inspection',
             'preferred_date' => 'required|date|after_or_equal:today',
             'preferred_time_slot' => 'required|string|in:Morning,Afternoon,Evening',
             'service_priority' => 'required|string|in:Normal,Urgent',
             'service_location_type' => 'required|string|in:Customer Address,Service Center Pickup',
-            'location' => 'nullable|required_if:service_location_type,Customer Address|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
-            'problem_description' => 'nullable|string',
+            'location' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'problem_description' => 'required|string',
             'notes' => 'nullable|string',
-            'rental_required' => 'required|boolean',
             'pickup_drop' => 'required|boolean',
         ]);
 
@@ -82,13 +101,14 @@ class ServiceBookingController extends Controller
                 ->withInput();
         }
 
-        if ($validated['service_location_type'] === 'Service Center Pickup' && empty($validated['location'])) {
-            $validated['location'] = 'Service Center Pickup';
+        if ($validated['service_location_type'] === 'Service Center Pickup') {
+            $validated['location'] = $validated['location'] ?: 'Service Center Pickup';
         }
 
         $validated['customer_id'] = Auth::id();
         $validated['status'] = 'Pending';
 
+        $validated['rental_required'] = false;
         $booking = ServiceBooking::create($validated);
 
         // Create initial log entry

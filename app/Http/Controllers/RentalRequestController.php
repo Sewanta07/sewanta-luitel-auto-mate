@@ -38,25 +38,46 @@ class RentalRequestController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $orderIds = $rentals->map(function ($rental) {
-            $prefix = $rental->owner_id ? 'marketplace_rental:' : 'admin_rental:';
-            return $prefix . $rental->id;
-        })->values();
+        $payments = Payment::where('user_id', $customerId)
+            ->whereIn('type', ['admin_rental', 'marketplace_rental', 'rental_damage'])
+            ->orderByDesc('id')
+            ->get();
 
-        $payments = Payment::whereIn('order_id', $orderIds)
-            ->get()
-            ->keyBy('order_id');
+        $paymentMap = [];
+        foreach ($payments as $payment) {
+            $parts = explode(':', (string) $payment->order_id);
+            $baseKey = isset($parts[1]) ? ($parts[0] . ':' . $parts[1]) : (string) $payment->order_id;
 
-        $rentals->each(function ($rental) use ($payments) {
-            $prefix = $rental->owner_id ? 'marketplace_rental:' : 'admin_rental:';
-            $orderId = $prefix . $rental->id;
-            $payment = $payments->get($orderId);
+            if (!isset($paymentMap[$baseKey])) {
+                $paymentMap[$baseKey] = $payment;
+            }
+        }
+
+        $requestPaymentIds = [];
+        $requests->each(function ($request) use (&$requestPaymentIds, $paymentMap) {
+            $baseKey = 'rental_request:' . $request->id;
+            $payment = $paymentMap[$baseKey] ?? null;
+            if ($payment) {
+                $request->payment_status = $payment->status;
+                $requestPaymentIds[$request->id] = $payment->id;
+            }
+        });
+
+        $rentalPaymentIds = [];
+        $rentals->each(function ($rental) use (&$rentalPaymentIds, $paymentMap) {
+            $prefix = $rental->owner_id ? 'marketplace_rental' : 'admin_rental';
+            $baseKey = $prefix . ':' . $rental->id;
+            $payment = $paymentMap[$baseKey] ?? null;
 
             $rental->payment_status = $payment?->status ?? 'pending';
             $rental->transaction_id = $payment?->transaction_id;
+
+            if ($payment) {
+                $rentalPaymentIds[$rental->id] = $payment->id;
+            }
         });
 
-        return view('customer.rentals', compact('requests', 'rentals'));
+        return view('customer.rentals', compact('requests', 'rentals', 'requestPaymentIds', 'rentalPaymentIds'));
     }
 
     /**

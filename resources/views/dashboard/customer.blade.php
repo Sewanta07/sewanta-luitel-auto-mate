@@ -69,7 +69,7 @@
                     <p class="text-xs text-gray-500 mt-1">All your service requests</p>
                 </a>
 
-                <a href="{{ route('customer.payments') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #10b981;">
+                <a href="{{ route('bookings.index') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #10b981;">
                     <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center" style="background-color: #f0fdf4;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" style="color: #10b981;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     </div>
