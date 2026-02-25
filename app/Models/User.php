@@ -48,8 +48,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function staffDetail()
-    {
-        return $this->hasOne(\App\Models\StaffDetail::class);
-    }
 }

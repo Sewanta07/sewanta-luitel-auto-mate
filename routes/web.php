@@ -49,9 +49,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // Contact Form Route
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-// TEST ROUTE - Remove this after testing
-Route::view('/test-pages', 'test-pages')->name('test.pages');
-
 // Public payment gateway callbacks
 Route::match(['get', 'post'], '/payments/esewa/success', [PaymentController::class, 'esewaSuccess'])->name('payments.esewa.success');
 Route::match(['get', 'post'], '/payments/esewa/failure', [PaymentController::class, 'esewaFailure'])->name('payments.esewa.failure');
@@ -70,7 +67,8 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
 
         // Customer static pages
         Route::view('/services', 'customer.services')->name('customer.services');
-        Route::resource('bookings', \App\Http\Controllers\ServiceBookingController::class);
+        Route::resource('bookings', \App\Http\Controllers\ServiceBookingController::class)
+            ->only(['index', 'create', 'store', 'show']);
         Route::post('bookings/{id}/cancel', [\App\Http\Controllers\ServiceBookingController::class, 'cancel'])->name('bookings.cancel');
         Route::post('bookings/{id}/reschedule', [\App\Http\Controllers\ServiceBookingController::class, 'reschedule'])->name('bookings.reschedule');
         Route::post('bookings/{id}/accept', [\App\Http\Controllers\ServiceBookingController::class, 'accept'])->name('bookings.accept');
@@ -287,22 +285,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     
     // Search
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
-});
-
-// Staff context
-Route::middleware(['multi.auth', 'check.staff.status'])->prefix('staff')->group(function () {
-    Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
-    Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
-    
-    // Rental Operations (Staff)
-    Route::get('/rentals', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'index'])->name('staff.rentals.index');
-    Route::get('/rentals/{rental}/inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'showInspection'])->name('staff.rentals.inspection');
-    Route::post('/rentals/{rental}/pre-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePreInspection'])->name('staff.rentals.pre-inspection');
-    Route::post('/rentals/{rental}/pickup', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'markPickedUp'])->name('staff.rentals.pickup');
-    Route::post('/rentals/{rental}/status', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'updateStatus'])->name('staff.rentals.status');
-    Route::post('/rentals/{rental}/post-inspection', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'storePostInspection'])->name('staff.rentals.post-inspection');
-    Route::post('/rentals/{rental}/complete', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'completeRental'])->name('staff.rentals.complete');
-    Route::get('/rentals/history', [\App\Http\Controllers\Staff\RentalOperationsController::class, 'history'])->name('staff.rentals.history');
 });
 
 // Staff status pages

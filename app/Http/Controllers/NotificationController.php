@@ -13,7 +13,7 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $user = getAuthenticatedUser();
 
         if (!$user) {
             return redirect()->route('login');
@@ -21,7 +21,8 @@ class NotificationController extends Controller
 
         $filter = $request->get('filter', 'all');
 
-        $query = Notification::where('customer_id', $user->id);
+        $customerId = (int) ($user->id ?? 0);
+        $query = Notification::where('customer_id', $customerId);
 
         switch ($filter) {
             case 'unread':
@@ -39,7 +40,7 @@ class NotificationController extends Controller
         }
 
         $notifications = $query->orderBy('created_at', 'desc')->paginate(20);
-        $unreadCount = Notification::where('customer_id', $user->id)->where('is_read', false)->count();
+        $unreadCount = Notification::where('customer_id', $customerId)->where('is_read', false)->count();
 
         return view('notifications.index', compact('notifications', 'unreadCount', 'filter'));
     }
@@ -93,21 +94,4 @@ class NotificationController extends Controller
         return back()->with('success', 'Notification deleted');
     }
 
-    /**
-     * Create a notification for a customer.
-     */
-    public static function create($customerId, $type, $title, $message, $iconType = 'info', $actionUrl = null, $actionText = null, $relatedId = null, $relatedType = null)
-    {
-        return Notification::create([
-            'customer_id' => $customerId,
-            'type' => $type,
-            'title' => $title,
-            'message' => $message,
-            'icon_type' => $iconType,
-            'action_url' => $actionUrl,
-            'action_text' => $actionText,
-            'related_id' => $relatedId,
-            'related_type' => $relatedType,
-        ]);
-    }
 }
