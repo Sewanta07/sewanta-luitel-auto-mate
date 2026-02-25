@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $owner_id
+ * @property int $vehicle_id
+ * @property float $daily_rate
+ * @property string $approval_status
+ * @property bool $is_available
+ */
 class OwnerVehicle extends Model
 {
     use HasFactory;

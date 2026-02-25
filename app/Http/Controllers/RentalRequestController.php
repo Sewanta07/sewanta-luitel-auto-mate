@@ -58,7 +58,7 @@ class RentalRequestController extends Controller
             $baseKey = 'rental_request:' . $request->id;
             $payment = $paymentMap[$baseKey] ?? null;
             if ($payment) {
-                $request->payment_status = $payment->status;
+                $request->payment_status = $this->mapGatewayStatusToRentalStatus((string) $payment->status);
                 $requestPaymentIds[$request->id] = $payment->id;
             }
         });
@@ -69,7 +69,9 @@ class RentalRequestController extends Controller
             $baseKey = $prefix . ':' . $rental->id;
             $payment = $paymentMap[$baseKey] ?? null;
 
-            $rental->payment_status = $payment?->status ?? 'pending';
+            $rental->payment_status = $payment
+                ? $this->mapGatewayStatusToRentalStatus((string) $payment->status)
+                : 'Unpaid';
             $rental->transaction_id = $payment?->transaction_id;
 
             if ($payment) {
@@ -118,6 +120,12 @@ class RentalRequestController extends Controller
             $totalCost = $days * $vehicle->daily_rate;
         }
 
+        if (!empty($validated['start_date']) && !empty($validated['end_date'])) {
+            if ($this->hasVehicleDateConflict((int) $vehicle->id, $validated['start_date'], $validated['end_date'])) {
+                return redirect()->back()->with('error', 'Selected vehicle is not available for the chosen dates.')->withInput();
+            }
+        }
+
         if (!$renterId) {
             return redirect()->route('login');
         }
@@ -144,6 +152,26 @@ class RentalRequestController extends Controller
         $vehicleName = $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model);
         notifyRentalUpdate($renterId, $rentalRequest, 'Pending', $vehicleName);
 
+        if (!empty($ownerId)) {
+            $renterName = trim((string) (Auth::guard('customer')->user()?->name ?? Auth::user()?->name ?? 'A renter'));
+            $dateDetails = '';
+            if (!empty($validated['start_date']) && !empty($validated['end_date'])) {
+                $dateDetails = ' Rental period: ' . $validated['start_date'] . ' to ' . $validated['end_date'] . '.';
+            }
+
+            createNotification(
+                (int) $ownerId,
+                'rental_update',
+                'New Rental Request',
+                $renterName . ' requested to rent your vehicle ' . $vehicleName . '.' . $dateDetails,
+                'info',
+                route('customer.rentals'),
+                'View Request',
+                $rentalRequest->id,
+                'RentalRequest'
+            );
+        }
+
         return redirect()->back()->with('success', 'Rental request sent!');
     }
 
@@ -164,6 +192,12 @@ class RentalRequestController extends Controller
         $vehicle = $request->vehicle;
         if (!$vehicle || !empty($vehicle->rented_by_user_id)) {
             return redirect()->back()->with('error', 'Vehicle is no longer available.');
+        }
+
+        if ($request->start_date && $request->end_date) {
+            if ($this->hasVehicleDateConflict((int) $request->vehicle_id, (string) $request->start_date, (string) $request->end_date, (int) $request->id)) {
+                return redirect()->back()->with('error', 'Vehicle has conflicting reservations for the selected period.');
+            }
         }
 
         $request->status = 'Approved';
@@ -196,6 +230,10 @@ class RentalRequestController extends Controller
 
         $request->status = 'Rejected';
         $request->save();
+
+        $vehicle = $request->vehicle;
+        $vehicleName = $vehicle ? ($vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model)) : 'requested vehicle';
+        notifyRentalUpdate($request->renter_id, $request, 'Rejected', $vehicleName);
 
         return redirect()->back()->with('success', 'Rental request rejected.');
     }
@@ -245,5 +283,44 @@ class RentalRequestController extends Controller
         }
 
         return redirect()->back()->with('success', 'Rental marked as returned.');
+    }
+
+    private function mapGatewayStatusToRentalStatus(string $status): string
+    {
+        $normalized = strtolower($status);
+
+        if ($normalized === 'paid') {
+            return 'Paid';
+        }
+
+        return 'Unpaid';
+    }
+
+    private function hasVehicleDateConflict(int $vehicleId, string $startDate, string $endDate, ?int $excludeRequestId = null): bool
+    {
+        $activeRequestStatuses = ['Pending', 'Approved', 'Ready for Pickup', 'Picked Up', 'In Use', 'Returned'];
+
+        $requestConflict = RentalRequest::query()
+            ->where('vehicle_id', $vehicleId)
+            ->whereIn('status', $activeRequestStatuses)
+            ->whereNotNull('start_date')
+            ->whereNotNull('end_date')
+            ->when($excludeRequestId, function ($query) use ($excludeRequestId) {
+                $query->where('id', '!=', $excludeRequestId);
+            })
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereDate('end_date', '>=', $startDate)
+            ->exists();
+
+        if ($requestConflict) {
+            return true;
+        }
+
+        return Rental::query()
+            ->where('vehicle_id', $vehicleId)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereDate('end_date', '>=', $startDate)
+            ->exists();
     }
 }

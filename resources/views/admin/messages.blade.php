@@ -98,7 +98,7 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         @if($message->booking)
-                                            <a href="{{ route('bookings.show', $message->booking->id) }}" class="text-[#ff5a1f] hover:underline">
+                                            <a href="{{ route('admin.services.invoice', $message->booking->id) }}" class="text-[#ff5a1f] hover:underline">
                                                 {{ $message->booking->booking_code }}
                                             </a>
                                         @else

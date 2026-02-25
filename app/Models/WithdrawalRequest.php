@@ -5,6 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $owner_id
+ * @property float $amount
+ * @property string $status
+ * @property string|null $note
+ * @property string|null $admin_note
+ * @property \Illuminate\Support\Carbon|null $requested_at
+ * @property \Illuminate\Support\Carbon|null $processed_at
+ * @property int|null $processed_by
+ */
 class WithdrawalRequest extends Model
 {
     use HasFactory;

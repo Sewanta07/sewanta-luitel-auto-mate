@@ -5,6 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $owner_id
+ * @property int $rental_id
+ * @property float $commission
+ * @property float $owner_amount
+ * @property string $payout_status
+ * @property \Illuminate\Support\Carbon|null $paid_out_at
+ */
 class Earning extends Model
 {
     use HasFactory;

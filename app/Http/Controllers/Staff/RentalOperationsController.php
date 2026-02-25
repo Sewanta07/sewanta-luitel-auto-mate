@@ -63,7 +63,7 @@ class RentalOperationsController extends Controller
             abort(403, 'Not authorized');
         }
 
-        if ($rental->payment_status !== 'Paid') {
+        if (!$this->isPaidStatus($rental->payment_status)) {
             return back()->with('error', 'Payment must be completed before inspection.');
         }
 
@@ -109,7 +109,7 @@ class RentalOperationsController extends Controller
             abort(403, 'Not authorized');
         }
 
-        if ($rental->payment_status !== 'Paid') {
+        if (!$this->isPaidStatus($rental->payment_status)) {
             return back()->with('error', 'Payment must be completed before pickup.');
         }
 
@@ -250,7 +250,7 @@ class RentalOperationsController extends Controller
             return back()->with('error', 'Vehicle must be returned before completing rental.');
         }
 
-        if ($rental->has_damage && $rental->damage_payment_status !== 'Paid') {
+        if ($rental->has_damage && !$this->isPaidStatus($rental->damage_payment_status)) {
             return back()->with('error', 'Damage payment must be completed before closing this rental.');
         }
 
@@ -275,5 +275,10 @@ class RentalOperationsController extends Controller
             ->paginate(20);
 
         return view('staff.rentals.history', compact('rentals'));
+    }
+
+    private function isPaidStatus(?string $status): bool
+    {
+        return strtolower((string) $status) === 'paid';
     }
 }

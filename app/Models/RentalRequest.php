@@ -5,6 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CustomerUser;
 
+/**
+ * @property int $id
+ * @property int $vehicle_id
+ * @property int $renter_id
+ * @property int|null $owner_id
+ * @property int|null $assigned_staff_id
+ * @property \Illuminate\Support\Carbon|null $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
+ * @property string $status
+ * @property string $payment_status
+ * @property bool $has_damage
+ * @property float|null $damage_charge
+ * @property string|null $damage_payment_status
+ */
 class RentalRequest extends Model
 {
     protected $fillable = [

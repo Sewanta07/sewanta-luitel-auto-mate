@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use App\Models\Payment;
 
+/**
+ * @property int $id
+ * @property int $customer_id
+ * @property int|null $staff_id
+ * @property string $status
+ * @property string $payment_status
+ * @property float|null $service_cost
+ * @property float|null $spare_parts_cost
+ * @property float|null $total_amount
+ * @property float|null $estimated_cost
+ * @property string $booking_code
+ */
 class ServiceBooking extends Model
 {
     use HasFactory;

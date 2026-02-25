@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -323,15 +324,26 @@ class PaymentController extends Controller
             if ($booking) {
                 $booking->update([
                     'payment_status' => 'paid',
-                    'status' => 'Paid',
                 ]);
+
+                createNotification(
+                    (int) $booking->customer_id,
+                    'payment',
+                    'Service Payment Successful',
+                    'Your service payment of Rs. ' . number_format((float) $payment->amount, 2) . ' was successful for booking #' . $booking->id . '.',
+                    'success',
+                    route('bookings.show', $booking->id),
+                    'View Booking',
+                    $booking->id,
+                    'ServiceBooking'
+                );
             }
 
             return;
         }
 
         if (in_array($prefix, ['admin_rental', 'marketplace_rental'], true)) {
-            $rental = Rental::with('vehicle')->find($entityId);
+            $rental = Rental::with(['vehicle', 'renter', 'owner'])->find($entityId);
             if (!$rental) {
                 return;
             }
@@ -343,10 +355,40 @@ class PaymentController extends Controller
                     'rented_by_user_id' => $rental->renter_id,
                 ]);
             }
+
+            $vehicleName = $this->vehicleDisplayName($rental->vehicle?->vehicle_name, $rental->vehicle?->brand, $rental->vehicle?->model);
+            $dateRange = $this->formatDateRange($rental->start_date, $rental->end_date);
+
+            createNotification(
+                (int) $rental->renter_id,
+                'payment',
+                'Rental Payment Successful',
+                'Payment of Rs. ' . number_format((float) $payment->amount, 2) . ' for ' . $vehicleName . ' has been received. ' . $dateRange,
+                'success',
+                route('customer.rentals'),
+                'View Rental',
+                $rental->id,
+                'Rental'
+            );
+
+            if (!empty($rental->owner_id)) {
+                $renterName = trim((string) ($rental->renter?->name ?? 'A renter'));
+                createNotification(
+                    (int) $rental->owner_id,
+                    'payment',
+                    'Rental Payment Received',
+                    $renterName . ' paid Rs. ' . number_format((float) $payment->amount, 2) . ' for your vehicle ' . $vehicleName . '. ' . $dateRange,
+                    'success',
+                    route('customer.rentals'),
+                    'View Request',
+                    $rental->id,
+                    'Rental'
+                );
+            }
         }
 
         if ($prefix === 'rental_request') {
-            $rentalRequest = RentalRequest::with('vehicle')->find($entityId);
+            $rentalRequest = RentalRequest::with(['vehicle', 'renter', 'owner'])->find($entityId);
             if (!$rentalRequest) {
                 return;
             }
@@ -401,11 +443,41 @@ class PaymentController extends Controller
                 ]);
             }
 
+            $vehicleName = $this->vehicleDisplayName($rentalRequest->vehicle?->vehicle_name, $rentalRequest->vehicle?->brand, $rentalRequest->vehicle?->model);
+            $dateRange = $this->formatDateRange($rentalRequest->start_date, $rentalRequest->end_date);
+
+            createNotification(
+                (int) $rentalRequest->renter_id,
+                'payment',
+                'Rental Payment Successful',
+                'Payment of Rs. ' . number_format((float) $totalAmount, 2) . ' for ' . $vehicleName . ' has been received. ' . $dateRange,
+                'success',
+                route('customer.rentals'),
+                'View Rental',
+                $rentalRequest->id,
+                'RentalRequest'
+            );
+
+            if (!empty($rentalRequest->owner_id)) {
+                $renterName = trim((string) ($rentalRequest->renter?->name ?? 'A renter'));
+                createNotification(
+                    (int) $rentalRequest->owner_id,
+                    'payment',
+                    'Booking Payment Received',
+                    $renterName . ' paid Rs. ' . number_format((float) $totalAmount, 2) . ' to rent your vehicle ' . $vehicleName . '. ' . $dateRange,
+                    'success',
+                    route('customer.rentals'),
+                    'View Booking',
+                    $rentalRequest->id,
+                    'RentalRequest'
+                );
+            }
+
             return;
         }
 
         if ($prefix === 'rental_damage') {
-            $rentalRequest = RentalRequest::find($entityId);
+            $rentalRequest = RentalRequest::with(['vehicle', 'renter', 'owner'])->find($entityId);
             if (!$rentalRequest) {
                 return;
             }
@@ -434,7 +506,61 @@ class PaymentController extends Controller
                     }
                 }
             }
+
+            $vehicleName = $this->vehicleDisplayName($rentalRequest->vehicle?->vehicle_name, $rentalRequest->vehicle?->brand, $rentalRequest->vehicle?->model);
+            $damageAmount = (float) ($rentalRequest->damage_charge ?? 0);
+
+            createNotification(
+                (int) $rentalRequest->renter_id,
+                'payment',
+                'Damage Payment Successful',
+                'Damage payment of Rs. ' . number_format($damageAmount, 2) . ' for ' . $vehicleName . ' has been received.',
+                'success',
+                route('customer.rentals'),
+                'View Rental',
+                $rentalRequest->id,
+                'RentalRequest'
+            );
+
+            if (!empty($rentalRequest->owner_id)) {
+                $renterName = trim((string) ($rentalRequest->renter?->name ?? 'A renter'));
+                createNotification(
+                    (int) $rentalRequest->owner_id,
+                    'payment',
+                    'Damage Payment Received',
+                    $renterName . ' paid damage charges of Rs. ' . number_format($damageAmount, 2) . ' for your vehicle ' . $vehicleName . '.',
+                    'success',
+                    route('customer.rentals'),
+                    'View Details',
+                    $rentalRequest->id,
+                    'RentalRequest'
+                );
+            }
         }
+    }
+
+    private function vehicleDisplayName(?string $name, ?string $brand, ?string $model): string
+    {
+        $label = trim((string) $name);
+        if ($label !== '') {
+            return $label;
+        }
+
+        $fallback = trim(((string) $brand) . ' ' . ((string) $model));
+
+        return $fallback !== '' ? $fallback : 'Vehicle';
+    }
+
+    private function formatDateRange($startDate, $endDate): string
+    {
+        if (!$startDate || !$endDate) {
+            return '';
+        }
+
+        $start = Carbon::parse($startDate)->format('M d, Y');
+        $end = Carbon::parse($endDate)->format('M d, Y');
+
+        return 'Rental period: ' . $start . ' to ' . $end . '.';
     }
 
     private function ensureCustomer(): void

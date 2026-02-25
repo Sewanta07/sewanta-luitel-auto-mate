@@ -88,6 +88,10 @@ class RentalController extends Controller
             return back()->with('error', 'Vehicle is currently unavailable.');
         }
 
+        if ($this->hasVehicleDateConflict((int) $vehicle->id, $validated['start_date'], $validated['end_date'])) {
+            return back()->with('error', 'Vehicle is already reserved for the selected dates.');
+        }
+
         $days = $this->calculateDays($validated['start_date'], $validated['end_date']);
         $total = round($days * (float) $vehicle->daily_rate, 2);
 
@@ -126,6 +130,10 @@ class RentalController extends Controller
 
         if ((int) $ownerVehicle->owner_id === (int) $user->id) {
             return back()->with('error', 'You cannot rent your own listed vehicle.');
+        }
+
+        if ($this->hasVehicleDateConflict((int) $ownerVehicle->vehicle_id, $validated['start_date'], $validated['end_date'])) {
+            return back()->with('error', 'Vehicle is already reserved for the selected dates.');
         }
 
         $days = $this->calculateDays($validated['start_date'], $validated['end_date']);
@@ -379,7 +387,7 @@ class RentalController extends Controller
 
             // If marking as paid, update all associated pending earnings for this owner
             if ($validated['status'] === 'paid') {
-                $pendingEarnings = Earning::where('owner_id', $withdrawalRequest->owner_id)
+                $pendingEarnings = Earning::query()->where('owner_id', $withdrawalRequest->owner_id)
                     ->where('payout_status', 'pending')
                     ->orderBy('id')
                     ->get();
@@ -387,6 +395,10 @@ class RentalController extends Controller
                 $amountRemaining = (float) $withdrawalRequest->amount;
 
                 foreach ($pendingEarnings as $earning) {
+                    if (!$earning instanceof Earning) {
+                        continue;
+                    }
+
                     if ($amountRemaining <= 0) {
                         break;
                     }
@@ -412,6 +424,31 @@ class RentalController extends Controller
     private function calculateDays(string $startDate, string $endDate): int
     {
         return max(1, Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate)) + 1);
+    }
+
+    private function hasVehicleDateConflict(int $vehicleId, string $startDate, string $endDate): bool
+    {
+        $activeRequestStatuses = ['Pending', 'Approved', 'Ready for Pickup', 'Picked Up', 'In Use', 'Returned'];
+
+        $requestConflict = RentalRequest::query()
+            ->where('vehicle_id', $vehicleId)
+            ->whereIn('status', $activeRequestStatuses)
+            ->whereNotNull('start_date')
+            ->whereNotNull('end_date')
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereDate('end_date', '>=', $startDate)
+            ->exists();
+
+        if ($requestConflict) {
+            return true;
+        }
+
+        return Rental::query()
+            ->where('vehicle_id', $vehicleId)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereDate('end_date', '>=', $startDate)
+            ->exists();
     }
 
     private function ensureCustomer(): void

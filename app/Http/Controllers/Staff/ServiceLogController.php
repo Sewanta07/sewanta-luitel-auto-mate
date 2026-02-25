@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceLog;
+use App\Models\ServiceBooking;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -44,13 +45,20 @@ class ServiceLogController extends Controller
             });
         }
 
-        $logs = $query->paginate(15);
-        
-        // Calculate summary stats
-        $totalServices = $logs->total();
-        $totalCost = $logs->getCollection()->sum(function ($log) {
-            return $log->booking->estimated_cost ?? 0;
-        });
+        $bookingIds = (clone $query)
+            ->select('service_booking_id')
+            ->distinct()
+            ->pluck('service_booking_id');
+
+        $totalServices = $bookingIds->count();
+        $totalCost = ServiceBooking::query()
+            ->whereIn('id', $bookingIds)
+            ->get()
+            ->sum(function (ServiceBooking $booking) {
+                return (float) ($booking->total_amount ?? $booking->estimated_cost ?? 0);
+            });
+
+        $logs = $query->paginate(15)->withQueryString();
 
         return view('staff.service-logs', [
             'logs' => $logs,

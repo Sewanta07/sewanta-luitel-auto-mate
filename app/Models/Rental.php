@@ -5,6 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $vehicle_id
+ * @property int|null $owner_id
+ * @property int $renter_id
+ * @property string $status
+ * @property float $total_amount
+ * @property float $commission_amount
+ * @property float $owner_earning
+ * @property float|null $damage_charge
+ */
 class Rental extends Model
 {
     use HasFactory;

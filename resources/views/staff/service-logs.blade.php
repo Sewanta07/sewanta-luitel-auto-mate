@@ -5,173 +5,159 @@
 @section('content')
 @include('components.staff-navbar')
 
-<div class="min-h-screen bg-gray-50 pb-12">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-12">
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {{-- Page Header --}}
-        <div class="sm:flex sm:items-center sm:justify-between mb-8 mt-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Service Logs</h1>
-                <p class="mt-2 text-lg text-gray-600">Review your completed services and service history.</p>
-            </div>
-             <div class="mt-4 sm:mt-0 flex space-x-3">
-                 <button type="button" class="inline-flex items-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#ff5a1f] focus:ring-offset-2 transition-colors">
-                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                    Export CSV
-                </button>
+        <div class="mb-8 mt-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <h1 class="text-4xl font-black text-gray-900">Service History</h1>
+                    <p class="mt-2 text-base text-gray-600 font-medium">View your completed services and work logs</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ route('staff.service.logs') }}" class="px-4 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:shadow-lg transition font-bold flex items-center gap-2 shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Refresh
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-             <!-- Filters -->
-            <div class="p-4 border-b border-gray-100 bg-gray-50 sm:flex sm:items-center sm:justify-between">
-                <div class="flex-1 min-w-0 sm:flex sm:items-center sm:space-x-4">
-                     <div class="relative max-w-xs shadow-sm rounded-xl">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                        </div>
-                        <input type="text" class="block w-full rounded-xl border border-gray-300 pl-10 focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3" placeholder="Search by VIN or Customer...">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 p-6 transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Total Completed</p>
+                        <p class="text-3xl font-black text-green-600 mt-2">{{ $totalServices }}</p>
+                        <p class="text-xs text-gray-500 mt-2">Services completed</p>
                     </div>
-                </div>
-                 <div class="mt-4 sm:mt-0 sm:flex sm:items-center sm:space-x-3">
-                    <span class="text-sm text-gray-500">Filter by:</span>
-                    <select class="block w-full rounded-xl border-gray-300 py-2 pl-3 pr-10 text-base focus:border-[#ff5a1f] focus:outline-none focus:ring-[#ff5a1f] sm:text-sm">
-                        <option>Last 30 Days</option>
-                        <option>Last 3 Months</option>
-                        <option>This Year</option>
-                        <option>All Time</option>
-                    </select>
+                    <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
                 </div>
             </div>
 
-            <!-- Table -->
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 p-6 transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Total Revenue</p>
+                        <p class="text-3xl font-black text-blue-600 mt-2">Rs. {{ number_format($totalCost, 0) }}</p>
+                        <p class="text-xs text-gray-500 mt-2">Estimated service value</p>
+                    </div>
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mb-8">
+            <h3 class="text-lg font-black text-gray-900 mb-4">Filter Results</h3>
+            <form action="{{ route('staff.service.logs') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Search</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Booking ref, vehicle..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-sm font-medium outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">From Date</label>
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-sm font-medium outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">To Date</label>
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-sm font-medium outline-none transition">
+                </div>
+                <div class="flex items-end gap-2">
+                    <button type="submit" class="w-full px-6 py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition shadow-lg">Filter</button>
+                    <a href="{{ route('staff.service.logs') }}" class="w-full text-center px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-lg font-black text-gray-900 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Completed Services
+                </h2>
+            </div>
+
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Completed</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking Ref</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Description</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
-                            <th scope="col" class="relative px-6 py-3"><span class="sr-only">Details</span></th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider">Booking Ref</th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider">Vehicle</th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider">Description</th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider">Cost</th>
+                            <th class="px-6 py-4 text-xs font-black text-gray-500 uppercase tracking-wider text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Jan 15, 2025
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                                #BK-7855
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="block text-sm font-medium text-gray-900">Mazda CX-5</span>
-                                <span class="block text-xs text-gray-500">MZD-9988</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">Transmission Fluid Change</div>
-                                <div class="text-xs text-gray-500">Refilled with ATF-OZ, checked for leaks.</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                $150.00
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">View Report</a>
-                            </td>
-                        </tr>
-
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Jan 12, 2025
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                                #BK-7842
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="block text-sm font-medium text-gray-900">Toyota Corolla</span>
-                                <span class="block text-xs text-gray-500">TYT-2233</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">Annual Safety Inspection</div>
-                                <div class="text-xs text-gray-500">Passed all checks. Replaced wiper blades.</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                $85.00
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">View Report</a>
-                            </td>
-                        </tr>
-
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Jan 10, 2025
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                                #BK-7830
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="block text-sm font-medium text-gray-900">Honda Accord</span>
-                                <span class="block text-xs text-gray-500">HDA-5566</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">Brake Pad Replacement</div>
-                                <div class="text-xs text-gray-500">Front and rear pads replaced. Rotors resurfaced.</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                $320.00
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-[#ff5a1f] hover:text-[#e64b15]">View Report</a>
-                            </td>
-                        </tr>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($logs as $log)
+                            <tr class="hover:bg-gray-50 transition-colors group">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900">{{ $log->created_at->format('M d, Y') }}</div>
+                                    <div class="text-xs text-gray-500">{{ $log->created_at->format('h:i A') }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-black text-sm">{{ $log->booking->booking_code }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-bold text-gray-900">{{ $log->booking->vehicle_model }}</div>
+                                    <div class="text-xs text-gray-500 font-mono">{{ $log->booking->vehicle_number }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900 font-medium">{{ $log->booking->service_type }}</div>
+                                    @if($log->notes)
+                                        <div class="text-xs text-gray-500 mt-1">{{ \Illuminate\Support\Str::limit($log->notes, 70) }}</div>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-bold text-gray-900">Rs. {{ number_format((float) ($log->booking->total_amount ?? $log->booking->estimated_cost ?? 0), 2) }}</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <a href="{{ route('staff.services.show', $log->booking->id) }}" class="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition font-bold text-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center">
+                                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    <p class="text-gray-500 font-bold text-lg">No completed services found</p>
+                                    <p class="text-gray-400 text-sm mt-1">Your completed services will appear here</p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <div class="bg-gray-50 px-4 py-3 border-t border-gray-200 sm:px-6">
-                <!-- Pagination -->
-                 <div class="flex items-center justify-between">
-                    <div class="flex-1 flex justify-between sm:hidden">
-                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
-                        <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
-                    </div>
-                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm text-gray-700">
-                                Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">24</span> results
-                            </p>
+            @if($logs->hasPages())
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-600">
+                            Showing <span class="font-bold">{{ $logs->firstItem() }}</span> to <span class="font-bold">{{ $logs->lastItem() }}</span> of <span class="font-bold">{{ $logs->total() }}</span> results
                         </div>
-                        <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    <span class="sr-only">Previous</span>
-                                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                </a>
-                                    <span class="sr-only">Previous</span>
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                                <a href="#" aria-current="page" class="z-10 bg-orange-50 border-[#ff5a1f] text-[#ff5a1f] relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
-                                <a href="#" class="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
-                                <a href="#" class="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
-                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    <span class="sr-only">Next</span>
-                                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
-                                </a>
-                                    <span class="sr-only">Next</span>
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                            </nav>
+                        <div class="flex gap-2">
+                            @if ($logs->onFirstPage())
+                                <button disabled class="px-4 py-2 rounded-lg bg-gray-200 text-gray-400 font-bold">← Previous</button>
+                            @else
+                                <a href="{{ $logs->previousPageUrl() }}" class="px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:border-orange-500 hover:text-orange-600 font-bold transition">← Previous</a>
+                            @endif
+
+                            @if ($logs->hasMorePages())
+                                <a href="{{ $logs->nextPageUrl() }}" class="px-4 py-2 rounded-lg bg-orange-500 text-white font-bold hover:bg-orange-600 transition">Next →</a>
+                            @else
+                                <button disabled class="px-4 py-2 rounded-lg bg-gray-200 text-gray-400 font-bold">Next →</button>
+                            @endif
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </main>
 </div>
 @endsection
-
