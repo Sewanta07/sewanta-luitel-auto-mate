@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\UserNotificationCreated;
 use App\Models\Notification;
 
 if (!function_exists('createNotification')) {
@@ -8,7 +9,7 @@ if (!function_exists('createNotification')) {
      */
     function createNotification($customerId, $type, $title, $message, $iconType = 'info', $actionUrl = null, $actionText = null, $relatedId = null, $relatedType = null)
     {
-        return Notification::create([
+        $notification = Notification::create([
             'customer_id' => $customerId,
             'type' => $type,
             'title' => $title,
@@ -19,6 +20,24 @@ if (!function_exists('createNotification')) {
             'related_id' => $relatedId,
             'related_type' => $relatedType,
         ]);
+
+        event(new UserNotificationCreated(
+            (int) $customerId,
+            [
+                'id' => (int) $notification->id,
+                'type' => (string) $notification->type,
+                'title' => (string) $notification->title,
+                'message' => (string) $notification->message,
+                'icon_type' => (string) $notification->icon_type,
+                'action_url' => $notification->action_url,
+                'action_text' => $notification->action_text,
+                'is_read' => (bool) $notification->is_read,
+                'created_at' => optional($notification->created_at)?->toISOString(),
+            ],
+            Notification::where('customer_id', $customerId)->where('is_read', false)->count()
+        ));
+
+        return $notification;
     }
 }
 

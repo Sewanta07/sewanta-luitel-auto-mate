@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RentalStatusUpdated;
 use App\Models\RentalRequest;
 use App\Models\Rental;
 use App\Models\Payment;
@@ -172,6 +173,8 @@ class RentalRequestController extends Controller
             );
         }
 
+        event(new RentalStatusUpdated($rentalRequest->fresh()));
+
         return redirect()->back()->with('success', 'Rental request sent!');
     }
 
@@ -211,6 +214,8 @@ class RentalRequestController extends Controller
         $vehicleName = $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model);
         notifyRentalUpdate($request->renter_id, $request, 'Approved', $vehicleName);
 
+        event(new RentalStatusUpdated($request->fresh()));
+
         return redirect()->back()->with('success', 'Rental request approved.');
     }
 
@@ -235,6 +240,8 @@ class RentalRequestController extends Controller
         $vehicleName = $vehicle ? ($vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model)) : 'requested vehicle';
         notifyRentalUpdate($request->renter_id, $request, 'Rejected', $vehicleName);
 
+        event(new RentalStatusUpdated($request->fresh()));
+
         return redirect()->back()->with('success', 'Rental request rejected.');
     }
 
@@ -254,6 +261,8 @@ class RentalRequestController extends Controller
 
         $request->payment_status = 'Paid';
         $request->save();
+
+        event(new RentalStatusUpdated($request->fresh()));
 
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }
@@ -281,6 +290,8 @@ class RentalRequestController extends Controller
             $vehicle->rented_by_user_id = null;
             $vehicle->save();
         }
+
+        event(new RentalStatusUpdated($request->fresh()));
 
         return redirect()->back()->with('success', 'Rental marked as returned.');
     }

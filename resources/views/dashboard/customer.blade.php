@@ -313,3 +313,32 @@
 
 @endsection
 
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userId = @json((int) $user->id);
+        let reloadTimer = null;
+
+        const scheduleReload = () => {
+            if (reloadTimer) {
+                return;
+            }
+
+            reloadTimer = setTimeout(() => {
+                window.location.reload();
+            }, 1200);
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeDashboard('customer', userId, {
+                serviceStatus: scheduleReload,
+                rentalStatus: scheduleReload,
+                paymentStatus: scheduleReload,
+                earningsUpdated: scheduleReload,
+                withdrawalUpdated: scheduleReload,
+            });
+        }
+    });
+</script>
+@endpush
+

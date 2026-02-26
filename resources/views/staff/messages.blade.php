@@ -55,6 +55,14 @@
 
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 650px;">
+                    @php
+                        $conversationId = \App\Support\Realtime\ConversationChannel::fromParticipants(
+                            get_class(Auth::user()),
+                            (int) Auth::id(),
+                            get_class($customer),
+                            (int) $customer->id
+                        );
+                    @endphp
                     <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white font-bold text-lg">
@@ -85,7 +93,7 @@
                             @php
                                 $isSender = $message->sender_id == Auth::id() && $message->sender_type == get_class(Auth::user());
                             @endphp
-                            <div class="mb-4 flex {{ $isSender ? 'justify-end' : 'justify-start' }}">
+                            <div class="mb-4 flex {{ $isSender ? 'justify-end' : 'justify-start' }}" data-message-id="{{ (int) $message->id }}">
                                 <div class="max-w-xs lg:max-w-md">
                                     <p class="text-xs font-semibold mb-1.5 {{ $isSender ? 'text-[#ff5a1f] text-right' : 'text-gray-900' }}">
                                         {{ $isSender ? 'You' : $customer->name }}
@@ -137,10 +145,81 @@
 </div>
 
 <script>
-    const container = document.getElementById('messages-container');
-    if (container) {
-        container.scrollTop = container.scrollHeight;
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('messages-container');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+
+        const conversationId = @json($conversationId);
+        const currentUserId = @json((int) Auth::id());
+        const currentUserType = @json(get_class(Auth::user()));
+        const currentUserName = 'You';
+        const otherUserName = @json($customer->name ?? 'Customer');
+
+        const formatDate = (value) => {
+            if (!value) {
+                return '';
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return '';
+            }
+
+            return date.toLocaleString(undefined, {
+                month: 'short',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+        };
+
+        const appendMessage = (payload) => {
+            if (!container || !payload || !payload.id) {
+                return;
+            }
+
+            if (document.querySelector(`[data-message-id="${payload.id}"]`)) {
+                return;
+            }
+
+            const isSender = Number(payload.sender_id) === Number(currentUserId)
+                && payload.sender_type === currentUserType;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `mb-4 flex ${isSender ? 'justify-end' : 'justify-start'}`;
+            wrapper.dataset.messageId = String(payload.id);
+
+            const senderLabel = isSender ? currentUserName : otherUserName;
+            const bubbleClass = isSender
+                ? 'bg-[#ff5a1f] text-white rounded-br-none'
+                : 'bg-gray-200 text-gray-900 rounded-bl-none';
+            const timeClass = isSender ? 'text-orange-50' : 'text-gray-700';
+            const nameClass = isSender ? 'text-[#ff5a1f] text-right' : 'text-gray-900';
+
+            wrapper.innerHTML = `
+                <div class="max-w-xs lg:max-w-md">
+                    <p class="text-xs font-semibold mb-1.5 ${nameClass}">${senderLabel}</p>
+                    <div class="px-4 py-3 rounded-2xl ${bubbleClass}">
+                        <p class="break-words"></p>
+                        <p class="text-xs mt-2 ${timeClass}">${formatDate(payload.created_at)}</p>
+                    </div>
+                </div>
+            `;
+
+            wrapper.querySelector('.break-words').textContent = payload.message ?? '';
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeChat(conversationId, {
+                message: appendMessage,
+            });
+        }
+    });
 </script>
 @endsection
 

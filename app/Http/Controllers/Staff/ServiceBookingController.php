@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Events\InventoryUpdated;
+use App\Events\ServiceStatusUpdated;
 use App\Models\InventoryItem;
 use App\Models\InventoryMovement;
 use App\Models\ServiceBooking;
@@ -78,6 +80,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures to avoid breaking workflow
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Booking status updated successfully!');
     }
@@ -157,6 +161,13 @@ class ServiceBookingController extends Controller
             'status' => 'Parts Used',
             'notes' => "Parts used: {$item->part_name} x{$request->quantity}",
         ]);
+
+        if ($booking->status !== 'Parts Added') {
+            $booking->update(['status' => 'Parts Added']);
+        }
+
+        event(new InventoryUpdated($item->fresh()));
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Part added to service and inventory updated.');
     }

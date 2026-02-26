@@ -149,3 +149,29 @@
     </main>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userId = @json((int) $user->id);
+        let reloadTimer = null;
+
+        const scheduleReload = () => {
+            if (reloadTimer) {
+                return;
+            }
+
+            reloadTimer = setTimeout(() => {
+                window.location.reload();
+            }, 1200);
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeDashboard('staff', userId, {
+                serviceStatus: scheduleReload,
+                rentalStatus: scheduleReload,
+            });
+        }
+    });
+</script>
+@endpush

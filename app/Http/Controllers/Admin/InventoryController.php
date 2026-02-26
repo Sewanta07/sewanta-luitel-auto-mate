@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Events\InventoryUpdated;
 use App\Models\InventoryItem;
 use App\Models\InventoryMovement;
 use Illuminate\Http\Request;
@@ -57,6 +58,8 @@ class InventoryController extends Controller
             'notes' => 'Initial stock added',
         ]);
 
+        event(new InventoryUpdated($item->fresh()));
+
         return redirect()->route('admin.inventory.index')->with('success', 'Inventory item created successfully.');
     }
 
@@ -95,6 +98,8 @@ class InventoryController extends Controller
                 'unit_price' => $item->unit_price,
                 'notes' => 'Stock adjusted from admin panel',
             ]);
+
+            event(new InventoryUpdated($item->fresh()));
         }
 
         return redirect()->route('admin.inventory.index')->with('success', 'Inventory item updated successfully.');
@@ -115,6 +120,8 @@ class InventoryController extends Controller
             'unit_price' => $item->unit_price,
             'notes' => 'Item deactivated',
         ]);
+
+        event(new InventoryUpdated($item->fresh()));
 
         return redirect()->route('admin.inventory.index')->with('success', 'Inventory item deactivated successfully.');
     }

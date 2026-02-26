@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EarningsUpdated;
+use App\Events\WithdrawalStatusUpdated;
 use App\Models\Earning;
 use App\Models\OwnerVehicle;
 use App\Models\Rental;
@@ -229,6 +231,14 @@ class RentalController extends Controller
                     ]
                 );
 
+                event(new EarningsUpdated(
+                    (int) $rental->owner_id,
+                    (float) ($rental->owner_earning ?? 0),
+                    (float) ($rental->commission_amount ?? 0),
+                    'rental_completed',
+                    (int) $rental->id
+                ));
+
                 OwnerVehicle::where('vehicle_id', $rental->vehicle_id)->update(['is_available' => true]);
             }
         });
@@ -244,6 +254,14 @@ class RentalController extends Controller
             'payout_status' => 'paid',
             'paid_out_at' => now(),
         ]);
+
+        event(new EarningsUpdated(
+            (int) $earning->owner_id,
+            (float) $earning->owner_amount,
+            (float) $earning->commission,
+            'payout_paid',
+            (int) $earning->rental_id
+        ));
 
         return back()->with('success', 'Owner payout marked as paid.');
     }
@@ -365,6 +383,8 @@ class RentalController extends Controller
             'requested_at' => now(),
         ]);
 
+        event(new WithdrawalStatusUpdated($withdrawalRequest));
+
         return back()->with('success', 'Withdrawal request submitted successfully. Admin will review your request.');
     }
 
@@ -417,6 +437,8 @@ class RentalController extends Controller
                 }
             }
         });
+
+        event(new WithdrawalStatusUpdated($withdrawalRequest->fresh()));
 
         return back()->with('success', 'Withdrawal request has been ' . $validated['status'] . '.');
     }

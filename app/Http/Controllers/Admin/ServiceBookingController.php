@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Events\ServiceStatusUpdated;
 use App\Models\ServiceBooking;
 use App\Models\StaffMember;
 use Illuminate\Http\Request;
@@ -82,6 +83,8 @@ class ServiceBookingController extends Controller
             // Suppress mail failures
         }
 
+        event(new ServiceStatusUpdated($booking->fresh()));
+
         return redirect()->back()->with('success', 'Staff assigned successfully!');
     }
 
@@ -116,6 +119,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Status updated successfully!');
     }
@@ -171,6 +176,8 @@ class ServiceBookingController extends Controller
             // Suppress mail failures
         }
 
+        event(new ServiceStatusUpdated($booking->fresh()));
+
         return redirect()->back()->with('success', 'Booking approved and staff assigned successfully!');
     }
 
@@ -208,6 +215,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Booking rejected successfully!');
     }

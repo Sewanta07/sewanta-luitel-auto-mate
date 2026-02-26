@@ -1,26 +1,32 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 if (!function_exists('getAuthenticatedUser')) {
     /**
      * Get the currently authenticated user from any guard.
      */
     function getAuthenticatedUser()
     {
-        // Check each guard in order
-        if (Auth::guard('admin')->check()) {
-            return Auth::guard('admin')->user();
+        try {
+            // Check each guard in order
+            if (Auth::guard('admin')->check()) {
+                return Auth::guard('admin')->user();
+            }
+
+            if (Auth::guard('staff')->check()) {
+                return Auth::guard('staff')->user();
+            }
+
+            if (Auth::guard('customer')->check()) {
+                return Auth::guard('customer')->user();
+            }
+
+            // Fallback to default guard
+            return Auth::user();
+        } catch (\Throwable $exception) {
+            return null;
         }
-        
-        if (Auth::guard('staff')->check()) {
-            return Auth::guard('staff')->user();
-        }
-        
-        if (Auth::guard('customer')->check()) {
-            return Auth::guard('customer')->user();
-        }
-        
-        // Fallback to default guard
-        return Auth::user();
     }
 }
 
@@ -30,45 +36,49 @@ if (!function_exists('getAuthenticatedUserRole')) {
      */
     function getAuthenticatedUserRole(): ?string
     {
-        // Check guards in order
-        if (Auth::guard('admin')->check()) {
-            return 'admin';
-        }
-        
-        if (Auth::guard('staff')->check()) {
-            return 'staff';
-        }
-        
-        if (Auth::guard('customer')->check()) {
-            return 'customer';
-        }
+        try {
+            // Check guards in order
+            if (Auth::guard('admin')->check()) {
+                return 'admin';
+            }
 
-        // Fallback: try to determine from user instance
-        $user = Auth::user();
-        
-        if (!$user) {
+            if (Auth::guard('staff')->check()) {
+                return 'staff';
+            }
+
+            if (Auth::guard('customer')->check()) {
+                return 'customer';
+            }
+
+            // Fallback: try to determine from user instance
+            $user = Auth::user();
+
+            if (!$user) {
+                return null;
+            }
+
+            // Check user type by class
+            if ($user instanceof \App\Models\Admin) {
+                return 'admin';
+            }
+
+            if ($user instanceof \App\Models\StaffMember) {
+                return 'staff';
+            }
+
+            if ($user instanceof \App\Models\CustomerUser) {
+                return 'customer';
+            }
+
+            // Check role attribute for User model (backward compatibility)
+            if (isset($user->role) && in_array($user->role, ['admin', 'staff', 'customer'])) {
+                return $user->role;
+            }
+
+            return 'customer'; // Default fallback
+        } catch (\Throwable $exception) {
             return null;
         }
-
-        // Check user type by class
-        if ($user instanceof \App\Models\Admin) {
-            return 'admin';
-        }
-        
-        if ($user instanceof \App\Models\StaffMember) {
-            return 'staff';
-        }
-        
-        if ($user instanceof \App\Models\CustomerUser) {
-            return 'customer';
-        }
-
-        // Check role attribute for User model (backward compatibility)
-        if (isset($user->role) && in_array($user->role, ['admin', 'staff', 'customer'])) {
-            return $user->role;
-        }
-
-        return 'customer'; // Default fallback
     }
 }
 

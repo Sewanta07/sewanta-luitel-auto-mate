@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Events\MessageReadUpdated;
+use App\Events\MessageSent;
 use App\Models\CustomerUser;
 use App\Models\Message;
 use App\Models\ServiceBooking;
+use App\Support\Realtime\ConversationChannel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,6 +65,12 @@ class CustomerController extends Controller
                 ->count();
         }
         $customer = CustomerUser::findOrFail($customerId);
+        $conversationId = ConversationChannel::fromParticipants(
+            get_class($staff),
+            (int) $staff->id,
+            CustomerUser::class,
+            (int) $customer->id
+        );
         
         // Get bookings for context
         $bookings = ServiceBooking::where('customer_id', $customerId)
@@ -82,12 +91,26 @@ class CustomerController extends Controller
         })->orderBy('created_at', 'asc')->get();
 
         // Mark messages from customer as read
-        Message::where('sender_id', $customer->id)
+        $messageIdsMarkedRead = Message::where('sender_id', $customer->id)
             ->where('sender_type', get_class($customer))
             ->where('receiver_id', $staff->id)
             ->where('receiver_type', get_class($staff))
             ->where('is_read', false)
-            ->update(['is_read' => true, 'read_at' => now()]);
+            ->pluck('id')
+            ->all();
+
+        if (!empty($messageIdsMarkedRead)) {
+            Message::whereIn('id', $messageIdsMarkedRead)
+                ->update(['is_read' => true, 'read_at' => now()]);
+
+            event(new MessageReadUpdated(
+                $conversationId,
+                array_map('intval', $messageIdsMarkedRead),
+                get_class($staff),
+                (int) $staff->id,
+                now()->toISOString()
+            ));
+        }
 
         return view('staff.messages', compact('customer', 'messages', 'bookings', 'customers'));
     }
@@ -102,7 +125,7 @@ class CustomerController extends Controller
         $staff = Auth::user();
         $customer = CustomerUser::findOrFail($customerId);
 
-        Message::create([
+        $message = Message::create([
             'sender_id' => $staff->id,
             'sender_type' => get_class($staff),
             'receiver_id' => $customer->id,
@@ -110,6 +133,15 @@ class CustomerController extends Controller
             'service_booking_id' => $request->service_booking_id,
             'message' => $request->message,
         ]);
+
+        $conversationId = ConversationChannel::fromParticipants(
+            get_class($staff),
+            (int) $staff->id,
+            get_class($customer),
+            (int) $customer->id
+        );
+
+        event(new MessageSent($message, $conversationId));
 
         return redirect()->back()->with('success', 'Message sent successfully!');
     }

@@ -51,6 +51,14 @@
             <!-- Messages Display Area -->
             <div class="lg:col-span-2">
                 @if(isset($selectedStaff))
+                    @php
+                        $conversationId = \App\Support\Realtime\ConversationChannel::fromParticipants(
+                            get_class($customer),
+                            (int) $customer->id,
+                            \App\Models\StaffMember::class,
+                            (int) $selectedStaff->id
+                        );
+                    @endphp
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 600px;">
                         <!-- Header -->
                         <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
@@ -74,7 +82,7 @@
                         <!-- Messages Container -->
                         <div class="flex-1 p-6 overflow-y-auto bg-gray-50" id="messagesContainer">
                             @forelse($messages as $message)
-                                <div class="mb-4 flex {{ $message->isSentByCustomer() ? 'justify-end' : 'justify-start' }}">
+                                <div class="mb-4 flex {{ $message->isSentByCustomer() ? 'justify-end' : 'justify-start' }}" data-message-id="{{ (int) $message->id }}">
                                     <div class="max-w-xs lg:max-w-md">
                                         <p class="text-[10px] font-black uppercase tracking-widest mb-1 {{ $message->isSentByCustomer() ? 'text-orange-400 text-right' : 'text-gray-400' }}">
                                             {{ $message->isSentByCustomer() ? ($customer->name ?? 'You') : ($selectedStaff->name ?? 'Staff') }}
@@ -134,10 +142,82 @@
 </div>
 
 <script>
-    // Auto-scroll messages to bottom
-    const messagesContainer = document.getElementById('messagesContainer');
-    if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const messagesContainer = document.getElementById('messagesContainer');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        @if(isset($selectedStaff))
+        const conversationId = @json($conversationId);
+        const currentUserId = @json((int) $customer->id);
+        const currentUserType = @json(get_class($customer));
+        const currentUserName = @json($customer->name ?? 'You');
+        const otherUserName = @json($selectedStaff->name ?? 'Staff');
+
+        const formatDate = (value) => {
+            if (!value) {
+                return '';
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return '';
+            }
+
+            return date.toLocaleString(undefined, {
+                month: 'short',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+        };
+
+        const appendMessage = (payload) => {
+            if (!messagesContainer || !payload || !payload.id) {
+                return;
+            }
+
+            if (document.querySelector(`[data-message-id="${payload.id}"]`)) {
+                return;
+            }
+
+            const isSentByCurrent = Number(payload.sender_id) === Number(currentUserId)
+                && payload.sender_type === currentUserType;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `mb-4 flex ${isSentByCurrent ? 'justify-end' : 'justify-start'}`;
+            wrapper.dataset.messageId = String(payload.id);
+
+            const senderLabel = isSentByCurrent ? currentUserName : otherUserName;
+            const bubbleClass = isSentByCurrent
+                ? 'bg-[#ff5a1f] text-white rounded-br-none'
+                : 'bg-gray-200 text-gray-900 rounded-bl-none';
+            const timeClass = isSentByCurrent ? 'text-orange-100' : 'text-gray-600';
+            const nameClass = isSentByCurrent ? 'text-orange-400 text-right' : 'text-gray-400';
+
+            wrapper.innerHTML = `
+                <div class="max-w-xs lg:max-w-md">
+                    <p class="text-[10px] font-black uppercase tracking-widest mb-1 ${nameClass}">${senderLabel}</p>
+                    <div class="px-4 py-3 rounded-2xl ${bubbleClass}">
+                        <p class="break-words"></p>
+                        <p class="text-xs mt-2 ${timeClass}">${formatDate(payload.created_at)}</p>
+                    </div>
+                </div>
+            `;
+
+            wrapper.querySelector('.break-words').textContent = payload.message ?? '';
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeChat(conversationId, {
+                message: appendMessage,
+            });
+        }
+        @endif
+    });
 </script>
 @endsection

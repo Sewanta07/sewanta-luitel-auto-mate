@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "heroicons": "^2.0.18",
+        "laravel-echo": "^2.2.4",
         "lucide-react": "^0.263.1"
     },
     "devDependencies": {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Events\RentalStatusUpdated;
 use App\Models\RentalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,6 +98,8 @@ class RentalOperationsController extends Controller
             route('customer.rentals')
         );
 
+        event(new RentalStatusUpdated($rental->fresh()));
+
         return back()->with('success', 'Pre-inspection completed! Vehicle is ready for pickup.');
     }
 
@@ -134,6 +137,8 @@ class RentalOperationsController extends Controller
             route('customer.rentals')
         );
 
+        event(new RentalStatusUpdated($rental->fresh()));
+
         return back()->with('success', 'Vehicle marked as picked up!');
     }
 
@@ -154,6 +159,8 @@ class RentalOperationsController extends Controller
         $rental->update([
             'status' => $validated['status'],
         ]);
+
+        event(new RentalStatusUpdated($rental->fresh()));
 
         return back()->with('success', 'Status updated successfully!');
     }
@@ -234,6 +241,8 @@ class RentalOperationsController extends Controller
             );
         }
 
+        event(new RentalStatusUpdated($rental->fresh()));
+
         return back()->with('success', 'Post-inspection completed! Rental marked as returned.');
     }
 
@@ -257,6 +266,8 @@ class RentalOperationsController extends Controller
         $rental->update([
             'status' => 'Completed',
         ]);
+
+        event(new RentalStatusUpdated($rental->fresh()));
 
         return back()->with('success', 'Rental completed successfully!');
     }

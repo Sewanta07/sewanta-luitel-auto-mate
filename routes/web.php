@@ -135,6 +135,10 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('/profile/update', [\App\Http\Controllers\StaffProfileController::class, 'updateProfile'])->name('staff.profile.update');
         Route::post('/profile/password', [\App\Http\Controllers\StaffProfileController::class, 'updatePassword'])->name('staff.profile.password');
 
+        // Staff booking management
+        Route::get('/bookings', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'index'])->name('staff.bookings');
+        Route::post('/bookings/{id}/status', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'updateStatus'])->name('staff.bookings.status');
+
         // Staff static pages
         Route::get('/service-logs', [\App\Http\Controllers\Staff\ServiceLogController::class, 'index'])->name('staff.service.logs');
         Route::get('/inventory', [\App\Http\Controllers\Staff\InventoryController::class, 'index'])->name('staff.inventory');

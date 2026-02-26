@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ServiceStatusUpdated;
 use App\Models\Payment;
 use App\Models\ServiceBooking;
 use Illuminate\Http\Request;
@@ -146,6 +147,8 @@ class ServiceBookingController extends Controller
             // Suppress mail failures to avoid breaking booking flow
         }
 
+        event(new ServiceStatusUpdated($booking->fresh()));
+
         return redirect()->route('bookings.index')
             ->with('success', 'Service booking created successfully!');
     }
@@ -187,6 +190,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Booking cancelled successfully.');
     }
@@ -249,6 +254,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'Booking rescheduled successfully.');
     }
@@ -327,6 +334,8 @@ class ServiceBookingController extends Controller
         } catch (\Throwable $e) {
             // Suppress mail failures
         }
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return redirect()->back()->with('success', 'You have accepted the assigned staff. Work can now begin!');
     }

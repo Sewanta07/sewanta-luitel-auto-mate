@@ -59,7 +59,7 @@
         {{-- Notifications --}}
         <a href="{{ route('notifications.index') }}" class="p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          <span id="customerNotificationBadge" class="hidden absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-red-500 text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center"></span>
         </a>
 
         {{-- USER DROPDOWN --}}
@@ -138,4 +138,44 @@
     </form>
   </div>
 </nav>
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userId = @json((int) (Auth::id() ?? 0));
+    const initialUnreadCount = @json(
+      \App\Models\Notification::where('customer_id', (int) (Auth::id() ?? 0))
+        ->where('is_read', false)
+        ->count()
+    );
+    const badge = document.getElementById('customerNotificationBadge');
+
+    const setBadge = (count) => {
+      if (!badge) {
+        return;
+      }
+
+      const normalized = Number(count) || 0;
+      if (normalized > 0) {
+        badge.classList.remove('hidden');
+        badge.textContent = normalized > 99 ? '99+' : String(normalized);
+        return;
+      }
+
+      badge.classList.add('hidden');
+      badge.textContent = '';
+    };
+
+    if (window.realtime && userId > 0) {
+      window.realtime.subscribeUser(userId, {
+        notification: (payload) => {
+          setBadge(payload?.unread_count ?? 0);
+        },
+      });
+    }
+
+    setBadge(initialUnreadCount);
+  });
+</script>
+@endpush
 

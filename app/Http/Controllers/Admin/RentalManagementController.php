@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Events\RentalStatusUpdated;
 use App\Models\Vehicle;
 use App\Models\OwnerVehicle;
 use App\Models\RentalRequest;
@@ -300,6 +301,8 @@ class RentalManagementController extends Controller
         $vehicleName = $request->vehicle->vehicle_name ?: ($request->vehicle->brand . ' ' . $request->vehicle->model);
         notifyRentalUpdate($request->renter_id, $request, 'Approved', $vehicleName);
 
+        event(new RentalStatusUpdated($request->fresh()));
+
         return back()->with('success', 'Rental request approved!');
     }
 
@@ -328,6 +331,8 @@ class RentalManagementController extends Controller
             route('customer.rentals')
         );
 
+        event(new RentalStatusUpdated($rental->fresh()));
+
         return back()->with('success', 'Rental request rejected.');
     }
 
@@ -343,6 +348,8 @@ class RentalManagementController extends Controller
         $rental->update([
             'assigned_staff_id' => $validated['staff_id'],
         ]);
+
+        event(new RentalStatusUpdated($rental->fresh()));
 
         return back()->with('success', 'Staff assigned to rental!');
     }

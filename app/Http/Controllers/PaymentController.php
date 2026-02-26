@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EarningsUpdated;
+use App\Events\PaymentStatusUpdated;
+use App\Events\RentalStatusUpdated;
+use App\Events\ServiceStatusUpdated;
 use App\Models\Payment;
+use App\Models\PaymentLog;
 use App\Models\Rental;
 use App\Models\RentalRequest;
 use App\Models\ServiceBooking;
@@ -45,6 +50,8 @@ class PaymentController extends Controller
             'payment_status' => 'pending',
             'status' => $booking->status === 'Pending' ? 'Approved' : $booking->status,
         ]);
+
+        event(new ServiceStatusUpdated($booking->fresh()));
 
         return back()->with('success', 'Service charges updated successfully.');
     }
@@ -256,26 +263,96 @@ class PaymentController extends Controller
             return redirect()->route('index')->with('error', 'Payment record not found.');
         }
 
-        $verification = $this->esewaService->verifyTransaction($orderId, (string) $payment->amount);
+        $transactionCode = (string) ($decoded['transaction_code'] ?? ($decoded['reference_id'] ?? ''));
 
-        DB::transaction(function () use ($payment, $verification, $decoded): void {
-            if (!$verification['verified']) {
-                $payment->update([
-                    'status' => 'failed',
-                    'gateway_response' => $verification['response'],
+        if ($transactionCode !== '') {
+            $duplicateProcessedTransaction = PaymentLog::query()
+                ->where('transaction_id', $transactionCode)
+                ->where('status', 'paid')
+                ->exists();
+
+            if ($duplicateProcessedTransaction) {
+                return response()->view('payments.status', [
+                    'status' => 'success',
+                    'message' => 'Payment callback already processed.',
+                    'payment' => $payment,
                 ]);
+            }
+        }
+
+        if (strtolower((string) $payment->status) === 'paid') {
+            return response()->view('payments.status', [
+                'status' => 'success',
+                'message' => 'Payment was already processed successfully.',
+                'payment' => $payment,
+            ]);
+        }
+
+        $verification = $this->esewaService->verifyTransaction($orderId, (string) $payment->amount);
+        $processed = false;
+
+        DB::transaction(function () use ($payment, $verification, $decoded, &$processed): void {
+            $lockedPayment = Payment::whereKey($payment->id)->lockForUpdate()->first();
+
+            if (!$lockedPayment) {
                 return;
             }
 
-            $payment->update([
+            if (strtolower((string) $lockedPayment->status) === 'paid') {
+                $processed = true;
+                return;
+            }
+
+            if (!$verification['verified']) {
+                $lockedPayment->update([
+                    'status' => 'failed',
+                    'gateway_response' => $verification['response'],
+                ]);
+
+                PaymentLog::create([
+                    'payment_id' => $lockedPayment->id,
+                    'order_id' => $lockedPayment->order_id,
+                    'transaction_id' => $decoded['transaction_code'] ?? ($decoded['reference_id'] ?? null),
+                    'status' => 'failed',
+                    'payload' => [
+                        'verification' => $verification,
+                    ],
+                ]);
+
+                event(new PaymentStatusUpdated($lockedPayment->fresh()));
+                return;
+            }
+
+            $lockedPayment->update([
                 'status' => 'paid',
                 'transaction_id' => $decoded['transaction_code'] ?? ($decoded['reference_id'] ?? null),
                 'gateway_response' => $verification['response'],
                 'paid_at' => now(),
             ]);
 
-            $this->applyBusinessStateAfterPayment($payment);
+            PaymentLog::create([
+                'payment_id' => $lockedPayment->id,
+                'order_id' => $lockedPayment->order_id,
+                'transaction_id' => $decoded['transaction_code'] ?? ($decoded['reference_id'] ?? null),
+                'status' => 'paid',
+                'payload' => [
+                    'verification' => $verification,
+                    'decoded' => $decoded,
+                ],
+            ]);
+
+            $this->applyBusinessStateAfterPayment($lockedPayment);
+            event(new PaymentStatusUpdated($lockedPayment->fresh()));
+            $processed = true;
         });
+
+        if (!$processed) {
+            return response()->view('payments.status', [
+                'status' => 'failed',
+                'message' => 'Payment callback could not be finalized. Please contact support.',
+                'payment' => $payment->fresh(),
+            ]);
+        }
 
         if ($payment->fresh()->status !== 'paid') {
             return response()->view('payments.status', [
@@ -305,6 +382,18 @@ class PaymentController extends Controller
                 'gateway_response' => $request->all(),
             ]);
             $payment = Payment::where('order_id', $orderId)->first();
+
+            if ($payment) {
+                PaymentLog::create([
+                    'payment_id' => $payment->id,
+                    'order_id' => $payment->order_id,
+                    'transaction_id' => $request->input('transaction_code') ?: null,
+                    'status' => 'failed',
+                    'payload' => $request->all(),
+                ]);
+
+                event(new PaymentStatusUpdated($payment));
+            }
         }
 
         return response()->view('payments.status', [
@@ -337,6 +426,8 @@ class PaymentController extends Controller
                     $booking->id,
                     'ServiceBooking'
                 );
+
+                event(new ServiceStatusUpdated($booking->fresh()));
             }
 
             return;
@@ -384,6 +475,18 @@ class PaymentController extends Controller
                     $rental->id,
                     'Rental'
                 );
+
+                event(new EarningsUpdated(
+                    (int) $rental->owner_id,
+                    (float) ($rental->owner_earning ?? 0),
+                    (float) ($rental->commission_amount ?? 0),
+                    'marketplace_rental_payment',
+                    (int) $rental->id
+                ));
+            }
+
+            if ($rental->rentalRequest) {
+                event(new RentalStatusUpdated($rental->rentalRequest->fresh()));
             }
         }
 
@@ -441,6 +544,14 @@ class PaymentController extends Controller
                     'owner_amount' => $ownerEarning,
                     'payout_status' => 'pending',
                 ]);
+
+                event(new EarningsUpdated(
+                    (int) $rentalRequest->owner_id,
+                    (float) $ownerEarning,
+                    (float) $commissionAmount,
+                    'rental_request_payment',
+                    (int) $rental->id
+                ));
             }
 
             $vehicleName = $this->vehicleDisplayName($rentalRequest->vehicle?->vehicle_name, $rentalRequest->vehicle?->brand, $rentalRequest->vehicle?->model);
@@ -473,6 +584,8 @@ class PaymentController extends Controller
                 );
             }
 
+            event(new RentalStatusUpdated($rentalRequest->fresh()));
+
             return;
         }
 
@@ -503,6 +616,14 @@ class PaymentController extends Controller
                         $earning->update([
                             'owner_amount' => $newOwnerAmount,
                         ]);
+
+                        event(new EarningsUpdated(
+                            (int) $rentalRequest->owner_id,
+                            (float) $newOwnerAmount,
+                            (float) ($earning->commission ?? 0),
+                            'rental_damage_adjustment',
+                            (int) $linkedRental->id
+                        ));
                     }
                 }
             }
@@ -536,6 +657,8 @@ class PaymentController extends Controller
                     'RentalRequest'
                 );
             }
+
+            event(new RentalStatusUpdated($rentalRequest->fresh()));
         }
     }
 
