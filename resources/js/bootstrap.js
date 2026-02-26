@@ -1,7 +1,9 @@
 import axios from 'axios';
 import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 window.axios = axios;
+window.Pusher = Pusher;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -18,6 +20,12 @@ if (appKey) {
 		wsHost: host,
 		wsPort: port,
 		wssPort: port,
+		authEndpoint: '/broadcasting/auth',
+		auth: {
+			headers: {
+				'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+			},
+		},
 		forceTLS,
 		enabledTransports: ['ws', 'wss'],
 	});
@@ -148,6 +156,14 @@ window.realtime = {
 
 		if (callbacks.withdrawalUpdated) {
 			channel.listen('.withdrawal.status.updated', callbacks.withdrawalUpdated);
+		}
+
+		if (callbacks.chatMessage) {
+			channel.listen('.chat.message.sent', callbacks.chatMessage);
+		}
+
+		if (callbacks.chatRead) {
+			channel.listen('.chat.message.read', callbacks.chatRead);
 		}
 
 		return channel;

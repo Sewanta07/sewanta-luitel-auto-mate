@@ -1,100 +1,236 @@
 
 
+<?php $__env->startSection('title', 'Analytics - AutoMate'); ?>
+
 <?php $__env->startSection('content'); ?>
+<?php
+    $topServiceTypeRows = $topServiceTypes ?? collect();
+    $recentPaymentRows = $recentPayments ?? collect();
+?>
 <div class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Analytics Dashboard</h1>
-            <p class="text-gray-600">View business performance and insights</p>
+        <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Analytics Dashboard</h1>
+                <p class="text-gray-600">Business performance, conversion, and trend insights</p>
+            </div>
+            <form method="GET" action="<?php echo e(route('admin.analytics')); ?>" class="flex items-center gap-2">
+                <label for="period" class="text-sm font-medium text-gray-600">Range</label>
+                <select id="period" name="period" class="rounded-lg border-gray-300 text-sm focus:ring-[#ff5a1f] focus:border-[#ff5a1f]">
+                    <?php $__currentLoopData = [7, 30, 90, 180, 365]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $period): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($period); ?>" <?php echo e((int) ($periodDays ?? 30) === $period ? 'selected' : ''); ?>>Last <?php echo e($period); ?> days</option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-[#ff5a1f] text-white text-sm font-semibold hover:opacity-90">Apply</button>
+            </form>
         </div>
 
-        <!-- Key Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
-                        <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($totalRevenue ?? 0), 2)); ?></h3>
-                    </div>
-                    <div class="bg-blue-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                </div>
+                <p class="text-gray-500 text-sm font-medium">Revenue (Selected Range)</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($periodRevenue ?? 0), 2)); ?></h3>
+                <p class="text-xs mt-2 <?php echo e(($periodRevenueChange ?? null) === null ? 'text-gray-400' : (($periodRevenueChange ?? 0) >= 0 ? 'text-green-600' : 'text-red-600')); ?>">
+                    <?php if(($periodRevenueChange ?? null) === null): ?>
+                        No prior period baseline
+                    <?php else: ?>
+                        <?php echo e(($periodRevenueChange ?? 0) >= 0 ? '+' : ''); ?><?php echo e(number_format((float) ($periodRevenueChange ?? 0), 1)); ?>% vs previous period
+                    <?php endif; ?>
+                </p>
             </div>
-            
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm font-medium">Services Completed</p>
-                        <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($servicesCompleted ?? 0))); ?></h3>
-                    </div>
-                    <div class="bg-green-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm font-medium">Customer Satisfaction</p>
-                        <h3 class="text-3xl font-bold text-gray-800 mt-2">
-                            <?php echo e($customerSatisfaction !== null ? number_format((float) $customerSatisfaction, 1) . '★' : 'N/A'); ?>
 
-                        </h3>
-                    </div>
-                    <div class="bg-orange-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                    </div>
-                </div>
-            </div>
-            
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm font-medium">Active Customers</p>
-                        <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($activeCustomers ?? 0))); ?></h3>
-                    </div>
-                    <div class="bg-purple-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    </div>
-                </div>
+                <p class="text-gray-500 text-sm font-medium">Completed Services (Range)</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($periodCompletedServices ?? 0))); ?></h3>
+                <p class="text-xs text-gray-500 mt-2">All-time completed: <?php echo e(number_format((int) ($servicesCompleted ?? 0))); ?></p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Payment Success Rate</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((float) ($paymentSuccessRate ?? 0), 1)); ?>%</h3>
+                <p class="text-xs text-gray-500 mt-2">Based on payment attempts in selected range</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">New Customers (Range)</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($periodNewCustomers ?? 0))); ?></h3>
+                <p class="text-xs text-gray-500 mt-2">Active customers total: <?php echo e(number_format((int) ($activeCustomers ?? 0))); ?></p>
             </div>
         </div>
 
-        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Revenue (Selected Range)','subtitle' => 'Daily paid totals','chart' => 'daily-revenue','series' => $dailyRevenue ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Revenue (Selected Range)','subtitle' => 'Daily paid totals','chart' => 'daily-revenue','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($dailyRevenue ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Service Status Breakdown','subtitle' => 'All service bookings by status','chart' => 'service-status','series' => $serviceStatusCounts ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Service Status Breakdown','subtitle' => 'All service bookings by status','chart' => 'service-status','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($serviceStatusCounts ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Revenue (6-Month Trend)','subtitle' => 'Monthly paid revenue trend','chart' => 'monthly-revenue','series' => $monthlyRevenue ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Revenue (6-Month Trend)','subtitle' => 'Monthly paid revenue trend','chart' => 'monthly-revenue','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($monthlyRevenue ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Inventory Health','subtitle' => 'Current stock health distribution','chart' => 'service-status','series' => $inventoryHealth ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Inventory Health','subtitle' => 'Current stock health distribution','chart' => 'service-status','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($inventoryHealth ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h2 class="text-lg font-bold text-gray-900">Revenue (Last 6 Months)</h2>
-                        <p class="text-sm text-gray-500">Paid transactions only</p>
-                    </div>
-                </div>
-                <div class="h-64 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border border-dashed border-gray-200"
-                     data-chart="monthly-revenue"
-                     data-series='<?php echo json_encode($monthlyRevenue ?? [], 15, 512) ?>'>
-                    [Chart Placeholder]
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Top Service Types (Range)</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-gray-500 border-b">
+                                <th class="py-3 pr-4">Service Type</th>
+                                <th class="py-3 pr-4">Bookings</th>
+                                <th class="py-3 pr-4">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__empty_1 = true; $__currentLoopData = $topServiceTypeRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="border-b last:border-0">
+                                    <td class="py-3 pr-4 text-gray-800 font-semibold"><?php echo e($service->service_type ?: 'Unspecified'); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(number_format((int) $service->total_bookings)); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700">Rs. <?php echo e(number_format((float) $service->total_amount, 2)); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="3" class="py-6 text-center text-gray-500">No completed services in selected range.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h2 class="text-lg font-bold text-gray-900">Service Status Breakdown</h2>
-                        <p class="text-sm text-gray-500">All services by status</p>
-                    </div>
-                </div>
-                <div class="h-64 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border border-dashed border-gray-200"
-                     data-chart="service-status"
-                     data-series='<?php echo json_encode($serviceStatusCounts ?? [], 15, 512) ?>'>
-                    [Chart Placeholder]
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Recent Payments</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-gray-500 border-b">
+                                <th class="py-3 pr-4">Order</th>
+                                <th class="py-3 pr-4">Customer</th>
+                                <th class="py-3 pr-4">Amount</th>
+                                <th class="py-3 pr-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__empty_1 = true; $__currentLoopData = $recentPaymentRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="border-b last:border-0">
+                                    <td class="py-3 pr-4 text-gray-800 font-semibold"><?php echo e($payment->order_id); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e($payment->user->name ?? 'N/A'); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700">Rs. <?php echo e(number_format((float) $payment->amount, 2)); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(ucfirst($payment->status)); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-gray-500">No payments available.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let reloadTimer = null;
+
+        const scheduleReload = () => {
+            if (reloadTimer) {
+                return;
+            }
+
+            reloadTimer = setTimeout(() => {
+                const current = new URL(window.location.href);
+                window.location.href = current.toString();
+            }, 1200);
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeDashboard('admin', null, {
+                serviceStatus: scheduleReload,
+                rentalStatus: scheduleReload,
+                paymentStatus: scheduleReload,
+                inventoryUpdated: scheduleReload,
+                earningsUpdated: scheduleReload,
+                withdrawalUpdated: scheduleReload,
+            });
+        }
+    });
+</script>
+<?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/admin/analytics.blade.php ENDPATH**/ ?>

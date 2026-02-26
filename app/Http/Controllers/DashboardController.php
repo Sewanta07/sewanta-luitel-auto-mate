@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 use App\Models\CustomerUser;
 use App\Models\InventoryItem;
 use App\Models\Payment;
+use App\Models\Rental;
 use App\Models\ServiceBooking;
+use App\Models\WithdrawalRequest;
 
 class DashboardController extends Controller
 {
@@ -135,12 +137,33 @@ class DashboardController extends Controller
         $pendingReview = ServiceBooking::where('status', 'Pending')->count();
 
         $totalInventory = InventoryItem::where('status', 'active')->sum('quantity');
-        $totalServiceCharge = ServiceBooking::where('status', 'Completed')->sum('service_cost');
+        $lowStockItems = InventoryItem::where('status', 'active')
+            ->whereColumn('quantity', '<=', 'minimum_stock')
+            ->count();
+
+        $totalServiceCharge = (float) ServiceBooking::where('status', 'Completed')
+            ->sum(DB::raw('COALESCE(total_amount, service_cost, estimated_cost, 0)'));
+
+        $totalRevenue = (float) Payment::where('status', 'paid')->sum('amount');
+        $activeRentals = Rental::whereNotIn('status', ['Completed', 'Cancelled', 'Rejected'])->count();
+        $pendingWithdrawals = WithdrawalRequest::where('status', 'pending')->count();
+
+        $recentBookings = ServiceBooking::with(['customer:id,name', 'staff:id,name'])
+            ->latest()
+            ->limit(6)
+            ->get();
 
         $startMonth = now()->subMonths(5)->startOfMonth();
         $monthlyServiceTotals = ServiceBooking::selectRaw("DATE_FORMAT(updated_at, '%Y-%m') as month_key, COUNT(*) as total")
             ->where('status', 'Completed')
             ->where('updated_at', '>=', $startMonth)
+            ->groupBy('month_key')
+            ->pluck('total', 'month_key');
+
+        $monthlyRevenueTotals = Payment::selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as month_key, SUM(amount) as total")
+            ->where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->where('paid_at', '>=', $startMonth)
             ->groupBy('month_key')
             ->pluck('total', 'month_key');
 
@@ -157,6 +180,34 @@ class DashboardController extends Controller
             ->values()
             ->all();
 
+        $monthlyRevenue = collect(range(5, 0))
+            ->map(function ($offset) use ($monthlyRevenueTotals) {
+                $monthKey = now()->subMonths($offset)->format('Y-m');
+                $label = Carbon::createFromFormat('Y-m', $monthKey)->format('M Y');
+
+                return [
+                    'label' => $label,
+                    'total' => (float) ($monthlyRevenueTotals[$monthKey] ?? 0),
+                ];
+            })
+            ->values()
+            ->all();
+
+        $serviceStatusCounts = ServiceBooking::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        $inventoryHealth = [
+            'In Stock' => InventoryItem::where('status', 'active')
+                ->whereColumn('quantity', '>', 'minimum_stock')
+                ->count(),
+            'Low Stock' => $lowStockItems,
+            'Out of Stock' => InventoryItem::where('status', 'active')
+                ->where('quantity', '<=', 0)
+                ->count(),
+        ];
+
         return view('dashboard.admin', compact(
             'user',
             'totalServices',
@@ -164,15 +215,23 @@ class DashboardController extends Controller
             'completedToday',
             'pendingReview',
             'totalInventory',
+            'lowStockItems',
             'totalServiceCharge',
-            'monthlyCompletedServices'
+            'totalRevenue',
+            'activeRentals',
+            'pendingWithdrawals',
+            'recentBookings',
+            'monthlyCompletedServices',
+            'monthlyRevenue',
+            'serviceStatusCounts',
+            'inventoryHealth'
         ));
     }
 
     /**
      * Show the admin analytics dashboard.
      */
-    public function analytics()
+    public function analytics(Request $request)
     {
         $user = Auth::user();
 
@@ -185,10 +244,50 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.' . $userRole);
         }
 
-        $totalRevenue = Payment::where('status', 'paid')->sum('amount');
+        $allowedPeriods = [7, 30, 90, 180, 365];
+        $periodDays = (int) $request->integer('period', 30);
+        if (!in_array($periodDays, $allowedPeriods, true)) {
+            $periodDays = 30;
+        }
+
+        $rangeEnd = now()->endOfDay();
+        $rangeStart = now()->subDays($periodDays - 1)->startOfDay();
+        $previousRangeEnd = $rangeStart->copy()->subSecond();
+        $previousRangeStart = $rangeStart->copy()->subDays($periodDays)->startOfDay();
+
+        $totalRevenue = (float) Payment::where('status', 'paid')->sum('amount');
         $servicesCompleted = ServiceBooking::where('status', 'Completed')->count();
-        $activeCustomers = CustomerUser::count();
+        $activeCustomers = CustomerUser::where('status', 'active')->count();
         $customerSatisfaction = null;
+
+        $periodRevenue = (float) Payment::where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->whereBetween('paid_at', [$rangeStart, $rangeEnd])
+            ->sum('amount');
+
+        $previousPeriodRevenue = (float) Payment::where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->whereBetween('paid_at', [$previousRangeStart, $previousRangeEnd])
+            ->sum('amount');
+
+        $periodRevenueChange = null;
+        if ($previousPeriodRevenue > 0) {
+            $periodRevenueChange = (($periodRevenue - $previousPeriodRevenue) / $previousPeriodRevenue) * 100;
+        }
+
+        $periodCompletedServices = ServiceBooking::where('status', 'Completed')
+            ->whereBetween('updated_at', [$rangeStart, $rangeEnd])
+            ->count();
+
+        $periodNewCustomers = CustomerUser::whereBetween('created_at', [$rangeStart, $rangeEnd])->count();
+
+        $periodTotalPayments = Payment::whereBetween('created_at', [$rangeStart, $rangeEnd])->count();
+        $periodPaidPayments = Payment::where('status', 'paid')
+            ->whereBetween('created_at', [$rangeStart, $rangeEnd])
+            ->count();
+        $paymentSuccessRate = $periodTotalPayments > 0
+            ? ($periodPaidPayments / $periodTotalPayments) * 100
+            : 0.0;
 
         $startMonth = now()->subMonths(5)->startOfMonth();
         $monthlyTotals = Payment::selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as month_key, SUM(amount) as total")
@@ -211,18 +310,77 @@ class DashboardController extends Controller
             ->values()
             ->all();
 
+        $dailyRevenueTotals = Payment::selectRaw('DATE(paid_at) as date_key, SUM(amount) as total')
+            ->where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->whereBetween('paid_at', [$rangeStart, $rangeEnd])
+            ->groupBy('date_key')
+            ->pluck('total', 'date_key');
+
+        $dailyRevenue = collect(range(0, $periodDays - 1))
+            ->map(function ($offset) use ($rangeStart, $dailyRevenueTotals) {
+                $date = $rangeStart->copy()->addDays($offset);
+                $dateKey = $date->format('Y-m-d');
+
+                return [
+                    'label' => $date->format('M d'),
+                    'total' => (float) ($dailyRevenueTotals[$dateKey] ?? 0),
+                ];
+            })
+            ->values()
+            ->all();
+
         $serviceStatusCounts = ServiceBooking::selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
 
+        $topServiceTypes = ServiceBooking::selectRaw('service_type, COUNT(*) as total_bookings, SUM(COALESCE(total_amount, service_cost, estimated_cost, 0)) as total_amount')
+            ->where('status', 'Completed')
+            ->whereBetween('updated_at', [$rangeStart, $rangeEnd])
+            ->groupBy('service_type')
+            ->orderByDesc('total_bookings')
+            ->limit(5)
+            ->get();
+
+        $inventoryHealth = [
+            'In Stock' => InventoryItem::where('status', 'active')
+                ->whereColumn('quantity', '>', 'minimum_stock')
+                ->count(),
+            'Low Stock' => InventoryItem::where('status', 'active')
+                ->whereColumn('quantity', '<=', 'minimum_stock')
+                ->where('quantity', '>', 0)
+                ->count(),
+            'Out of Stock' => InventoryItem::where('status', 'active')
+                ->where('quantity', '<=', 0)
+                ->count(),
+        ];
+
+        $recentPayments = Payment::with('user:id,name')
+            ->orderByDesc('paid_at')
+            ->orderByDesc('id')
+            ->limit(8)
+            ->get();
+
         return view('admin.analytics', compact(
+            'periodDays',
             'totalRevenue',
             'servicesCompleted',
             'activeCustomers',
             'customerSatisfaction',
+            'periodRevenue',
+            'previousPeriodRevenue',
+            'periodRevenueChange',
+            'periodCompletedServices',
+            'periodNewCustomers',
+            'paymentSuccessRate',
             'monthlyRevenue',
+            'dailyRevenue',
             'serviceStatusCounts'
+            ,
+            'topServiceTypes',
+            'inventoryHealth',
+            'recentPayments'
         ));
     }
 

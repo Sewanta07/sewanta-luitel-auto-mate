@@ -25,6 +25,12 @@
            <a href="<?php echo e(route('bookings.index')); ?>" 
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('bookings.index') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
             Bookings
+            <?php if(($navCounts['services_pending'] ?? 0) > 0): ?>
+              <span class="ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
+                <?php echo e(($navCounts['services_pending'] ?? 0) > 99 ? '99+' : ($navCounts['services_pending'] ?? 0)); ?>
+
+              </span>
+            <?php endif; ?>
           </a>
           <a href="<?php echo e(route('customer.vehicles')); ?>" 
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('customer.vehicles*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
@@ -37,6 +43,12 @@
           <a href="<?php echo e(route('customer.rentals')); ?>" 
              class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50'); ?>">
             My Rentals
+            <?php if(($navCounts['rentals_pending'] ?? 0) > 0): ?>
+              <span class="ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
+                <?php echo e(($navCounts['rentals_pending'] ?? 0) > 99 ? '99+' : ($navCounts['rentals_pending'] ?? 0)); ?>
+
+              </span>
+            <?php endif; ?>
           </a>
           </div>
       </div>
@@ -54,6 +66,12 @@
         
         <a href="<?php echo e(route('customer.messages') ?? '#'); ?>" class="p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative" title="Messages">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <?php if(($navCounts['messages_unread'] ?? 0) > 0): ?>
+            <span class="absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center">
+              <?php echo e(($navCounts['messages_unread'] ?? 0) > 99 ? '99+' : ($navCounts['messages_unread'] ?? 0)); ?>
+
+            </span>
+          <?php endif; ?>
         </a>
 
         
@@ -143,10 +161,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const userId = <?php echo json_encode((int) (Auth::id() ?? 0), 15, 512) ?>;
-    const initialUnreadCount = <?php echo json_encode(
-      \App\Models\Notification::where('customer_id', (int) (Auth::id() ?? 0))
-        ->where('is_read', false)
-        ->count()) ?>;
+    const initialUnreadCount = <?php echo json_encode((int) ($navCounts['notifications_unread'] ?? 0), 15, 512) ?>;
     const badge = document.getElementById('customerNotificationBadge');
 
     const setBadge = (count) => {

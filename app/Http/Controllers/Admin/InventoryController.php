@@ -45,6 +45,20 @@ class InventoryController extends Controller
             'supplier' => 'nullable|string|max:255',
         ]);
 
+        $normalizedPartName = mb_strtolower(trim($validated['part_name']));
+        $normalizedCategory = mb_strtolower(trim($validated['category']));
+
+        $existingItem = InventoryItem::query()
+            ->whereRaw('LOWER(TRIM(part_name)) = ?', [$normalizedPartName])
+            ->whereRaw('LOWER(TRIM(category)) = ?', [$normalizedCategory])
+            ->first();
+
+        if ($existingItem) {
+            return redirect()
+                ->route('admin.inventory.edit', $existingItem->id)
+                ->with('warning', 'This inventory part already exists. Update the existing item instead.');
+        }
+
         $item = InventoryItem::create($validated);
 
         InventoryMovement::create([
@@ -108,22 +122,19 @@ class InventoryController extends Controller
     public function destroy($id)
     {
         $item = InventoryItem::findOrFail($id);
-        $item->update(['status' => 'inactive']);
 
-        InventoryMovement::create([
-            'inventory_item_id' => $item->id,
-            'service_booking_id' => null,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
-            'change_type' => 'deactivate',
-            'quantity_change' => 0,
-            'unit_price' => $item->unit_price,
-            'notes' => 'Item deactivated',
-        ]);
+        if ($item->serviceBookings()->exists()) {
+            return redirect()
+                ->route('admin.inventory.index')
+                ->with('error', 'This item cannot be deleted because it is already used in service bookings.');
+        }
 
-        event(new InventoryUpdated($item->fresh()));
+        $deletedItem = $item->fresh();
+        $item->delete();
 
-        return redirect()->route('admin.inventory.index')->with('success', 'Inventory item deactivated successfully.');
+        event(new InventoryUpdated($deletedItem));
+
+        return redirect()->route('admin.inventory.index')->with('success', 'Inventory item deleted successfully.');
     }
 
     public function reports()

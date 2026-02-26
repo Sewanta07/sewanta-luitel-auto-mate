@@ -243,32 +243,6 @@ class RentalManagementController extends Controller
     }
 
     /**
-     * Quick approval dashboard for pending requests
-     */
-    public function quickApproval()
-    {
-        $pendingRequests = RentalRequest::with(['vehicle', 'renter', 'owner', 'assignedStaff'])
-            ->where('status', 'Pending')
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        $approvedWaitingStaff = RentalRequest::with(['vehicle', 'renter', 'assignedStaff'])
-            ->where('status', 'Approved')
-            ->whereNull('assigned_staff_id')
-            ->orderBy('approved_at', 'asc')
-            ->get();
-
-        $staff = StaffMember::where('status', 'active')->get();
-
-        $stats = [
-            'pending_count' => $pendingRequests->count(),
-            'awaiting_staff' => $approvedWaitingStaff->count(),
-        ];
-
-        return view('admin.rentals.quick-approval', compact('pendingRequests', 'approvedWaitingStaff', 'staff', 'stats'));
-    }
-
-    /**
      * Manage all rental requests
      */
     public function requests()

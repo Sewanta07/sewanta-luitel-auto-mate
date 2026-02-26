@@ -43,6 +43,10 @@ class ServiceBookingController extends Controller
         ]);
 
         $booking = ServiceBooking::where('id', $id)->where('staff_id', Auth::id())->firstOrFail();
+
+        if ($booking->status === 'Completed') {
+            return redirect()->back()->with('error', 'This booking is completed and is now view-only.');
+        }
         
         // Staff can only progress if customer accepted
         if ($booking->status === 'Assigned' && $request->status !== 'Customer Accepted') {
@@ -93,7 +97,7 @@ class ServiceBookingController extends Controller
             ->with(['customer', 'parts'])
             ->firstOrFail();
 
-        $inventoryItems = InventoryItem::where('status', 'active')
+        $inventoryItems = InventoryItem::orderByRaw("CASE WHEN status = 'active' THEN 0 ELSE 1 END")
             ->orderBy('part_name')
             ->get();
 
@@ -110,6 +114,10 @@ class ServiceBookingController extends Controller
         $booking = ServiceBooking::where('id', $id)
             ->where('staff_id', Auth::id())
             ->firstOrFail();
+
+        if ($booking->status === 'Completed') {
+            return redirect()->back()->with('error', 'This booking is completed and is now view-only.');
+        }
 
         $item = InventoryItem::findOrFail($request->inventory_item_id);
 

@@ -153,4 +153,30 @@
 </div>
 <?php $__env->stopSection(); ?>
 
+<?php $__env->startPush('scripts'); ?>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userId = <?php echo json_encode((int) $user->id, 15, 512) ?>;
+        let reloadTimer = null;
+
+        const scheduleReload = () => {
+            if (reloadTimer) {
+                return;
+            }
+
+            reloadTimer = setTimeout(() => {
+                window.location.reload();
+            }, 1200);
+        };
+
+        if (window.realtime) {
+            window.realtime.subscribeDashboard('staff', userId, {
+                serviceStatus: scheduleReload,
+                rentalStatus: scheduleReload,
+            });
+        }
+    });
+</script>
+<?php $__env->stopPush(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/dashboard/staff.blade.php ENDPATH**/ ?>

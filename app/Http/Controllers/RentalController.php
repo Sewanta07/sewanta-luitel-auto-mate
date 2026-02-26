@@ -398,7 +398,18 @@ class RentalController extends Controller
         ]);
 
         DB::transaction(function () use ($withdrawalRequest, $validated) {
-            $withdrawalRequest->update([
+            $lockedWithdrawalRequest = WithdrawalRequest::query()
+                ->whereKey($withdrawalRequest->id)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$lockedWithdrawalRequest) {
+                throw new \RuntimeException('Withdrawal request not found.');
+            }
+
+            $previousStatus = (string) $lockedWithdrawalRequest->status;
+
+            $lockedWithdrawalRequest->update([
                 'status' => $validated['status'],
                 'admin_note' => $validated['admin_note'] ?? null,
                 'processed_at' => now(),
@@ -406,13 +417,14 @@ class RentalController extends Controller
             ]);
 
             // If marking as paid, update all associated pending earnings for this owner
-            if ($validated['status'] === 'paid') {
-                $pendingEarnings = Earning::query()->where('owner_id', $withdrawalRequest->owner_id)
+            if ($validated['status'] === 'paid' && $previousStatus !== 'paid') {
+                $pendingEarnings = Earning::query()->where('owner_id', $lockedWithdrawalRequest->owner_id)
                     ->where('payout_status', 'pending')
                     ->orderBy('id')
+                    ->lockForUpdate()
                     ->get();
 
-                $amountRemaining = (float) $withdrawalRequest->amount;
+                $amountRemaining = (float) $lockedWithdrawalRequest->amount;
 
                 foreach ($pendingEarnings as $earning) {
                     if (!$earning instanceof Earning) {
@@ -424,16 +436,32 @@ class RentalController extends Controller
                     }
 
                     $earningAmount = (float) $earning->owner_amount;
-                    
+
                     if ($earningAmount <= $amountRemaining) {
                         // Fully pay this earning
                         $earning->update([
                             'payout_status' => 'paid',
                             'paid_out_at' => now(),
                         ]);
-                        $withdrawalRequest->earnings()->attach($earning->id);
+                        $lockedWithdrawalRequest->earnings()->syncWithoutDetaching([$earning->id]);
                         $amountRemaining -= $earningAmount;
+                        continue;
                     }
+
+                    // Partial payout from a larger pending earning
+                    $newOwnerAmount = round($earningAmount - $amountRemaining, 2);
+
+                    $earning->update([
+                        'owner_amount' => $newOwnerAmount,
+                    ]);
+
+                    $lockedWithdrawalRequest->earnings()->syncWithoutDetaching([$earning->id]);
+                    $amountRemaining = 0;
+                    break;
+                }
+
+                if ($amountRemaining > 0) {
+                    throw new \RuntimeException('Unable to allocate full withdrawal amount from pending earnings.');
                 }
             }
         });

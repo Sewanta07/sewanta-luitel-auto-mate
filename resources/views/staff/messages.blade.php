@@ -55,14 +55,6 @@
 
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 650px;">
-                    @php
-                        $conversationId = \App\Support\Realtime\ConversationChannel::fromParticipants(
-                            get_class(Auth::user()),
-                            (int) Auth::id(),
-                            get_class($customer),
-                            (int) $customer->id
-                        );
-                    @endphp
                     <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white font-bold text-lg">
@@ -91,7 +83,7 @@
                     <div class="flex-1 p-6 overflow-y-auto bg-gray-50" id="messages-container">
                         @forelse($messages as $message)
                             @php
-                                $isSender = $message->sender_id == Auth::id() && $message->sender_type == get_class(Auth::user());
+                                $isSender = (int) $message->sender_id === (int) $staffChatUserId;
                             @endphp
                             <div class="mb-4 flex {{ $isSender ? 'justify-end' : 'justify-start' }}" data-message-id="{{ (int) $message->id }}">
                                 <div class="max-w-xs lg:max-w-md">
@@ -102,9 +94,6 @@
                                         <p class="break-words">{{ $message->message }}</p>
                                         <p class="text-xs mt-2 {{ $isSender ? 'text-orange-50' : 'text-gray-700' }}">
                                             {{ $message->created_at->format('M d, g:i A') }}
-                                            @if($message->booking)
-                                                • {{ $message->booking->booking_code }}
-                                            @endif
                                         </p>
                                     </div>
                                 </div>
@@ -117,18 +106,10 @@
                     </div>
 
                     <div class="p-6 border-t bg-white">
-                        <form action="{{ route('staff.customers.sendMessage', $customer->id) }}" method="POST" class="flex gap-3">
+                        <form id="staffMessageForm" action="{{ route('staff.customers.sendMessage', $customer->id) }}" method="POST" class="flex gap-3">
                             @csrf
-                            <div class="w-48">
-                                <select name="service_booking_id" class="w-full px-3 py-3 bg-white border-2 border-gray-300 rounded-xl text-sm font-bold text-gray-900 focus:border-[#ff5a1f] focus:ring focus:ring-orange-100">
-                                    <option value="" class="text-gray-900">General</option>
-                                    @foreach($bookings as $booking)
-                                        <option value="{{ $booking->id }}" class="text-gray-900">{{ $booking->booking_code }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                             <div class="flex-1">
-                                <textarea name="message" rows="2" required placeholder="Type your message..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-600 font-medium focus:border-[#ff5a1f] focus:ring focus:ring-orange-100 resize-none focus:outline-none transition-all"></textarea>
+                                <textarea id="staffMessageInput" name="message" rows="2" required placeholder="Type your message..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-600 font-medium focus:border-[#ff5a1f] focus:ring focus:ring-orange-100 resize-none focus:outline-none transition-all"></textarea>
                             </div>
                             <button type="submit" class="px-6 py-3 bg-[#ff5a1f] text-white font-bold rounded-xl hover:bg-[#e44d18] transition-all flex items-center gap-2 self-end">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -152,10 +133,12 @@
         }
 
         const conversationId = @json($conversationId);
-        const currentUserId = @json((int) Auth::id());
-        const currentUserType = @json(get_class(Auth::user()));
+        const currentUserId = @json((int) $staffChatUserId);
+        const receiverId = @json((int) $customerChatUserId);
         const currentUserName = 'You';
         const otherUserName = @json($customer->name ?? 'Customer');
+        const form = document.getElementById('staffMessageForm');
+        const messageInput = document.getElementById('staffMessageInput');
 
         const formatDate = (value) => {
             if (!value) {
@@ -173,6 +156,7 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
+                timeZone: 'Asia/Kathmandu',
             });
         };
 
@@ -185,8 +169,7 @@
                 return;
             }
 
-            const isSender = Number(payload.sender_id) === Number(currentUserId)
-                && payload.sender_type === currentUserType;
+            const isSender = Number(payload.sender_id) === Number(currentUserId);
 
             const wrapper = document.createElement('div');
             wrapper.className = `mb-4 flex ${isSender ? 'justify-end' : 'justify-start'}`;
@@ -216,7 +199,42 @@
 
         if (window.realtime) {
             window.realtime.subscribeChat(conversationId, {
-                message: appendMessage,
+                message: (payload) => {
+                    if (!payload) {
+                        return;
+                    }
+
+                    if (Number(payload.sender_id) === Number(currentUserId)) {
+                        return;
+                    }
+
+                    appendMessage(payload);
+                },
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const messageText = (messageInput?.value ?? '').trim();
+                if (!messageText) {
+                    return;
+                }
+
+                if (messageInput) {
+                    messageInput.value = '';
+                }
+
+                try {
+                    const response = await window.axios.post(form.action, {
+                        message: messageText,
+                    });
+
+                    appendMessage(response.data?.message);
+                } catch (error) {
+                    console.error(error);
+                }
             });
         }
     });

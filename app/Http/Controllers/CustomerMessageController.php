@@ -6,151 +6,136 @@ use App\Events\MessageReadUpdated;
 use App\Events\MessageSent;
 use App\Models\Message;
 use App\Models\StaffMember;
+use App\Support\Realtime\ChatUserResolver;
 use App\Support\Realtime\ConversationChannel;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CustomerMessageController extends Controller
 {
-    /**
-     * Show customer messaging page
-     */
     public function index()
     {
         $customer = Auth::user();
-        
-        // Get list of staff members customer has chatted with
-        $staffMembers = StaffMember::with(['messages' => function ($query) use ($customer) {
-            $query->where(function ($q) use ($customer) {
-                $q->where('sender_type', 'App\Models\CustomerUser')
-                  ->where('sender_id', $customer->id)
-                  ->where('receiver_type', 'App\Models\StaffMember');
-            })->orWhere(function ($q) use ($customer) {
-                $q->where('receiver_type', 'App\Models\CustomerUser')
-                  ->where('receiver_id', $customer->id)
-                  ->where('sender_type', 'App\Models\StaffMember');
-            });
-        }])->whereHas('messages', function ($query) use ($customer) {
-            $query->where(function ($q) use ($customer) {
-                $q->where('sender_type', 'App\Models\CustomerUser')
-                  ->where('sender_id', $customer->id);
-            })->orWhere(function ($q) use ($customer) {
-                $q->where('receiver_type', 'App\Models\CustomerUser')
-                  ->where('receiver_id', $customer->id);
-            });
-        })->latest()->get();
+        $customerUser = ChatUserResolver::forAuthenticated();
+
+        abort_unless((bool) $customerUser, 401);
+
+        $staffMembers = StaffMember::where('status', 'active')->orderBy('name')->get();
 
         return view('customer.messages', [
             'staffMembers' => $staffMembers,
             'selectedStaff' => null,
+            'messages' => collect(),
             'customer' => $customer,
+            'customerChatUserId' => $customerUser->id,
         ]);
     }
 
-    /**
-     * Show messages with specific staff member
-     */
     public function show(StaffMember $staff)
     {
         $customer = Auth::user();
-        $conversationId = ConversationChannel::fromParticipants(
-            get_class($customer),
-            (int) $customer->id,
-            StaffMember::class,
-            (int) $staff->id
-        );
-        
-        // Get all messages between customer and this staff member
-        $messages = Message::with('sender')->where(function ($query) use ($customer, $staff) {
-            $query->where('sender_type', 'App\Models\CustomerUser')
-                  ->where('sender_id', $customer->id)
-                  ->where('receiver_type', 'App\Models\StaffMember')
-                  ->where('receiver_id', $staff->id);
-        })->orWhere(function ($query) use ($customer, $staff) {
-            $query->where('sender_type', 'App\Models\StaffMember')
-                  ->where('sender_id', $staff->id)
-                  ->where('receiver_type', 'App\Models\CustomerUser')
-                  ->where('receiver_id', $customer->id);
-        })->orderBy('created_at')->get();
+        $customerUser = ChatUserResolver::forAuthenticated();
+        abort_unless((bool) $customerUser, 401);
 
-        // Mark messages as read
-        $messageIdsMarkedRead = Message::where('receiver_type', 'App\Models\CustomerUser')
-            ->where('receiver_id', $customer->id)
-            ->where('sender_type', 'App\Models\StaffMember')
-            ->where('sender_id', $staff->id)
+        $staffUser = ChatUserResolver::fromAuthenticatable($staff);
+        $conversationId = ConversationChannel::fromUserIds($customerUser->id, $staffUser->id);
+
+        $messages = Message::query()
+            ->where(function ($query) use ($customerUser, $staffUser) {
+                $query->where('sender_id', $customerUser->id)
+                    ->where('receiver_id', $staffUser->id);
+            })
+            ->orWhere(function ($query) use ($customerUser, $staffUser) {
+                $query->where('sender_id', $staffUser->id)
+                    ->where('receiver_id', $customerUser->id);
+            })
+            ->orderBy('created_at')
+            ->get();
+
+        $messageIdsMarkedRead = Message::query()
+            ->where('sender_id', $staffUser->id)
+            ->where('receiver_id', $customerUser->id)
             ->where('is_read', false)
             ->pluck('id')
             ->all();
 
         if (!empty($messageIdsMarkedRead)) {
-            Message::whereIn('id', $messageIdsMarkedRead)
-                ->update(['is_read' => true, 'read_at' => now()]);
+            Message::query()->whereIn('id', $messageIdsMarkedRead)->update(['is_read' => true]);
 
-            event(new MessageReadUpdated(
-                $conversationId,
-                array_map('intval', $messageIdsMarkedRead),
-                get_class($customer),
-                (int) $customer->id,
-                now()->toISOString()
-            ));
+            try {
+                event(new MessageReadUpdated(
+                    $conversationId,
+                    array_map('intval', $messageIdsMarkedRead),
+                    $customerUser->id,
+                    now()->toISOString()
+                ));
+            } catch (\Throwable $exception) {
+                Log::warning('Message read broadcast skipped', [
+                    'conversation_id' => $conversationId,
+                    'reader_id' => $customerUser->id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
         }
 
-        // Get list of all staff members customer has chatted with
-        $staffMembers = StaffMember::with(['messages' => function ($query) use ($customer) {
-            $query->where(function ($q) use ($customer) {
-                $q->where('sender_type', 'App\Models\CustomerUser')
-                  ->where('sender_id', $customer->id);
-            })->orWhere(function ($q) use ($customer) {
-                $q->where('receiver_type', 'App\Models\CustomerUser')
-                  ->where('receiver_id', $customer->id);
-            });
-        }])->whereHas('messages', function ($query) use ($customer) {
-            $query->where(function ($q) use ($customer) {
-                $q->where('sender_type', 'App\Models\CustomerUser')
-                  ->where('sender_id', $customer->id);
-            })->orWhere(function ($q) use ($customer) {
-                $q->where('receiver_type', 'App\Models\CustomerUser')
-                  ->where('receiver_id', $customer->id);
-            });
-        })->latest()->get();
+        $staffMembers = StaffMember::where('status', 'active')->orderBy('name')->get();
 
         return view('customer.messages', [
             'staffMembers' => $staffMembers,
             'selectedStaff' => $staff,
             'messages' => $messages,
             'customer' => $customer,
+            'customerChatUserId' => $customerUser->id,
+            'selectedStaffChatUserId' => $staffUser->id,
+            'conversationId' => $conversationId,
         ]);
     }
 
-    /**
-     * Send message to staff
-     */
     public function send(StaffMember $staff, Request $request)
     {
-        $customer = Auth::user();
-        
         $validated = $request->validate([
             'message' => 'required|string|max:1000'
         ]);
 
+        $sender = ChatUserResolver::forAuthenticated();
+        abort_unless((bool) $sender, 401);
+
+        $receiver = ChatUserResolver::fromAuthenticatable($staff);
+
         $message = Message::create([
-            'sender_type' => 'App\Models\CustomerUser',
-            'sender_id' => $customer->id,
-            'receiver_type' => 'App\Models\StaffMember',
-            'receiver_id' => $staff->id,
+            'sender_id' => $sender->id,
+            'receiver_id' => $receiver->id,
             'message' => $validated['message'],
             'is_read' => false
         ]);
 
-        $conversationId = ConversationChannel::fromParticipants(
-            get_class($customer),
-            (int) $customer->id,
-            StaffMember::class,
-            (int) $staff->id
-        );
+        $conversationId = ConversationChannel::fromUserIds($sender->id, $receiver->id);
 
-        event(new MessageSent($message, $conversationId));
+        try {
+            event(new MessageSent($message, $conversationId));
+        } catch (\Throwable $exception) {
+            Log::warning('Message sent broadcast skipped', [
+                'conversation_id' => $conversationId,
+                'message_id' => (int) $message->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
-        return back()->with('success', 'Message sent successfully');
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'ok' => true,
+                'message' => [
+                    'id' => (int) $message->id,
+                    'sender_id' => (int) $message->sender_id,
+                    'receiver_id' => (int) $message->receiver_id,
+                    'message' => $message->message,
+                    'is_read' => (bool) $message->is_read,
+                    'created_at' => optional($message->created_at)?->toISOString(),
+                ],
+            ]);
+        }
+
+        return redirect()->route('customer.messages.show', $staff->id)->with('success', 'Message sent successfully');
     }
 }

@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    @php
+        $redirectUrl = route('index');
+        $redirectLabel = 'Back to Home';
+
+        if (isset($payment) && $payment) {
+            $parts = explode(':', (string) $payment->order_id);
+            $prefix = (string) ($parts[0] ?? '');
+            $entityId = (int) ($parts[1] ?? 0);
+
+            if ($prefix === 'service_booking' && $entityId > 0) {
+                $redirectUrl = route('bookings.show', $entityId);
+                $redirectLabel = 'View Booking';
+            } elseif (in_array($prefix, ['rental_request', 'admin_rental', 'marketplace_rental', 'rental_damage'], true)) {
+                $redirectUrl = route('customer.rentals');
+                $redirectLabel = 'View Rentals';
+            }
+        }
+    @endphp
+
     <div class="max-w-2xl w-full">
         <!-- Company Header -->
         <div class="text-center mb-8">
@@ -151,7 +170,7 @@
                                 <i class="fas fa-exclamation-triangle text-red-500 text-xl mt-1 mr-3"></i>
                                 <div>
                                     <h4 class="font-bold text-red-900 mb-1">Payment Failed</h4>
-                                    <p class="text-sm text-red-700">If the amount was deducted from your account, it will be refunded within 5-7 business days. Please try again or contact support.</p>
+                                    <p class="text-sm text-red-700">If the amount was deducted from your account,  contact support.</p>
                                 </div>
                             </div>
                         </div>
@@ -161,9 +180,9 @@
 
             <!-- Action Buttons -->
             <div class="px-8 py-6 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row gap-3 justify-center">
-                <a href="{{ route('index') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition-all shadow-lg hover:shadow-xl">
+                <a href="{{ $redirectUrl }}" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition-all shadow-lg hover:shadow-xl">
                     <i class="fas fa-home mr-2"></i>
-                    Back to Home
+                    {{ $redirectLabel }}
                 </a>
                 @if($status === 'failed')
                     <a href="{{ url()->previous() }}" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-white text-gray-700 font-bold hover:bg-gray-50 transition-all border-2 border-gray-200">

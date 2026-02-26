@@ -2,6 +2,7 @@
 
 use App\Events\UserNotificationCreated;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Log;
 
 if (!function_exists('createNotification')) {
     /**
@@ -21,21 +22,29 @@ if (!function_exists('createNotification')) {
             'related_type' => $relatedType,
         ]);
 
-        event(new UserNotificationCreated(
-            (int) $customerId,
-            [
-                'id' => (int) $notification->id,
-                'type' => (string) $notification->type,
-                'title' => (string) $notification->title,
-                'message' => (string) $notification->message,
-                'icon_type' => (string) $notification->icon_type,
-                'action_url' => $notification->action_url,
-                'action_text' => $notification->action_text,
-                'is_read' => (bool) $notification->is_read,
-                'created_at' => optional($notification->created_at)?->toISOString(),
-            ],
-            Notification::where('customer_id', $customerId)->where('is_read', false)->count()
-        ));
+        try {
+            event(new UserNotificationCreated(
+                (int) $customerId,
+                [
+                    'id' => (int) $notification->id,
+                    'type' => (string) $notification->type,
+                    'title' => (string) $notification->title,
+                    'message' => (string) $notification->message,
+                    'icon_type' => (string) $notification->icon_type,
+                    'action_url' => $notification->action_url,
+                    'action_text' => $notification->action_text,
+                    'is_read' => (bool) $notification->is_read,
+                    'created_at' => optional($notification->created_at)?->toISOString(),
+                ],
+                Notification::where('customer_id', $customerId)->where('is_read', false)->count()
+            ));
+        } catch (\Throwable $exception) {
+            Log::warning('Notification broadcast skipped', [
+                'customer_id' => (int) $customerId,
+                'notification_id' => (int) $notification->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
         return $notification;
     }

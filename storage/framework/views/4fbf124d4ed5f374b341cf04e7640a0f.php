@@ -93,7 +93,12 @@
                   <p class="font-bold text-gray-900">Rs. <?php echo e(number_format($item->unit_price, 2)); ?></p>
                 </td>
                 <td class="px-6 py-4">
-                  <?php if($item->stock_status === 'out_of_stock'): ?>
+                  <?php if($item->status !== 'active'): ?>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-300">
+                      <span class="w-2.5 h-2.5 bg-gray-500 rounded-full"></span>
+                      <span class="text-xs font-black text-gray-700 uppercase tracking-wider">Inactive</span>
+                    </div>
+                  <?php elseif($item->stock_status === 'out_of_stock'): ?>
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 border border-red-200">
                       <span class="w-2.5 h-2.5 bg-red-600 rounded-full"></span>
                       <span class="text-xs font-black text-red-700 uppercase tracking-wider">Out</span>

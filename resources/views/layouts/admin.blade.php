@@ -105,6 +105,46 @@
                     return;
                 }
 
+                if (chartType === 'daily-revenue') {
+                    const labels = series.map((item) => item.label);
+                    const data = series.map((item) => item.total);
+
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels,
+                            datasets: [
+                                {
+                                    label: 'Daily Revenue',
+                                    data,
+                                    borderColor: '#2563eb',
+                                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                                    fill: true,
+                                    tension: 0.3,
+                                    pointRadius: 2,
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `Rs. ${context.parsed.y.toLocaleString()}`,
+                                    },
+                                },
+                            },
+                            scales: {
+                                y: { beginAtZero: true },
+                            },
+                        },
+                    });
+
+                    return;
+                }
+
                 if (chartType === 'service-status') {
                     const labels = Object.keys(series);
                     const data = Object.values(series);

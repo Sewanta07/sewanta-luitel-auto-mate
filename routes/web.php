@@ -12,13 +12,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SearchController;
 
-// Landing Page - Redirect authenticated users to their dashboard
+// Landing Page
 Route::get('/', function () {
-    $role = getAuthenticatedUserRole();
-    if ($role) {
-        return redirect()->route('dashboard.' . $role);
-    }
-
     return view('index');
 })->name('index');
 
@@ -57,7 +52,9 @@ Route::match(['get', 'post'], '/payments/esewa/failure', [PaymentController::cla
 Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     Route::get('/customer/dashboard', [DashboardController::class, 'customer'])->name('dashboard.customer');
     Route::get('/staff/dashboard', [DashboardController::class, 'staff'])->name('dashboard.staff');
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('dashboard.admin');
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
+        ->middleware('role:admin')
+        ->name('dashboard.admin');
 
     // Customer Profile Routes
     Route::prefix('customer')->group(function () {
@@ -92,7 +89,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
             ->middleware('role:customer')
             ->name('payments.rental-requests.damage-pay');
         Route::get('/rentals', [\App\Http\Controllers\RentalRequestController::class, 'index'])->name('customer.rentals');
-        Route::view('/settings', 'customer.settings')->name('customer.settings');
         
         // Customer messaging
         Route::get('/messages', [\App\Http\Controllers\CustomerMessageController::class, 'index'])->name('customer.messages');
@@ -145,7 +141,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::get('/customers', [\App\Http\Controllers\Staff\CustomerController::class, 'index'])->name('staff.customers');
         Route::get('/customers/{customer}/messages', [\App\Http\Controllers\Staff\CustomerController::class, 'messages'])->name('staff.customers.messages');
         Route::post('/customers/{customer}/messages', [\App\Http\Controllers\Staff\CustomerController::class, 'sendMessage'])->name('staff.customers.sendMessage');
-        Route::view('/settings', 'staff.profile-settings')->name('staff.settings');
         
         // Staff service details
         Route::get('/services/{id}', [\App\Http\Controllers\Staff\ServiceBookingController::class, 'show'])->name('staff.services.show');
@@ -180,14 +175,9 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
         Route::get('/analytics', [\App\Http\Controllers\DashboardController::class, 'analytics'])
+            ->middleware('role:admin')
             ->name('admin.analytics');
 
-        Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
-        Route::post('/settings/general', [\App\Http\Controllers\Admin\SettingsController::class, 'updateGeneral'])->name('admin.settings.general');
-        Route::post('/settings/service', [\App\Http\Controllers\Admin\SettingsController::class, 'updateService'])->name('admin.settings.service');
-        Route::post('/settings/notification', [\App\Http\Controllers\Admin\SettingsController::class, 'updateNotification'])->name('admin.settings.notification');
-        Route::post('/settings/display', [\App\Http\Controllers\Admin\SettingsController::class, 'updateDisplay'])->name('admin.settings.display');
-        Route::post('/settings/security', [\App\Http\Controllers\Admin\SettingsController::class, 'updateSecurity'])->name('admin.settings.security');
 
         // Contact Messages
         Route::get('/contact-messages', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.contact-messages.index');
@@ -205,7 +195,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         
         // Rental Management (Admin)
         Route::get('/rentals', [\App\Http\Controllers\Admin\RentalManagementController::class, 'dashboard'])->name('admin.rentals.dashboard');
-        Route::get('/rentals/quick-approval', [\App\Http\Controllers\Admin\RentalManagementController::class, 'quickApproval'])->name('admin.rentals.quick-approval');
         Route::get('/rentals/vehicles', [\App\Http\Controllers\Admin\RentalManagementController::class, 'vehicles'])->name('admin.rentals.vehicles');
         Route::post('/rentals/vehicles', [\App\Http\Controllers\Admin\RentalManagementController::class, 'storeVehicle'])->name('admin.rentals.vehicles.store');
         Route::put('/rentals/vehicles/{vehicle}', [\App\Http\Controllers\Admin\RentalManagementController::class, 'updateVehicle'])->name('admin.rentals.vehicles.update');
@@ -230,6 +219,8 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         
         // Message Monitoring
         Route::get('/messages', [\App\Http\Controllers\Admin\MessageMonitorController::class, 'index'])->name('admin.messages');
+        Route::get('/messages/conversations/{customer}/{staff}', [\App\Http\Controllers\Admin\MessageMonitorController::class, 'show'])
+            ->name('admin.messages.conversation');
         
 
         // Staff/admin service pricing
@@ -289,6 +280,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     
     // Search
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+
 });
 
 // Staff status pages

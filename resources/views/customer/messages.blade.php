@@ -51,14 +51,6 @@
             <!-- Messages Display Area -->
             <div class="lg:col-span-2">
                 @if(isset($selectedStaff))
-                    @php
-                        $conversationId = \App\Support\Realtime\ConversationChannel::fromParticipants(
-                            get_class($customer),
-                            (int) $customer->id,
-                            \App\Models\StaffMember::class,
-                            (int) $selectedStaff->id
-                        );
-                    @endphp
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 600px;">
                         <!-- Header -->
                         <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
@@ -104,10 +96,10 @@
 
                         <!-- Message Input Form -->
                         <div class="p-6 border-t bg-white">
-                            <form action="{{ route('customer.messages.send', $selectedStaff->id) }}" method="POST" class="flex gap-3">
+                            <form id="customerMessageForm" action="{{ route('customer.messages.send', $selectedStaff->id) }}" method="POST" class="flex gap-3">
                                 @csrf
                                 <div class="flex-1">
-                                    <textarea name="message" 
+                                    <textarea id="customerMessageInput" name="message" 
                                               rows="2"
                                               placeholder="Type your message..." 
                                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff5a1f] focus:ring focus:ring-orange-100 resize-none focus:outline-none transition-all"
@@ -150,10 +142,12 @@
 
         @if(isset($selectedStaff))
         const conversationId = @json($conversationId);
-        const currentUserId = @json((int) $customer->id);
-        const currentUserType = @json(get_class($customer));
+        const currentUserId = @json((int) $customerChatUserId);
+        const receiverId = @json((int) $selectedStaffChatUserId);
         const currentUserName = @json($customer->name ?? 'You');
         const otherUserName = @json($selectedStaff->name ?? 'Staff');
+        const form = document.getElementById('customerMessageForm');
+        const messageInput = document.getElementById('customerMessageInput');
 
         const formatDate = (value) => {
             if (!value) {
@@ -171,6 +165,7 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
+                timeZone: 'Asia/Kathmandu',
             });
         };
 
@@ -183,8 +178,7 @@
                 return;
             }
 
-            const isSentByCurrent = Number(payload.sender_id) === Number(currentUserId)
-                && payload.sender_type === currentUserType;
+            const isSentByCurrent = Number(payload.sender_id) === Number(currentUserId);
 
             const wrapper = document.createElement('div');
             wrapper.className = `mb-4 flex ${isSentByCurrent ? 'justify-end' : 'justify-start'}`;
@@ -214,7 +208,42 @@
 
         if (window.realtime) {
             window.realtime.subscribeChat(conversationId, {
-                message: appendMessage,
+                message: (payload) => {
+                    if (!payload) {
+                        return;
+                    }
+
+                    if (Number(payload.sender_id) === Number(currentUserId)) {
+                        return;
+                    }
+
+                    appendMessage(payload);
+                },
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const messageText = (messageInput?.value ?? '').trim();
+                if (!messageText) {
+                    return;
+                }
+
+                if (messageInput) {
+                    messageInput.value = '';
+                }
+
+                try {
+                    const response = await window.axios.post(form.action, {
+                        message: messageText,
+                    });
+
+                    appendMessage(response.data?.message);
+                } catch (error) {
+                    console.error(error);
+                }
             });
         }
         @endif

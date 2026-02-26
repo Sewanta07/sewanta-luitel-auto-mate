@@ -5,6 +5,26 @@
 
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-12">
   <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+    @php($isCompleted = $booking->status === 'Completed')
+
+    @if(session('success'))
+      <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-bold text-green-700">
+        {{ session('success') }}
+      </div>
+    @endif
+
+    @if(session('error'))
+      <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+        {{ session('error') }}
+      </div>
+    @endif
+
+    @if($errors->any())
+      <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
     <!-- Header -->
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-10">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
@@ -141,6 +161,11 @@
             </div>
             <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide">Update Service Progress</h3>
           </div>
+          @if($isCompleted)
+            <div class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700">
+              This booking is completed. You can view details and history, but editing is disabled.
+            </div>
+          @else
           <form action="{{ route('staff.bookings.status', $booking->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data">
               @csrf
               
@@ -188,6 +213,7 @@
                 </button>
               </div>
           </form>
+          @endif
         </div>
 
         <!-- Parts Used - Full Width -->
@@ -197,6 +223,11 @@
               Parts Used
           </h2>
 
+          @if($isCompleted)
+            <div class="mb-6 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700">
+              Parts cannot be modified after completion.
+            </div>
+          @else
           <form action="{{ route('staff.services.parts.add', $booking->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             @csrf
             <div>
@@ -204,7 +235,9 @@
               <select name="inventory_item_id" required class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded-lg text-sm font-bold">
                 <option value="" disabled selected>Select part</option>
                 @foreach($inventoryItems as $item)
-                  <option value="{{ $item->id }}">{{ $item->part_name }} ({{ $item->quantity }})</option>
+                  <option value="{{ $item->id }}" {{ $item->status !== 'active' || $item->quantity <= 0 ? 'disabled' : '' }}>
+                    {{ $item->part_name }} ({{ $item->quantity }}) - {{ ucfirst($item->status) }}{{ $item->quantity <= 0 ? ' - Out of stock' : '' }}
+                  </option>
                 @endforeach
               </select>
             </div>
@@ -216,6 +249,7 @@
               <button type="submit" class="w-full px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-lg shadow-lg hover:bg-[#e44d18]">Add Part</button>
             </div>
           </form>
+          @endif
 
           <div class="border border-gray-100 rounded-xl overflow-hidden">
             <table class="w-full text-sm text-left">

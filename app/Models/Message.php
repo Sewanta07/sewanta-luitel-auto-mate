@@ -3,39 +3,37 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CustomerUser;
+use Illuminate\Support\Facades\Schema;
 
 class Message extends Model
 {
     protected $fillable = [
         'sender_id',
-        'sender_type',
         'receiver_id',
-        'receiver_type',
-        'service_booking_id',
         'message',
         'is_read',
-        'read_at',
     ];
 
     protected $casts = [
         'is_read' => 'boolean',
-        'read_at' => 'datetime',
     ];
 
     public function sender()
     {
-        return $this->morphTo();
+        if (Schema::hasColumn($this->getTable(), 'sender_type')) {
+            return $this->morphTo(__FUNCTION__, 'sender_type', 'sender_id');
+        }
+
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
     public function receiver()
     {
-        return $this->morphTo();
-    }
+        if (Schema::hasColumn($this->getTable(), 'receiver_type')) {
+            return $this->morphTo(__FUNCTION__, 'receiver_type', 'receiver_id');
+        }
 
-    public function booking()
-    {
-        return $this->belongsTo(ServiceBooking::class, 'service_booking_id');
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 
     public function markAsRead()
@@ -43,13 +41,17 @@ class Message extends Model
         if (!$this->is_read) {
             $this->update([
                 'is_read' => true,
-                'read_at' => now(),
             ]);
         }
     }
 
+    public function isSentBy(int $userId): bool
+    {
+        return (int) $this->sender_id === $userId;
+    }
+
     public function isSentByCustomer(): bool
     {
-        return $this->sender_type === CustomerUser::class;
+        return optional($this->sender)->role === 'customer';
     }
 }

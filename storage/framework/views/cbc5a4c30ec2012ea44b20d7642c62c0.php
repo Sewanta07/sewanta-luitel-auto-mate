@@ -1,140 +1,191 @@
 <?php $__env->startSection('title', 'Admin Dashboard - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
+<?php
+    $recentBookingRows = collect($recentBookings ?? [])->filter()->values();
+?>
 <div class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
-            <p class="text-gray-600">Welcome back, here's your latest data</p>
+        <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
+                <p class="text-gray-600">Real-time overview of services, payments, inventory, and operations</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="<?php echo e(route('admin.analytics')); ?>" class="px-4 py-2 rounded-lg bg-[#ff5a1f] text-white text-sm font-semibold hover:opacity-90">Open Analytics</a>
+                <a href="<?php echo e(route('admin.services')); ?>" class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50">Manage Services</a>
+            </div>
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">Total Services</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($totalServices ?? 0))); ?></h3>
-                            </div>
-                            <div class="bg-orange-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            </div>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Total Services</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($totalServices ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">In Progress</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($inProgressServices ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Completed Today</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($completedToday ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($totalRevenue ?? 0), 2)); ?></h3>
+            </div>
 
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">In Progress</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($inProgressServices ?? 0))); ?></h3>
-                            </div>
-                            <div class="bg-blue-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </div>
-                        </div>
-                    </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Pending Review</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($pendingReview ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Active Rentals</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($activeRentals ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Low Stock Items</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($lowStockItems ?? 0))); ?></h3>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-500 text-sm font-medium">Pending Withdrawals</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($pendingWithdrawals ?? 0))); ?></h3>
+            </div>
+        </div>
 
-                     
-                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">Completed Today</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($completedToday ?? 0))); ?></h3>
-                            </div>
-                            <div class="bg-green-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </div>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Completed Services (6 Months)','subtitle' => 'Completed service volume trend','chart' => 'admin-performance','series' => $monthlyCompletedServices ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Completed Services (6 Months)','subtitle' => 'Completed service volume trend','chart' => 'admin-performance','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($monthlyCompletedServices ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
 
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">Pending Review</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((int) ($pendingReview ?? 0))); ?></h3>
-                            </div>
-                            <div class="bg-yellow-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </div>
-                        </div>
-                    </div>
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Revenue (6 Months)','subtitle' => 'Paid transactions trend','chart' => 'monthly-revenue','series' => $monthlyRevenue ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Revenue (6 Months)','subtitle' => 'Paid transactions trend','chart' => 'monthly-revenue','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($monthlyRevenue ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Service Status Mix','subtitle' => 'Distribution across all statuses','chart' => 'service-status','series' => $serviceStatusCounts ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Service Status Mix','subtitle' => 'Distribution across all statuses','chart' => 'service-status','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($serviceStatusCounts ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal91b17fe816eccd2dd419f56044b0f392 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal91b17fe816eccd2dd419f56044b0f392 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.chart-card','data' => ['title' => 'Inventory Health','subtitle' => 'In stock vs low stock vs out of stock','chart' => 'service-status','series' => $inventoryHealth ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.chart-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Inventory Health','subtitle' => 'In stock vs low stock vs out of stock','chart' => 'service-status','series' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($inventoryHealth ?? [])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $attributes = $__attributesOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__attributesOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal91b17fe816eccd2dd419f56044b0f392)): ?>
+<?php $component = $__componentOriginal91b17fe816eccd2dd419f56044b0f392; ?>
+<?php unset($__componentOriginal91b17fe816eccd2dd419f56044b0f392); ?>
+<?php endif; ?>
+        </div>
 
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">Total Inventory</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format((float) ($totalInventory ?? 0))); ?></h3>
-                            </div>
-                            <div class="bg-indigo-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
-                            </div>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-900">Recent Service Bookings</h2>
+                    <a href="<?php echo e(route('admin.services')); ?>" class="text-sm font-semibold text-[#ff5a1f] hover:underline">View all</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-gray-500 border-b">
+                                <th class="py-3 pr-4">Booking</th>
+                                <th class="py-3 pr-4">Customer</th>
+                                <th class="py-3 pr-4">Staff</th>
+                                <th class="py-3 pr-4">Status</th>
+                                <th class="py-3 pr-4">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__empty_1 = true; $__currentLoopData = $recentBookingRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="border-b last:border-0">
+                                    <td class="py-3 pr-4 font-semibold text-gray-800"><?php echo e(data_get($booking, 'booking_code', '#' . data_get($booking, 'id'))); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(data_get($booking, 'customer.name', 'N/A')); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(data_get($booking, 'staff.name', 'Unassigned')); ?></td>
+                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(data_get($booking, 'status', 'N/A')); ?></td>
+                                    <td class="py-3 pr-4 text-gray-500"><?php echo e(optional(data_get($booking, 'updated_at'))->diffForHumans()); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="5" class="py-6 text-center text-gray-500">No service bookings found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 text-sm font-medium">Total Service Charge</p>
-                                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($totalServiceCharge ?? 0), 2)); ?></h3>
-                            </div>
-                            <div class="bg-orange-100 p-3 rounded-full">
-                                <svg class="w-8 h-8 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
-                            </div>
-                        </div>
-                    </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+                <div class="space-y-3">
+                    <a href="<?php echo e(route('admin.users')); ?>" class="block px-4 py-3 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-700 font-semibold">Manage Users</a>
+                    <a href="<?php echo e(route('admin.staff-applications.index')); ?>" class="block px-4 py-3 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-700 font-semibold">Review Staff Applications</a>
+                    <a href="<?php echo e(route('admin.inventory.index')); ?>" class="block px-4 py-3 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-700 font-semibold">Check Inventory</a>
+                    <a href="<?php echo e(route('admin.messages')); ?>" class="block px-4 py-3 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-700 font-semibold">Open Messages</a>
                 </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">Performance Overview</h2>
-                            <p class="text-sm text-gray-500">Year-over-year growth comparison</p>
-                        </div>
-                    </div>
-                    <div class="h-64 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border border-dashed border-gray-200"
-                         data-chart="admin-performance"
-                         data-series='<?php echo json_encode($monthlyCompletedServices ?? [], 15, 512) ?>'>
-                        [Chart Placeholder]
-                    </div>
-                </div>
-
-                
-                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
-                    <div class="space-y-4">
-                        <a href="<?php echo e(route('admin.users')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
-                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
-                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            </div>
-                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">Manage Users</span>
-                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </a>
-
-                        <a href="<?php echo e(route('admin.staff-applications.index')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
-                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
-                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            </div>
-                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">Staff Applications</span>
-                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </a>
-
-                        <a href="<?php echo e(route('admin.settings')); ?>" class="group flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-orange-50 transition border border-gray-100 hover:border-orange-100">
-                            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:bg-[#ff5a1f] transition">
-                                <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            </div>
-                            <span class="ml-4 font-semibold text-gray-700 group-hover:text-[#ff5a1f] transition">System Settings</span>
-                            <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#ff5a1f] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </a>
-                    </div>
-                    </div>
+                <div class="mt-6 rounded-lg border border-gray-100 bg-gray-50 p-4">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Service Revenue</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">Rs. <?php echo e(number_format((float) ($totalServiceCharge ?? 0), 2)); ?></p>
+                    <p class="text-sm text-gray-500 mt-1">From completed service bookings</p>
                 </div>
             </div>
         </div>

@@ -9,7 +9,9 @@ class InventoryController extends Controller
 {
     public function index()
     {
-        $items = InventoryItem::where('status', 'active')->orderBy('part_name')->get();
+        $items = InventoryItem::orderByRaw("CASE WHEN status = 'active' THEN 0 ELSE 1 END")
+            ->orderBy('part_name')
+            ->get();
 
         $stats = [
             'total' => $items->count(),
