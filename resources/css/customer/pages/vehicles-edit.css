@@ -1,0 +1,51 @@
+.cs-vehicles-edit-page .cs-vehicles-edit-card {
+	max-width: 100%;
+	border-radius: 1.5rem;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-main,
+.cs-vehicles-edit-page .cs-vehicles-edit-form,
+.cs-vehicles-edit-page .cs-vehicles-edit-field,
+.cs-vehicles-edit-page .cs-vehicles-edit-actions {
+	box-sizing: border-box;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-title {
+	line-height: 1.2;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-control {
+	box-sizing: border-box;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-control-mono {
+	letter-spacing: 0.01em;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-note {
+	line-height: 1.4;
+}
+
+.cs-vehicles-edit-page input,
+.cs-vehicles-edit-page select,
+.cs-vehicles-edit-page textarea {
+	box-sizing: border-box;
+	min-height: 2.9rem;
+}
+
+.cs-vehicles-edit-page .cs-vehicles-edit-grid > .sm\:col-span-2 {
+	grid-column: 1 / -1;
+}
+
+@media (min-width: 640px) {
+	.cs-vehicles-edit-page .cs-vehicles-edit-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}

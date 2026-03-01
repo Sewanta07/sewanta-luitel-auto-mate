@@ -74,6 +74,22 @@
           </thead>
           <tbody class="divide-y divide-gray-100">
             @forelse($items as $item)
+              @php
+                $stockPercent = $item->minimum_stock > 0 ? min(($item->quantity / $item->minimum_stock) * 100, 100) : 100;
+                $stockWidthClass = match (true) {
+                  $stockPercent <= 0 => 'w-0',
+                  $stockPercent <= 10 => 'w-1/12',
+                  $stockPercent <= 20 => 'w-2/12',
+                  $stockPercent <= 30 => 'w-3/12',
+                  $stockPercent <= 40 => 'w-4/12',
+                  $stockPercent <= 50 => 'w-6/12',
+                  $stockPercent <= 60 => 'w-7/12',
+                  $stockPercent <= 70 => 'w-8/12',
+                  $stockPercent <= 80 => 'w-9/12',
+                  $stockPercent <= 90 => 'w-10/12',
+                  default => 'w-full',
+                };
+              @endphp
               <tr class="hover:bg-gray-50 transition-colors group">
                 <td class="px-6 py-4">
                   <p class="font-bold text-gray-900 group-hover:text-orange-600 transition">{{ $item->part_name }}</p>
@@ -84,7 +100,7 @@
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-3">
                     <div class="w-24 bg-gray-200 rounded-full h-2">
-                      <div class="bg-gradient-to-r {{ $item->stock_status === 'out_of_stock' ? 'from-red-500 to-red-600' : ($item->stock_status === 'low_stock' ? 'from-orange-500 to-orange-600' : 'from-green-500 to-green-600') }} h-2 rounded-full" style="width: {{ min(($item->quantity / $item->minimum_stock) * 100, 100) }}%"></div>
+                      <div class="bg-gradient-to-r {{ $item->stock_status === 'out_of_stock' ? 'from-red-500 to-red-600' : ($item->stock_status === 'low_stock' ? 'from-orange-500 to-orange-600' : 'from-green-500 to-green-600') }} h-2 rounded-full {{ $stockWidthClass }}"></div>
                     </div>
                     <span class="text-sm font-black text-gray-900 whitespace-nowrap">{{ $item->quantity }}/{{ $item->minimum_stock }}</span>
                   </div>

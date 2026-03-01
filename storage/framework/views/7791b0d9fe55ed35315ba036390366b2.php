@@ -27,24 +27,21 @@
                 <?php echo $__env->make('customer.components.status-card', [
                     'title' => 'Pending Requests',
                     'count' => $stats['pending'],
-                    'bgColor' => '#fff7ed',
-                    'textColor' => '#ff5a1f',
+                    'accent' => 'orange',
                     'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 002-2V7a2 2 0 00-2-2h-3.5a1.5 1.5 0 01-3 0H7a2 2 0 00-2 2v3a2 2 0 002 2h2"></path></svg>'
                 ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                 <?php echo $__env->make('customer.components.status-card', [
                     'title' => 'In Progress',
                     'count' => $stats['in_progress'],
-                    'bgColor' => '#dbeafe',
-                    'textColor' => '#2563eb',
+                    'accent' => 'blue',
                     'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l1-6h16l1 6M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"></path></svg>'
                 ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                 <?php echo $__env->make('customer.components.status-card', [
                     'title' => 'Completed Services',
                     'count' => $stats['completed'],
-                    'bgColor' => '#f0fdf4',
-                    'textColor' => '#10b981',
+                    'accent' => 'green',
                     'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
                 ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             </div>
@@ -53,33 +50,33 @@
 
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="<?php echo e(route('bookings.create')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #ff5a1f;">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center" style="background-color: #fff7ed;">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" style="color: #ff5a1f;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <a href="<?php echo e(route('bookings.create')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-orange-500">
+                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-orange-50">
+                        <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </div>
                     <p class="font-semibold text-gray-900 text-sm">Request Service</p>
                     <p class="text-xs text-gray-500 mt-1">Book a new appointment</p>
                 </a>
 
-                <a href="<?php echo e(route('bookings.index')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #2563eb;">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center" style="background-color: #eff6ff;">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" style="color: #2563eb;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <a href="<?php echo e(route('bookings.index')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-blue-600">
+                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-blue-50">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </div>
                     <p class="font-semibold text-gray-900 text-sm">View Bookings</p>
                     <p class="text-xs text-gray-500 mt-1">All your service requests</p>
                 </a>
 
-                <a href="<?php echo e(route('bookings.index')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #10b981;">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center" style="background-color: #f0fdf4;">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" style="color: #10b981;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <a href="<?php echo e(route('bookings.index')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-green-500">
+                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-green-50">
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     </div>
                     <p class="font-semibold text-gray-900 text-sm">Make Payment</p>
                     <p class="text-xs text-gray-500 mt-1">Pay outstanding invoices</p>
                 </a>
 
-                <a href="<?php echo e(route('customer.profile')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4" style="border-left-color: #7c3aed;">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center" style="background-color: #f5f3ff;">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" style="color: #7c3aed;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 15a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                <a href="<?php echo e(route('customer.profile')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-purple-600">
+                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-purple-50">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 15a3 3 0 100-6 3 3 0 000 6z"/></svg>
                     </div>
                     <p class="font-semibold text-gray-900 text-sm">My Profile</p>
                     <p class="text-xs text-gray-500 mt-1">Manage your account</p>
@@ -154,7 +151,7 @@
                         </div>
                         
                         
-                        <div class="mt-6 p-4 rounded-lg border-l-4" style="border-left-color: #ff5a1f; background-color: #fff7ed;">
+                        <div class="mt-6 p-4 rounded-lg border-l-4 border-l-orange-500 bg-orange-50">
                             <p class="text-sm text-gray-600 font-medium">Current Status</p>
                             <p class="text-lg font-bold text-gray-900 mt-1"><?php echo e($activeBooking->status); ?></p>
                             <p class="text-xs text-gray-500 mt-2">Request <?php echo e($activeBooking->created_at->diffForHumans()); ?></p>
@@ -167,7 +164,7 @@
                         </div>
                         <p class="text-gray-600 font-medium">No active services</p>
                         <p class="text-sm text-gray-500 mt-1">Your completed services will show here</p>
-                        <a href="<?php echo e(route('bookings.create')); ?>" class="mt-4 inline-flex items-center px-4 py-2 text-white rounded-lg text-sm font-medium" style="background-color: #ff5a1f;" onmouseover="this.style.backgroundColor='#e64b15'" onmouseout="this.style.backgroundColor='#ff5a1f'">Request a Service</a>
+                        <a href="<?php echo e(route('bookings.create')); ?>" class="mt-4 inline-flex items-center px-4 py-2 text-white rounded-lg text-sm font-medium bg-[#ff5a1f] hover:bg-[#e64b15] transition-colors">Request a Service</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -179,9 +176,16 @@
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Bookings</h3>
                         <div class="space-y-3">
                             <?php $__currentLoopData = $recentBookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
+                                    $bookingToneMap = [
+                                        'Completed' => ['icon' => 'bg-green-100 text-green-700', 'chip' => 'bg-green-100 text-green-700'],
+                                        'In Progress' => ['icon' => 'bg-blue-100 text-blue-800', 'chip' => 'bg-blue-100 text-blue-800'],
+                                    ];
+                                    $bookingTone = $bookingToneMap[$booking->status] ?? ['icon' => 'bg-amber-100 text-amber-800', 'chip' => 'bg-amber-100 text-amber-800'];
+                                ?>
                                 <a href="<?php echo e(route('bookings.show', $booking->id)); ?>" class="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
                                     <div class="flex items-center gap-4 flex-1">
-                                        <div class="w-10 h-10 rounded-full" style="background-color: <?php echo e($booking->status === 'Completed' ? '#d1fae5' : ($booking->status === 'In Progress' ? '#dbeafe' : '#fef3c7')); ?>; color: <?php echo e($booking->status === 'Completed' ? '#059669' : ($booking->status === 'In Progress' ? '#1e40af' : '#92400e')); ?>;" class="flex items-center justify-center text-sm font-bold">
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold <?php echo e($bookingTone['icon']); ?>">
                                             <?php if($booking->status === 'Completed'): ?>
                                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></path></svg>
                                             <?php elseif($booking->status === 'In Progress'): ?>
@@ -195,7 +199,7 @@
                                             <p class="text-xs text-gray-500"><?php echo e($booking->created_at->format('M d, Y')); ?></p>
                                         </div>
                                     </div>
-                                    <span class="px-3 py-1 text-xs font-semibold rounded-full" style="background-color: <?php echo e($booking->status === 'Completed' ? '#d1fae5' : ($booking->status === 'In Progress' ? '#dbeafe' : '#fef3c7')); ?>; color: <?php echo e($booking->status === 'Completed' ? '#059669' : ($booking->status === 'In Progress' ? '#1e40af' : '#92400e')); ?>;">
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full <?php echo e($bookingTone['chip']); ?>">
                                         <?php echo e($booking->status); ?>
 
                                     </span>
@@ -206,13 +210,13 @@
                     </div>
                 <?php else: ?>
                     <div class="p-10 rounded-2xl bg-white shadow-sm text-center">
-                        <div class="mx-auto w-32 h-32 flex items-center justify-center rounded-full text-white mb-6" style="background-color: #ff5a1f;">
+                        <div class="mx-auto w-32 h-32 flex items-center justify-center rounded-full text-white mb-6 bg-[#ff5a1f]">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a4 4 0 11-5.6 5.6L3 18l3 1 5.1-5.1a4 4 0 001.6-4.6l-2-4.1z"></path></svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">No service requests yet</h3>
                         <p class="text-sm text-gray-500 mt-2">You don't have any active service requests. When you need help, we are just a click away.</p>
                         <div class="mt-6">
-                            <a href="<?php echo e(route('bookings.create')); ?>" class="inline-flex items-center px-4 py-2 text-white rounded-lg shadow transition" style="background-color: #ff5a1f;" onmouseover="this.style.backgroundColor='#e64b15'" onmouseout="this.style.backgroundColor='#ff5a1f'">Request Service</a>
+                            <a href="<?php echo e(route('bookings.create')); ?>" class="inline-flex items-center px-4 py-2 text-white rounded-lg shadow transition bg-[#ff5a1f] hover:bg-[#e64b15]">Request Service</a>
                         </div>
                     </div>
                 <?php endif; ?>

@@ -1,16 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.customer-core')
 
 @section('content')
 @include('customer.navbar')
 
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">
+<div class="cs-page cs-bookings-show-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Header -->
     <div class="text-center mb-10">
       <h1 class="text-5xl font-black text-gray-900 mb-2">Booking Details</h1>
       <p class="text-gray-500 text-lg">Booking <span class="font-black text-gray-700">{{ $booking->booking_code }}</span></p>
       <div class="mt-6 flex justify-center">
-          <span class="inline-block px-6 py-2 rounded-full font-black text-sm tracking-wider shadow-lg
+          <span class="cs-booking-status inline-block px-6 py-2 rounded-full font-black text-sm tracking-wider shadow-lg
             @if($booking->status == 'Pending') bg-yellow-100 text-yellow-800 border-2 border-yellow-200
             @elseif($booking->status == 'Approved') bg-indigo-100 text-indigo-800 border-2 border-indigo-200
             @elseif($booking->status == 'Assigned') bg-blue-100 text-blue-800 border-2 border-blue-200
@@ -44,7 +44,7 @@
       @endif
 
       <!-- Booking Info Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="cs-booking-info-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-orange-500">
           <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Service Type</p>
           <p class="text-lg font-black text-gray-900">{{ $booking->service_type }}</p>
@@ -67,7 +67,7 @@
             <svg class="w-6 h-6 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Service Updates & Communication
         </h2>
-        <div class="space-y-8">
+        <div class="cs-timeline space-y-8">
             @forelse($booking->logs as $log)
                 <div class="flex gap-6 relative pb-8">
                     @if(!$loop->last)

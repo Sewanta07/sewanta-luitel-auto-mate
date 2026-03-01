@@ -1,49 +1,44 @@
 {{-- Premium Customer Navigation Bar --}}
-<nav x-data="{ userDropdownOpen: false, mobileMenuOpen: false }" class="bg-white sticky top-0 z-50 border-b border-gray-100 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20">
+<nav id="customerNav" class="cs-cnav bg-white sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+  <div class="cs-cnav-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="cs-cnav-row flex items-center justify-between h-20">
       
       {{-- BRANDING (LEFT) --}}
-      <div class="flex-shrink-0">
-        <a href="{{ route('index') }}" class="flex items-center space-x-2 group">
-          <svg class="w-8 h-8 text-[#ff5a1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          <span class="text-2xl font-black tracking-tight text-gray-900">
-            Auto<span class="text-[#ff5a1f]">Mate</span>
-          </span>
+      <div class="cs-cnav-brand-wrap flex-shrink-0">
+        <a href="{{ route('index') }}" class="cs-cnav-brand-link flex items-center space-x-2 group">
+          <img src="{{ asset('assets/branding/company-logo.png') }}" alt="AutoMate" class="customer-logo-image">
         </a>
       </div>
 
       {{-- CENTERED LINKS --}}
-      <div class="hidden lg:flex flex-1 justify-center">
-        <div class="flex items-center space-x-2">
+      <div class="cs-cnav-links-wrap hidden lg:flex flex-1 justify-center">
+        <div class="cs-cnav-links flex items-center space-x-2">
           <a href="{{ route('dashboard.customer') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+             class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle' }}">
             Dashboard
           </a>
            <a href="{{ route('bookings.index') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('bookings.index') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+             class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('bookings.index') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle' }}">
             Bookings
             @if(($navCounts['services_pending'] ?? 0) > 0)
-              <span class="ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
+              <span class="cs-cnav-count ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
                 {{ ($navCounts['services_pending'] ?? 0) > 99 ? '99+' : ($navCounts['services_pending'] ?? 0) }}
               </span>
             @endif
           </a>
           <a href="{{ route('customer.vehicles') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.vehicles*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+             class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.vehicles*') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle' }}">
             Vehicles
           </a>
           <a href="{{ route('customer.rent-vehicles') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rent-vehicles') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+             class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rent-vehicles') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle' }}">
             Rent Vehicles
           </a>
           <a href="{{ route('customer.rentals') }}" 
-             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50' }}">
+             class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 {{ request()->routeIs('customer.rentals*') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle' }}">
             My Rentals
             @if(($navCounts['rentals_pending'] ?? 0) > 0)
-              <span class="ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
+              <span class="cs-cnav-count ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white text-[10px] font-bold align-middle">
                 {{ ($navCounts['rentals_pending'] ?? 0) > 99 ? '99+' : ($navCounts['rentals_pending'] ?? 0) }}
               </span>
             @endif
@@ -52,72 +47,70 @@
       </div>
 
       {{-- ACTIONS & USER (RIGHT) --}}
-      <div class="flex items-center space-x-4">
+      <div class="cs-cnav-actions flex items-center space-x-4">
+        <button id="customerMobileMenuButton" type="button" class="cs-cnav-mobile-toggle lg:hidden p-2.5 rounded-xl text-gray-500 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all" aria-label="Toggle mobile menu">
+          <svg class="cs-cnav-mobile-toggle-icon w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
         
         {{-- High-Priority Action --}}
         <a href="{{ route('bookings.create') }}" 
-           class="hidden md:flex items-center px-6 py-2.5 rounded-full text-sm font-black bg-[#ff5a1f] text-white shadow-lg shadow-orange-100 hover:bg-[#e44d18] hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+           class="cs-cnav-cta hidden md:flex items-center px-6 py-2.5 rounded-full text-sm font-black bg-[#ff5a1f] text-white shadow-lg shadow-orange-100 hover:bg-[#e44d18] hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+          <svg class="cs-cnav-cta-icon w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Book Service
         </a>
 
         {{-- Customer Messaging --}}
-        <a href="{{ route('customer.messages') ?? '#' }}" class="p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative" title="Messages">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <a href="{{ route('customer.messages') ?? '#' }}" class="cs-cnav-icon-link p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative" title="Messages">
+          <svg class="cs-cnav-icon w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           @if(($navCounts['messages_unread'] ?? 0) > 0)
-            <span class="absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center">
+            <span class="cs-cnav-badge absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-[#ff5a1f] text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center">
               {{ ($navCounts['messages_unread'] ?? 0) > 99 ? '99+' : ($navCounts['messages_unread'] ?? 0) }}
             </span>
           @endif
         </a>
 
         {{-- Notifications --}}
-        <a href="{{ route('notifications.index') }}" class="p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          <span id="customerNotificationBadge" class="hidden absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-red-500 text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center"></span>
+        <a href="{{ route('notifications.index') }}" class="cs-cnav-icon-link p-2.5 rounded-xl text-gray-400 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all duration-200 relative">
+          <svg class="cs-cnav-icon w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span id="customerNotificationBadge" class="cs-cnav-badge hidden absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-red-500 text-white border-2 border-white text-[10px] font-bold leading-none flex items-center justify-center"></span>
         </a>
 
         {{-- USER DROPDOWN --}}
-        <div class="relative">
-          <button @click="userDropdownOpen = !userDropdownOpen" 
-                  class="flex items-center p-1 rounded-full hover:bg-gray-50 transition-all duration-200 focus:outline-none border border-transparent hover:border-gray-200">
-            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border-2 border-white overflow-hidden shadow-sm">
-              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        <div class="cs-cnav-user relative">
+          <button id="customerUserDropdownButton" type="button"
+                  class="cs-cnav-user-btn flex items-center p-1 rounded-full hover:bg-gray-50 transition-all duration-200 focus:outline-none border border-transparent hover:border-gray-200">
+            <div class="cs-cnav-user-avatar w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border-2 border-white overflow-hidden shadow-sm">
+              <svg class="cs-cnav-user-avatar-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             </div>
           </button>
 
           {{-- DROPDOWN PANEL --}}
-          <div x-show="userDropdownOpen" 
-               @click.away="userDropdownOpen = false"
-               x-transition:enter="transition ease-out duration-150"
-               x-transition:enter-start="opacity-0 scale-95 translate-y-2"
-               x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-               class="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 ring-1 ring-black/5 overflow-hidden">
+          <div id="customerUserDropdownMenu" class="cs-cnav-dropdown hidden absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 ring-1 ring-black/5 overflow-hidden">
             
-            <div class="px-5 py-4 border-b border-gray-50">
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Logged in as</p>
-              <p class="text-base font-black text-gray-900 mt-1 truncate">{{ Auth::user()->name ?? 'Customer' }}</p>
+            <div class="cs-cnav-dropdown-head px-5 py-4 border-b border-gray-50">
+              <p class="cs-cnav-dropdown-label text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Logged in as</p>
+              <p class="cs-cnav-dropdown-name text-base font-black text-gray-900 mt-1 truncate">{{ Auth::user()->name ?? 'Customer' }}</p>
             </div>
 
-            <div class="p-2 space-y-1">
-              <a href="{{ route('customer.profile') }}" class="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">
-                <svg class="w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <div class="cs-cnav-dropdown-body p-2 space-y-1">
+              <a href="{{ route('customer.profile') }}" class="cs-cnav-dropdown-link flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">
+                <svg class="cs-cnav-dropdown-link-icon w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 My Profile
               </a>
 
 
 
-              <a href="{{ route('owner.earnings.dashboard') }}" class="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">
-                <svg class="w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <a href="{{ route('owner.earnings.dashboard') }}" class="cs-cnav-dropdown-link flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">
+                <svg class="cs-cnav-dropdown-link-icon w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Earnings
               </a>
 
-              <div class="h-px bg-gray-50 my-2"></div>
+              <div class="cs-cnav-dropdown-divider h-px bg-gray-50 my-2"></div>
 
               <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="w-full flex items-center px-4 py-3 rounded-xl text-sm font-black text-red-600 hover:bg-red-50 transition-all">
-                  <svg class="w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>
+                <button type="submit" class="cs-cnav-dropdown-logout w-full flex items-center px-4 py-3 rounded-xl text-sm font-black text-red-600 hover:bg-red-50 transition-all">
+                  <svg class="cs-cnav-dropdown-link-icon w-5 h-5 mr-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>
                   Sign Out
                 </button>
               </form>
@@ -130,26 +123,22 @@
   </div>
 
   {{-- MOBILE MENU --}}
-  <div x-show="mobileMenuOpen" 
-       x-transition:enter="transition ease-out duration-200"
-       x-transition:enter-start="opacity-0 -translate-y-4"
-       x-transition:enter-end="opacity-100 translate-y-0"
-       class="lg:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
+  <div id="customerMobileMenu" class="cs-cnav-mobile-menu hidden lg:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
     
-    <a href="{{ route('dashboard.customer') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
-    <a href="{{ route('customer.vehicles') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>
-    <a href="{{ route('bookings.create') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Book Service</a>
-    <a href="{{ route('bookings.index') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Bookings</a>
-    <a href="{{ route('customer.messages') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Messages</a>
-    <a href="{{ route('customer.rent-vehicles') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent Vehicles</a>
-    <a href="{{ route('customer.rentals') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Rentals</a>
-    <a href="{{ route('customer.profile') }}" class="block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Profile</a>
+    <a href="{{ route('dashboard.customer') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
+    <a href="{{ route('customer.vehicles') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>
+    <a href="{{ route('bookings.create') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Book Service</a>
+    <a href="{{ route('bookings.index') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Bookings</a>
+    <a href="{{ route('customer.messages') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Messages</a>
+    <a href="{{ route('customer.rent-vehicles') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Rent Vehicles</a>
+    <a href="{{ route('customer.rentals') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Rentals</a>
+    <a href="{{ route('customer.profile') }}" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Profile</a>
     
-    <div class="h-px bg-gray-100 my-4"></div>
+    <div class="cs-cnav-mobile-divider h-px bg-gray-100 my-4"></div>
     
     <form action="{{ route('logout') }}" method="POST">
       @csrf
-      <button type="submit" class="w-full text-left p-4 rounded-xl text-sm font-bold text-red-600 hover:bg-red-50 transition-all">Logout</button>
+      <button type="submit" class="cs-cnav-mobile-logout w-full text-left p-4 rounded-xl text-sm font-bold text-red-600 hover:bg-red-50 transition-all">Logout</button>
     </form>
   </div>
 </nav>
@@ -157,6 +146,37 @@
 @push('scripts')
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const navRoot = document.getElementById('customerNav');
+    const userDropdownButton = document.getElementById('customerUserDropdownButton');
+    const userDropdownMenu = document.getElementById('customerUserDropdownMenu');
+    const mobileMenuButton = document.getElementById('customerMobileMenuButton');
+    const mobileMenu = document.getElementById('customerMobileMenu');
+
+    const closeUserDropdown = () => userDropdownMenu?.classList.add('hidden');
+    const closeMobileMenu = () => mobileMenu?.classList.add('hidden');
+
+    userDropdownButton?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      userDropdownMenu?.classList.toggle('hidden');
+    });
+
+    mobileMenuButton?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!navRoot?.contains(event.target)) {
+        closeUserDropdown();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeUserDropdown();
+        closeMobileMenu();
+      }
+    });
+
     const userId = @json((int) (Auth::id() ?? 0));
     const initialUnreadCount = @json((int) ($navCounts['notifications_unread'] ?? 0));
     const badge = document.getElementById('customerNotificationBadge');

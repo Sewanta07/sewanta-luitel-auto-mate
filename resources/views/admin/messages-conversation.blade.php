@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 700px;">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full max-h-[700px]">
                         <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
                             <div class="flex items-center gap-3">
                                 <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white font-bold text-lg">

@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'AutoMate - Smart Vehicle Service Management')</title>
+    <title>@yield('title', 'AutoMate')</title>
 
-    <!-- Tailwind CSS via Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+    @vite(['resources/css/app.css', 'resources/css/customer-core.css', 'resources/js/app.js', 'resources/js/customer-core.js'])
+
     @stack('styles')
 </head>
 <body class="app-layout-body">
@@ -20,4 +19,3 @@
     @stack('scripts')
 </body>
 </html>
-

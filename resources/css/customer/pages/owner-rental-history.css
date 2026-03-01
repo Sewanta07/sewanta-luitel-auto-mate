@@ -1,0 +1,135 @@
+.cs-owner-history-page .cs-owner-history-stats {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+.cs-owner-history-page .cs-owner-history-main {
+	width: min(1180px, 100%);
+	margin-inline: auto;
+}
+
+.cs-owner-history-page .cs-owner-history-head {
+	align-items: end;
+}
+
+.cs-owner-history-page .cs-owner-history-title {
+	line-height: 1.1;
+}
+
+.cs-owner-history-page .cs-owner-history-subtitle {
+	max-width: 54ch;
+}
+
+.cs-owner-history-page .cs-owner-history-stats > div {
+	border-radius: 1rem;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-owner-history-page .cs-owner-history-stat-card {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.cs-owner-history-page .cs-owner-history-stat-value {
+	line-height: 1.15;
+	word-break: break-word;
+}
+
+.cs-owner-history-page .cs-owner-history-tabs {
+	display: flex;
+	gap: 0.25rem;
+	flex-wrap: wrap;
+}
+
+.cs-owner-history-page .cs-owner-history-tab-btn {
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+
+.cs-owner-history-page .cs-owner-history-tab-btn.is-active {
+	background: #ff5a1f;
+	color: #fff;
+	box-shadow: 0 8px 16px rgba(255, 90, 31, 0.2);
+}
+
+.cs-owner-history-page .cs-owner-history-panel {
+	display: none;
+}
+
+.cs-owner-history-page .cs-owner-history-panel.is-active {
+	display: block;
+}
+
+.cs-owner-history-page .cs-owner-history-panel > .space-y-4 > div {
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-owner-history-page .cs-owner-history-list {
+	display: grid;
+	gap: 1rem;
+}
+
+.cs-owner-history-page .cs-owner-history-item {
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-owner-history-page .cs-owner-history-item-head {
+	align-items: center;
+}
+
+.cs-owner-history-page .cs-owner-history-chip {
+	display: inline-flex;
+	align-items: center;
+	font-weight: 700;
+}
+
+.cs-owner-history-page .cs-owner-history-item-grid {
+	align-items: start;
+}
+
+.cs-owner-history-page .cs-owner-history-note {
+	border-radius: 0.75rem;
+}
+
+.cs-owner-history-page .cs-owner-history-note-title {
+	letter-spacing: 0.02em;
+}
+
+.cs-owner-history-page .cs-owner-history-meta {
+	flex-wrap: wrap;
+	row-gap: 0.35rem;
+}
+
+.cs-owner-history-page .cs-owner-history-empty {
+	line-height: 1.5;
+}
+
+.cs-owner-history-page .cs-owner-history-empty-title {
+	line-height: 1.25;
+}
+
+.cs-owner-history-page .cs-owner-history-empty-icon {
+	opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+	.cs-owner-history-page .cs-owner-history-stats {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cs-owner-history-page .cs-owner-history-tabs {
+		width: 100%;
+	}
+
+	.cs-owner-history-page .cs-owner-history-tab-btn {
+		flex: 1 1 calc(50% - 0.25rem);
+	}
+
+	.cs-owner-history-page .cs-owner-history-item-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}

@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-    <title><?php echo $__env->yieldContent('title', 'AutoMate - Smart Vehicle Service Management'); ?></title>
+    <title><?php echo $__env->yieldContent('title', 'AutoMate'); ?></title>
 
-    <!-- Tailwind CSS via Vite -->
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
-    
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/css/customer-core.css', 'resources/js/app.js', 'resources/js/customer-core.js']); ?>
+
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body class="app-layout-body">
@@ -20,5 +19,4 @@
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
-
-<?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\AutoMate\resources\views/layouts/customer-core.blade.php ENDPATH**/ ?>

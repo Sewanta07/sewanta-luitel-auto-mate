@@ -28,7 +28,7 @@
 
                     <div class="divide-y max-h-96 overflow-y-auto bg-white">
                         @forelse($customers as $c)
-                            <a href="{{ route('staff.customers.messages', $c->id) }}" class="conversation-link block p-4 transition-all border-l-4 text-gray-900 {{ $customer->id === $c->id ? 'border-[#ff5a1f] bg-orange-50 shadow-md' : 'border-transparent hover:bg-gray-50' }}">
+                            <a href="{{ route('staff.customers.messages', $c->id) }}" class="block p-4 transition-all border-l-4 text-gray-900 visited:text-gray-900 hover:text-gray-900 no-underline {{ $customer->id === $c->id ? 'border-[#ff5a1f] bg-orange-50 shadow-md' : 'border-transparent hover:bg-gray-50' }}">
                                 <div class="flex items-start gap-3">
                                     <div class="w-10 h-10 rounded-full bg-[#ff5a1f] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                         {{ strtoupper(substr($c->name ?? $c->email ?? 'C', 0, 1)) }}
@@ -54,7 +54,7 @@
             </div>
 
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full" style="max-height: 650px;">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full max-h-[650px]">
                     <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white font-bold text-lg">
@@ -72,7 +72,7 @@
                         <p class="text-xs uppercase tracking-wide text-gray-700 font-bold mb-2">Related Bookings</p>
                             <div class="flex gap-2 flex-wrap">
                                 @foreach($bookings as $booking)
-                                    <a href="{{ route('staff.services.show', $booking->id) }}" class="booking-link inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-gray-900 bg-white border border-gray-200 hover:border-[#ff5a1f] hover:text-[#ff5a1f] transition">
+                                    <a href="{{ route('staff.services.show', $booking->id) }}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-gray-900 no-underline bg-white border border-gray-200 hover:border-[#ff5a1f] hover:text-[#ff5a1f] transition">
                                         {{ $booking->booking_code }} - {{ $booking->service_type }}
                                     </a>
                                 @endforeach
@@ -240,29 +240,3 @@
     });
 </script>
 @endsection
-
-@push('styles')
-<style>
-    .conversation-link {
-        color: #111827 !important;
-        text-decoration: none !important;
-    }
-    
-    .conversation-link:visited {
-        color: #111827 !important;
-    }
-    
-    .conversation-link:hover {
-        color: #111827 !important;
-    }
-    
-    .booking-link {
-        color: #111827 !important;
-        text-decoration: none !important;
-    }
-    
-    .booking-link:hover {
-        color: #ff5a1f !important;
-    }
-</style>
-@endpush

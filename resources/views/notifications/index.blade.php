@@ -66,12 +66,19 @@
         @forelse($notifications ?? [] as $notification)
           @php
             $config = $notification->getIconConfig();
+            $dotColorMap = [
+              'text-blue-600' => 'bg-blue-600',
+              'text-green-600' => 'bg-green-600',
+              'text-orange-600' => 'bg-orange-600',
+              'text-red-600' => 'bg-red-600',
+            ];
+            $dotColorClass = $dotColorMap[$config['text']] ?? 'bg-blue-600';
           @endphp
           
           {{-- Notification Card --}}
           <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:{{ $config['border'] }} hover:shadow-xl hover:{{ $config['shadow'] }} transition-all duration-300 {{ $notification->is_read ? 'opacity-75' : '' }}">
             @if(!$notification->is_read)
-              <div class="absolute top-6 right-6 w-3 h-3 rounded-full animate-pulse group-hover:scale-125 transition-transform" style="background-color: {{ str_replace('text-', '#', $config['text']) }}"></div>
+              <div class="absolute top-6 right-6 w-3 h-3 rounded-full animate-pulse group-hover:scale-125 transition-transform {{ $dotColorClass }}"></div>
             @endif
             <div class="flex items-start space-x-5">
               <div class="flex-shrink-0 w-14 h-14 rounded-2xl {{ $config['bg'] }} flex items-center justify-center {{ $config['text'] }} group-hover:scale-110 transition-transform duration-300">

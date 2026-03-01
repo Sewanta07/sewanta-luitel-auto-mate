@@ -1,75 +1,55 @@
-@extends('layouts.app')
+@extends('layouts.customer-core')
 
 @section('title', 'Book a Service - AutoMate')
 
 @section('content')
-@php($user = auth()->user())
-<div class="dashboard">
-    <nav class="dashboard-nav">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <h1>AutoMate</h1>
-                </div>
-                <div class="nav-links">
-                    <a href="{{ route('dashboard.customer') }}" class="btn btn-outline">Dashboard</a>
-                    <a href="{{ route('customer.profile') }}" class="btn btn-outline">My Profile</a>
-                    <span class="user-info">Welcome, {{ $user?->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+@include('customer.navbar')
 
-    <div class="dashboard-content">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2>Service Booking</h2>
-                <p>Browse services, book, and confirm your appointment.</p>
-            </div>
+<section class="cs-page cs-services-page">
+    <div class="cs-container cs-services-wrap cs-services-container">
+        <header class="cs-page-head cs-services-head">
+            <h1 class="cs-page-title cs-services-title">Service Booking</h1>
+            <p class="cs-page-subtitle cs-services-subtitle">Browse services, book, and confirm your appointment.</p>
+        </header>
 
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-icon">🛠️</div>
-                    <h3>Browse Services</h3>
-                    <p>Choose from maintenance, repairs, diagnostics, and more.</p>
-                    <ul class="feature-list">
-                        <li>Service categories and pricing</li>
-                        <li>Estimated duration</li>
-                        <li>Recommended add-ons</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary btn-sm">Browse</a>
-                </div>
+        <div class="cs-cards-grid cs-services-grid">
+            <article class="cs-card cs-service-card cs-service-card-browse">
+                <div class="cs-card-icon cs-service-card-icon" aria-hidden="true">🛠️</div>
+                <h2 class="cs-card-title cs-service-card-title">Browse Services</h2>
+                <p class="cs-card-text cs-service-card-text">Choose from maintenance, repairs, diagnostics, and more.</p>
+                <ul class="cs-list cs-service-card-list">
+                    <li class="cs-service-card-item">Service categories and pricing</li>
+                    <li class="cs-service-card-item">Estimated duration</li>
+                    <li class="cs-service-card-item">Recommended add-ons</li>
+                </ul>
+                <a href="{{ route('bookings.create') }}" class="cs-btn cs-btn-primary cs-btn-sm cs-service-card-cta">Browse</a>
+            </article>
 
-                <div class="dashboard-card">
-                    <div class="card-icon">📅</div>
-                    <h3>Book a Service</h3>
-                    <p>Select date, slot, and preferred workshop.</p>
-                    <ul class="feature-list">
-                        <li>Choose vehicle from your garage</li>
-                        <li>Pickup / drop options</li>
-                        <li>Instant confirmation</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary btn-sm">Book Now</a>
-                </div>
+            <article class="cs-card cs-service-card cs-service-card-book">
+                <div class="cs-card-icon cs-service-card-icon" aria-hidden="true">📅</div>
+                <h2 class="cs-card-title cs-service-card-title">Book a Service</h2>
+                <p class="cs-card-text cs-service-card-text">Select date, slot, and preferred workshop.</p>
+                <ul class="cs-list cs-service-card-list">
+                    <li class="cs-service-card-item">Choose vehicle from your garage</li>
+                    <li class="cs-service-card-item">Pickup / drop options</li>
+                    <li class="cs-service-card-item">Instant confirmation</li>
+                </ul>
+                <a href="{{ route('bookings.create') }}" class="cs-btn cs-btn-primary cs-btn-sm cs-service-card-cta">Book Now</a>
+            </article>
 
-                <div class="dashboard-card">
-                    <div class="card-icon">✅</div>
-                    <h3>Booking Confirmation</h3>
-                    <p>Review booking details and receive notifications.</p>
-                    <ul class="feature-list">
-                        <li>Summary of selected services</li>
-                        <li>Slot and location details</li>
-                        <li>Notification preferences</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary btn-sm">View Confirmation</a>
-                </div>
-            </div>
+            <article class="cs-card cs-service-card cs-service-card-confirmation">
+                <div class="cs-card-icon cs-service-card-icon" aria-hidden="true">✅</div>
+                <h2 class="cs-card-title cs-service-card-title">Booking Confirmation</h2>
+                <p class="cs-card-text cs-service-card-text">Review booking details and receive notifications.</p>
+                <ul class="cs-list cs-service-card-list">
+                    <li class="cs-service-card-item">Summary of selected services</li>
+                    <li class="cs-service-card-item">Slot and location details</li>
+                    <li class="cs-service-card-item">Notification preferences</li>
+                </ul>
+                <a href="{{ route('bookings.index') }}" class="cs-btn cs-btn-primary cs-btn-sm cs-service-card-cta">View Confirmation</a>
+            </article>
         </div>
     </div>
-</div>
+</section>
 @endsection
 

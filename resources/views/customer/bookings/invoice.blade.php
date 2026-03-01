@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.customer-core')
 
 @section('title', 'Service Invoice - AutoMate')
 
 @section('content')
 @include('customer.navbar')
 
-<div class="min-h-screen bg-gray-50 pb-20">
+<div class="cs-page cs-bookings-invoice-page min-h-screen bg-gray-50 pb-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 sm:p-7">
             <div class="flex items-center justify-between mb-6">
@@ -79,7 +79,7 @@
 
             <div class="mt-6 border-t border-gray-100 pt-5">
                 <h3 class="text-sm font-bold text-gray-700 mb-3">Payment Summary</h3>
-                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3">
+                <div class="cs-invoice-summary bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3">
                     <div class="flex items-center justify-between">
                         <p class="text-sm font-bold text-gray-500">Total Payable</p>
                         <p class="text-xl font-black text-[#ff5a1f]">Rs. {{ number_format($payableAmount, 2) }}</p>
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="mt-6 flex gap-3">
+            <div class="cs-invoice-actions mt-6 flex gap-3">
                 <a href="{{ route('bookings.index') }}" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-center hover:bg-gray-200">Back to Bookings</a>
                 <button class="flex-1 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18]">Download PDF</button>
             </div>

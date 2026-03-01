@@ -1,0 +1,42 @@
+.cs-bookings-invoice-page .cs-invoice-summary {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.cs-bookings-invoice-page .cs-page {
+	padding-top: 1.5rem;
+}
+
+.cs-bookings-invoice-page .cs-invoice-summary > div {
+	align-items: flex-start;
+}
+
+.cs-bookings-invoice-page table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.cs-bookings-invoice-page thead th {
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+}
+
+.cs-bookings-invoice-page tfoot td {
+	font-weight: 800;
+}
+
+.cs-bookings-invoice-page .cs-invoice-actions {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.cs-bookings-invoice-page .cs-invoice-actions > * {
+	flex: 1 1 0;
+}
+
+@media (max-width: 640px) {
+	.cs-bookings-invoice-page .cs-invoice-actions {
+		flex-direction: column;
+	}
+}

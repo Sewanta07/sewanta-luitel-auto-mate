@@ -1,0 +1,393 @@
+.cs-bookings-page .cs-empty {
+	border-style: dashed;
+	border-radius: 1.2rem;
+	padding: 5rem;
+	text-align: center;
+}
+
+.cs-bookings-page .cs-bookings-container {
+	width: min(1180px, calc(100% - 2rem));
+	margin-inline: auto;
+	padding-top: 2.5rem;
+	padding-bottom: 2.5rem;
+}
+
+.cs-bookings-page .cs-bookings-head {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 2.5rem;
+}
+
+.cs-bookings-page .cs-bookings-title {
+	margin: 0;
+	font-size: 2.25rem;
+	line-height: 1.2;
+	font-weight: 900;
+	letter-spacing: -0.02em;
+}
+
+.cs-bookings-page .cs-bookings-title-accent {
+	color: var(--cs-accent);
+}
+
+.cs-bookings-page .cs-bookings-subtitle {
+	margin-top: 0.5rem;
+	font-weight: 500;
+	color: #6b7280;
+}
+
+.cs-bookings-page .cs-bookings-cta {
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	padding: 1rem 2rem;
+	border-radius: 1rem;
+	font-weight: 900;
+	box-shadow: 0 12px 24px rgba(255, 90, 31, 0.22);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cs-bookings-page .cs-bookings-cta:hover {
+	transform: translateY(-2px);
+}
+
+.cs-bookings-page .cs-bookings-cta-icon {
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-right: 0.5rem;
+	transition: transform 0.3s ease;
+}
+
+.cs-bookings-page .cs-bookings-cta:hover .cs-bookings-cta-icon {
+	transform: rotate(90deg);
+}
+
+.cs-bookings-page .cs-bookings-success {
+	margin-bottom: 2rem;
+	padding: 1rem;
+	background: #f0fdf4;
+	border: 1px solid #bbf7d0;
+	border-radius: 1rem;
+	display: flex;
+	align-items: center;
+	color: #15803d;
+	font-weight: 700;
+}
+
+.cs-bookings-page .cs-bookings-success-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-right: 0.75rem;
+	color: #22c55e;
+}
+
+.cs-bookings-page .cs-bookings-table-wrap {
+	border-radius: 2rem;
+	overflow: hidden;
+}
+
+.cs-bookings-page .cs-table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+.cs-bookings-page .cs-table-scroll {
+	overflow-x: auto;
+}
+
+.cs-bookings-page .cs-table th,
+.cs-bookings-page .cs-table td {
+	vertical-align: middle;
+	padding: 1.5rem 2rem;
+}
+
+.cs-bookings-page .cs-table th {
+	font-size: 0.7rem;
+	font-weight: 900;
+	letter-spacing: 0.11em;
+	text-transform: uppercase;
+	color: #9ca3af;
+}
+
+.cs-bookings-page .cs-table-head-row {
+	border-bottom: 1px solid #f3f4f6;
+}
+
+.cs-bookings-page .cs-table-head-cell-right,
+.cs-bookings-page .cs-table-cell-right {
+	text-align: right;
+}
+
+.cs-bookings-page .cs-table-body {
+	border-top: 1px solid #f9fafb;
+}
+
+.cs-bookings-page .cs-table tbody tr {
+	transition: background-color 0.2s ease;
+}
+
+.cs-bookings-page .cs-table tbody tr:hover {
+	background: #f9fafb;
+}
+
+.cs-bookings-page .cs-vehicle-cell {
+	display: flex;
+	align-items: center;
+}
+
+.cs-bookings-page .cs-vehicle-icon-wrap {
+	width: 3rem;
+	height: 3rem;
+	margin-right: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 1rem;
+	background: #f3f4f6;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cs-bookings-page .cs-table-row:hover .cs-vehicle-icon-wrap {
+	background: #ffedd5;
+	color: var(--cs-accent);
+}
+
+.cs-bookings-page .cs-vehicle-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.cs-bookings-page .cs-vehicle-title {
+	margin: 0;
+	font-weight: 900;
+	color: #111827;
+}
+
+.cs-bookings-page .cs-vehicle-meta {
+	margin: 0;
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #9ca3af;
+}
+
+.cs-bookings-page .cs-service-type {
+	margin: 0;
+	font-weight: 700;
+	color: #374151;
+}
+
+.cs-bookings-page .cs-date-cell {
+	font-weight: 500;
+	color: #6b7280;
+}
+
+.cs-bookings-page .cs-status-pill {
+	display: inline-flex;
+	align-items: center;
+}
+
+.cs-bookings-page .cs-receipt-link {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.5rem;
+	background: #fff7ed;
+	color: var(--cs-accent);
+	font-size: 0.75rem;
+	font-weight: 900;
+	text-decoration: none;
+	transition: background-color 0.2s ease;
+}
+
+.cs-bookings-page .cs-receipt-link:hover {
+	background: #ffedd5;
+}
+
+.cs-bookings-page .cs-receipt-na {
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: #9ca3af;
+}
+
+.cs-bookings-page .cs-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.75rem;
+}
+
+.cs-bookings-page .cs-action-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.5rem;
+	font-size: 0.75rem;
+	font-weight: 900;
+	text-decoration: none;
+	border: 0;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.cs-bookings-page .cs-action-btn-view {
+	background: #eff6ff;
+	color: #2563eb;
+}
+
+.cs-bookings-page .cs-action-btn-view:hover {
+	background: #dbeafe;
+}
+
+.cs-bookings-page .cs-action-btn-cancel {
+	background: #fef2f2;
+	color: #dc2626;
+}
+
+.cs-bookings-page .cs-action-btn-cancel:hover {
+	background: #fee2e2;
+}
+
+.cs-bookings-page .cs-action-btn-invoice {
+	background: #f0fdf4;
+	color: #16a34a;
+}
+
+.cs-bookings-page .cs-action-btn-invoice:hover {
+	background: #dcfce7;
+}
+
+.cs-bookings-page .cs-reschedule-details {
+	text-align: left;
+}
+
+.cs-bookings-page details summary {
+	list-style: none;
+}
+
+.cs-bookings-page details summary::-webkit-details-marker {
+	display: none;
+}
+
+.cs-bookings-page .cs-reschedule-summary {
+	cursor: pointer;
+	font-size: 0.75rem;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: #9ca3af;
+}
+
+.cs-bookings-page .cs-reschedule-summary:hover {
+	color: var(--cs-accent);
+}
+
+.cs-bookings-page .cs-reschedule-form {
+	margin-top: 0.75rem;
+	padding: 0.75rem;
+	background: #f9fafb;
+	border: 1px solid #f3f4f6;
+	border-radius: 0.75rem;
+	display: grid;
+	gap: 0.5rem;
+}
+
+.cs-bookings-page .cs-reschedule-input,
+.cs-bookings-page .cs-reschedule-select {
+	width: 100%;
+	padding: 0.5rem 0.75rem;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.5rem;
+	font-size: 0.75rem;
+	font-weight: 700;
+	box-sizing: border-box;
+}
+
+.cs-bookings-page .cs-reschedule-save {
+	width: 100%;
+	padding: 0.5rem 0.75rem;
+	border: 0;
+	border-radius: 0.5rem;
+	background: #f97316;
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 900;
+	cursor: pointer;
+}
+
+.cs-bookings-page .cs-reschedule-save:hover {
+	background: #ea580c;
+}
+
+.cs-bookings-page .cs-empty-icon-wrap {
+	width: 6rem;
+	height: 6rem;
+	margin: 0 auto 1.5rem;
+	border-radius: 1.5rem;
+	background: #fff7ed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.cs-bookings-page .cs-empty-icon {
+	width: 3rem;
+	height: 3rem;
+	color: var(--cs-accent);
+}
+
+.cs-bookings-page .cs-empty-title {
+	margin: 0 0 0.5rem;
+	font-size: 1.5rem;
+	font-weight: 900;
+	color: #111827;
+}
+
+.cs-bookings-page .cs-empty-text {
+	margin: 0 0 2rem;
+	font-weight: 500;
+	color: #6b7280;
+}
+
+.cs-bookings-page .cs-empty-link {
+	display: inline-block;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.75rem;
+	background: #fff7ed;
+	font-weight: 900;
+	text-decoration: none;
+	transition: background-color 0.2s ease;
+}
+
+.cs-bookings-page .cs-empty-link:hover {
+	background: #ffedd5;
+}
+
+@media (min-width: 768px) {
+	.cs-bookings-page .cs-bookings-head {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+@media (max-width: 960px) {
+	.cs-bookings-page .cs-table-wrap {
+		overflow-x: auto;
+	}
+
+	.cs-bookings-page .cs-bookings-cta {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.cs-bookings-page .cs-table th,
+	.cs-bookings-page .cs-table td {
+		padding: 1rem;
+	}
+}

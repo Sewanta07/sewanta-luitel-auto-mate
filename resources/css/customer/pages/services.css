@@ -1,0 +1,113 @@
+.cs-services-wrap .cs-cards-grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.25rem;
+}
+
+.cs-services-page .cs-services-container {
+	width: min(1180px, 100%);
+	margin-inline: auto;
+}
+
+.cs-services-page .cs-services-head {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cs-services-page .cs-services-title {
+	line-height: 1.1;
+}
+
+.cs-services-page .cs-services-subtitle {
+	max-width: 58ch;
+}
+
+.cs-services-page .cs-services-grid {
+	align-items: stretch;
+}
+
+.cs-services-wrap .cs-page-head {
+	margin-bottom: 2rem;
+}
+
+.cs-services-wrap .cs-card {
+	background: var(--cs-white);
+	border: 1px solid var(--cs-border);
+	border-radius: 1.2rem;
+	padding: 1.4rem;
+	box-shadow: var(--cs-shadow-soft);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cs-services-page .cs-service-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.cs-services-wrap .cs-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 24px rgba(17, 24, 39, 0.12);
+}
+
+.cs-services-wrap .cs-card-icon {
+	font-size: 1.55rem;
+	margin-bottom: 0.5rem;
+}
+
+.cs-services-page .cs-service-card-icon {
+	line-height: 1;
+}
+
+.cs-services-wrap .cs-card-title {
+	margin: 0;
+	font-size: 1.15rem;
+	font-weight: 800;
+}
+
+.cs-services-page .cs-service-card-title {
+	line-height: 1.28;
+}
+
+.cs-services-wrap .cs-card-text {
+	margin: 0.5rem 0 0.85rem;
+	color: var(--cs-muted);
+	line-height: 1.5;
+}
+
+.cs-services-page .cs-service-card-text {
+	min-height: 3em;
+}
+
+.cs-services-wrap .cs-list {
+	margin: 0 0 1rem;
+	padding-left: 1.1rem;
+	color: #374151;
+	display: grid;
+	gap: 0.35rem;
+	font-size: 0.92rem;
+}
+
+.cs-services-page .cs-service-card-list {
+	margin-bottom: 1.1rem;
+	flex: 1 1 auto;
+}
+
+.cs-services-page .cs-service-card-item {
+	line-height: 1.4;
+}
+
+.cs-services-wrap .cs-btn {
+	text-decoration: none;
+}
+
+.cs-services-page .cs-service-card-cta {
+	align-self: flex-start;
+	font-weight: 700;
+}
+
+@media (min-width: 900px) {
+	.cs-services-wrap .cs-cards-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}

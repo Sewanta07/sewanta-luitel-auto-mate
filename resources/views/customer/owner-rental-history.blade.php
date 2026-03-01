@@ -1,82 +1,80 @@
-@extends('layouts.app')
+@extends('layouts.customer-core')
 
 @section('title', 'My Listed Vehicles Rental History - AutoMate')
 
 @section('content')
 @include('customer.navbar')
 
-<div class="min-h-screen bg-gray-50 pb-12">
-    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+<div class="cs-page cs-owner-history-page min-h-screen bg-gray-50 pb-12">
+    <main class="cs-owner-history-main max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {{-- Page Header --}}
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 mt-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">My Listed Vehicles Rental History</h1>
-                <p class="mt-2 text-lg text-gray-600">Track all rentals of your listed vehicles.</p>
+        <div class="cs-owner-history-head flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 mt-4">
+            <div class="cs-owner-history-head-copy">
+                <h1 class="cs-owner-history-title text-3xl font-bold text-gray-900">My Listed Vehicles Rental History</h1>
+                <p class="cs-owner-history-subtitle mt-2 text-lg text-gray-600">Track all rentals of your listed vehicles.</p>
             </div>
         </div>
 
         {{-- Stats Cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl shadow-lg p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm font-medium opacity-90">Total Rentals</p>
-                    <svg class="w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+        <div class="cs-owner-history-stats grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="cs-owner-history-stat-card cs-owner-history-stat-card-total bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl shadow-lg p-6">
+                <div class="cs-owner-history-stat-head flex items-center justify-between mb-2">
+                    <p class="cs-owner-history-stat-label text-sm font-medium opacity-90">Total Rentals</p>
+                    <svg class="cs-owner-history-stat-icon w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                 </div>
-                <p class="text-3xl font-bold">{{ $stats['total_rentals'] }}</p>
+                <p class="cs-owner-history-stat-value text-3xl font-bold">{{ $stats['total_rentals'] }}</p>
             </div>
             
-            <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-2xl shadow-lg p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm font-medium opacity-90">Active Rentals</p>
-                    <svg class="w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="cs-owner-history-stat-card cs-owner-history-stat-card-active bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-2xl shadow-lg p-6">
+                <div class="cs-owner-history-stat-head flex items-center justify-between mb-2">
+                    <p class="cs-owner-history-stat-label text-sm font-medium opacity-90">Active Rentals</p>
+                    <svg class="cs-owner-history-stat-icon w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-3xl font-bold">{{ $stats['active_rentals'] }}</p>
+                <p class="cs-owner-history-stat-value text-3xl font-bold">{{ $stats['active_rentals'] }}</p>
             </div>
             
-            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl shadow-lg p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm font-medium opacity-90">Completed</p>
-                    <svg class="w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="cs-owner-history-stat-card cs-owner-history-stat-card-completed bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl shadow-lg p-6">
+                <div class="cs-owner-history-stat-head flex items-center justify-between mb-2">
+                    <p class="cs-owner-history-stat-label text-sm font-medium opacity-90">Completed</p>
+                    <svg class="cs-owner-history-stat-icon w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-3xl font-bold">{{ $stats['completed_rentals'] }}</p>
+                <p class="cs-owner-history-stat-value text-3xl font-bold">{{ $stats['completed_rentals'] }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-2xl shadow-lg p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm font-medium opacity-90">Total Earned</p>
-                    <svg class="w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="cs-owner-history-stat-card cs-owner-history-stat-card-earned bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-2xl shadow-lg p-6">
+                <div class="cs-owner-history-stat-head flex items-center justify-between mb-2">
+                    <p class="cs-owner-history-stat-label text-sm font-medium opacity-90">Total Earned</p>
+                    <svg class="cs-owner-history-stat-icon w-8 h-8 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-3xl font-bold">Rs. {{ number_format($stats['total_earned'], 2) }}</p>
+                <p class="cs-owner-history-stat-value text-3xl font-bold">Rs. {{ number_format($stats['total_earned'], 2) }}</p>
             </div>
         </div>
 
         {{-- Tabs --}}
-        <div class="mb-6" x-data="{ activeTab: 'requests' }">
-            <div class="flex space-x-1 bg-white rounded-2xl p-2 shadow-sm border border-gray-100 w-fit">
-                <button @click="activeTab = 'requests'" 
-                        :class="activeTab === 'requests' ? 'bg-[#ff5a1f] text-white shadow-md' : 'text-gray-600 hover:text-gray-900'"
-                        class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">
+        <div class="mb-6">
+            <div class="cs-owner-history-tabs flex space-x-1 bg-white rounded-2xl p-2 shadow-sm border border-gray-100 w-fit">
+                <button type="button" data-tab="requests"
+                        class="cs-owner-history-tab-btn is-active px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">
                     Rental Requests ({{ $rentalRequests->total() }})
                 </button>
-                <button @click="activeTab = 'marketplace'" 
-                        :class="activeTab === 'marketplace' ? 'bg-[#ff5a1f] text-white shadow-md' : 'text-gray-600 hover:text-gray-900'"
-                        class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">
+                <button type="button" data-tab="marketplace"
+                        class="cs-owner-history-tab-btn text-gray-600 hover:text-gray-900 px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">
                     Marketplace Rentals ({{ $marketplaceRentals->total() }})
                 </button>
             </div>
 
             {{-- Rental Requests Tab --}}
-            <div x-show="activeTab === 'requests'" x-transition class="mt-6">
-                <div class="space-y-4">
+            <div class="cs-owner-history-panel is-active mt-6" data-panel="requests">
+                <div class="cs-owner-history-list space-y-4">
                     @forelse($rentalRequests as $request)
-                        <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                        <div class="cs-owner-history-item bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <h3 class="text-lg font-bold text-gray-900">
+                                    <div class="cs-owner-history-item-head flex items-center gap-3 mb-3">
+                                        <h3 class="cs-owner-history-item-title text-lg font-bold text-gray-900">
                                             {{ $request->vehicle?->vehicle_name ?: ($request->vehicle?->brand . ' ' . $request->vehicle?->model) }}
                                         </h3>
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold
+                                        <span class="cs-owner-history-chip px-3 py-1 rounded-full text-xs font-bold
                                             @if($request->status === 'Approved' || $request->status === 'Ready for Pickup') bg-blue-100 text-blue-700
                                             @elseif($request->status === 'Picked Up' || $request->status === 'In Use') bg-green-100 text-green-700
                                             @elseif($request->status === 'Returned') bg-purple-100 text-purple-700
@@ -87,9 +85,9 @@
                                         </span>
                                     </div>
 
-                                    <p class="text-sm text-gray-500 mb-2">{{ $request->vehicle?->plate_number }}</p>
+                                    <p class="cs-owner-history-plate text-sm text-gray-500 mb-2">{{ $request->vehicle?->plate_number }}</p>
 
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                                    <div class="cs-owner-history-item-grid grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
                                         <div>
                                             <p class="text-xs text-gray-500">Renter</p>
                                             <p class="text-sm font-bold text-gray-900">{{ $request->renter?->name ?? 'N/A' }}</p>
@@ -112,24 +110,24 @@
                                     </div>
 
                                     @if($request->assignedStaff)
-                                        <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
-                                            <p class="text-xs font-bold text-blue-700 mb-1">Assigned Staff</p>
-                                            <p class="text-sm text-blue-900">{{ $request->assignedStaff->user->name ?? 'N/A' }}</p>
+                                        <div class="cs-owner-history-note cs-owner-history-note-staff bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                                            <p class="cs-owner-history-note-title text-xs font-bold text-blue-700 mb-1">Assigned Staff</p>
+                                            <p class="cs-owner-history-note-text text-sm text-blue-900">{{ $request->assignedStaff->user->name ?? 'N/A' }}</p>
                                         </div>
                                     @endif
 
                                     @if($request->has_damage)
-                                        <div class="bg-red-50 border border-red-100 rounded-lg p-3 mb-3">
-                                            <p class="text-xs font-bold text-red-700 mb-1">Damage Reported</p>
-                                            <p class="text-sm text-red-900">Charge: Rs. {{ number_format($request->damage_charge ?? 0, 2) }}</p>
-                                            <p class="text-xs text-red-700 mt-1">Payment: {{ $request->damage_payment_status ?? 'Unpaid' }}</p>
+                                        <div class="cs-owner-history-note cs-owner-history-note-damage bg-red-50 border border-red-100 rounded-lg p-3 mb-3">
+                                            <p class="cs-owner-history-note-title text-xs font-bold text-red-700 mb-1">Damage Reported</p>
+                                            <p class="cs-owner-history-note-text text-sm text-red-900">Charge: Rs. {{ number_format($request->damage_charge ?? 0, 2) }}</p>
+                                            <p class="cs-owner-history-note-subtext text-xs text-red-700 mt-1">Payment: {{ $request->damage_payment_status ?? 'Unpaid' }}</p>
                                             @if($request->damage_description)
-                                                <p class="text-xs text-gray-600 mt-2">{{ $request->damage_description }}</p>
+                                                <p class="cs-owner-history-note-desc text-xs text-gray-600 mt-2">{{ $request->damage_description }}</p>
                                             @endif
                                         </div>
                                     @endif
 
-                                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <div class="cs-owner-history-meta flex items-center gap-2 text-xs text-gray-500">
                                         <span>Payment: <span class="font-bold {{ $request->payment_status === 'Paid' ? 'text-green-600' : 'text-orange-600' }}">{{ $request->payment_status }}</span></span>
                                         <span>•</span>
                                         <span>Request ID: #{{ $request->id }}</span>
@@ -138,10 +136,10 @@
                             </div>
                         </div>
                     @empty
-                        <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
-                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                            <h3 class="text-xl font-semibold text-gray-900">No rental requests yet</h3>
-                            <p class="text-gray-500 mt-2">Your rental requests will appear here.</p>
+                        <div class="cs-owner-history-empty bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
+                            <svg class="cs-owner-history-empty-icon w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            <h3 class="cs-owner-history-empty-title text-xl font-semibold text-gray-900">No rental requests yet</h3>
+                            <p class="cs-owner-history-empty-text text-gray-500 mt-2">Your rental requests will appear here.</p>
                         </div>
                     @endforelse
                 </div>
@@ -154,17 +152,17 @@
             </div>
 
             {{-- Marketplace Rentals Tab --}}
-            <div x-show="activeTab === 'marketplace'" x-transition class="mt-6">
-                <div class="space-y-4">
+            <div class="cs-owner-history-panel mt-6" data-panel="marketplace">
+                <div class="cs-owner-history-list space-y-4">
                     @forelse($marketplaceRentals as $rental)
-                        <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                        <div class="cs-owner-history-item bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <h3 class="text-lg font-bold text-gray-900">
+                                    <div class="cs-owner-history-item-head flex items-center gap-3 mb-3">
+                                        <h3 class="cs-owner-history-item-title text-lg font-bold text-gray-900">
                                             {{ $rental->vehicle?->vehicle_name ?: ($rental->vehicle?->brand . ' ' . $rental->vehicle?->model) }}
                                         </h3>
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold
+                                        <span class="cs-owner-history-chip px-3 py-1 rounded-full text-xs font-bold
                                             @if($rental->status === 'confirmed') bg-green-100 text-green-700
                                             @elseif($rental->status === 'completed') bg-gray-200 text-gray-700
                                             @else bg-yellow-100 text-yellow-700 @endif">
@@ -172,9 +170,9 @@
                                         </span>
                                     </div>
 
-                                    <p class="text-sm text-gray-500 mb-2">{{ $rental->vehicle?->plate_number }}</p>
+                                    <p class="cs-owner-history-plate text-sm text-gray-500 mb-2">{{ $rental->vehicle?->plate_number }}</p>
 
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                                    <div class="cs-owner-history-item-grid grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
                                         <div>
                                             <p class="text-xs text-gray-500">Renter</p>
                                             <p class="text-sm font-bold text-gray-900">{{ $rental->renter?->name ?? 'N/A' }}</p>
@@ -197,8 +195,8 @@
                                     </div>
 
                                     @if($rental->owner_earning || $rental->commission_amount)
-                                        <div class="bg-green-50 border border-green-100 rounded-lg p-3 mb-3">
-                                            <div class="flex items-center justify-between">
+                                        <div class="cs-owner-history-note cs-owner-history-note-earning bg-green-50 border border-green-100 rounded-lg p-3 mb-3">
+                                            <div class="cs-owner-history-earning-grid flex items-center justify-between">
                                                 <div>
                                                     <p class="text-xs font-bold text-green-700">Your Earning</p>
                                                     <p class="text-lg font-bold text-green-900">Rs. {{ number_format($rental->owner_earning ?? 0, 2) }}</p>
@@ -212,16 +210,16 @@
                                     @endif
 
                                     @if($rental->damage_charge && $rental->damage_charge > 0)
-                                        <div class="bg-red-50 border border-red-100 rounded-lg p-3 mb-3">
-                                            <p class="text-xs font-bold text-red-700 mb-1">Damage Charge</p>
-                                            <p class="text-sm text-red-900">Rs. {{ number_format($rental->damage_charge, 2) }}</p>
+                                        <div class="cs-owner-history-note cs-owner-history-note-damage bg-red-50 border border-red-100 rounded-lg p-3 mb-3">
+                                            <p class="cs-owner-history-note-title text-xs font-bold text-red-700 mb-1">Damage Charge</p>
+                                            <p class="cs-owner-history-note-text text-sm text-red-900">Rs. {{ number_format($rental->damage_charge, 2) }}</p>
                                             @if($rental->damage_notes)
-                                                <p class="text-xs text-gray-600 mt-1">{{ $rental->damage_notes }}</p>
+                                                <p class="cs-owner-history-note-desc text-xs text-gray-600 mt-1">{{ $rental->damage_notes }}</p>
                                             @endif
                                         </div>
                                     @endif
 
-                                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <div class="cs-owner-history-meta flex items-center gap-2 text-xs text-gray-500">
                                         <span>Rental ID: #{{ $rental->id }}</span>
                                         @if($rental->rental_request_id)
                                             <span>•</span>
@@ -232,10 +230,10 @@
                             </div>
                         </div>
                     @empty
-                        <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
-                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <h3 class="text-xl font-semibold text-gray-900">No marketplace rentals yet</h3>
-                            <p class="text-gray-500 mt-2">Marketplace rentals will appear here.</p>
+                        <div class="cs-owner-history-empty bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
+                            <svg class="cs-owner-history-empty-icon w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <h3 class="cs-owner-history-empty-title text-xl font-semibold text-gray-900">No marketplace rentals yet</h3>
+                            <p class="cs-owner-history-empty-text text-gray-500 mt-2">Marketplace rentals will appear here.</p>
                         </div>
                     @endforelse
                 </div>
@@ -249,4 +247,31 @@
         </div>
     </main>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = Array.from(document.querySelectorAll('.cs-owner-history-tab-btn'));
+    const tabPanels = Array.from(document.querySelectorAll('.cs-owner-history-panel'));
+
+    const activateTab = (tab) => {
+        tabButtons.forEach((button) => {
+            const active = button.dataset.tab === tab;
+            button.classList.toggle('is-active', active);
+            button.classList.toggle('text-gray-600', !active);
+            button.classList.toggle('hover:text-gray-900', !active);
+        });
+
+        tabPanels.forEach((panel) => {
+            panel.classList.toggle('is-active', panel.dataset.panel === tab);
+        });
+    };
+
+    tabButtons.forEach((button) => {
+        button.addEventListener('click', () => activateTab(button.dataset.tab));
+    });
+
+    const activeDefault = tabButtons.find((button) => button.classList.contains('is-active'));
+    activateTab(activeDefault?.dataset.tab ?? 'requests');
+});
+</script>
 @endsection

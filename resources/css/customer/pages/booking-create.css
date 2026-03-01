@@ -1,0 +1,122 @@
+.cs-booking-create-page .cs-form-card {
+	max-width: 100%;
+	border-radius: 1.5rem;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-booking-create-page .cs-back-link {
+	font-weight: 800;
+}
+
+.cs-booking-create-page .cs-booking-create-container {
+	width: min(980px, calc(100% - 2rem));
+	margin-inline: auto;
+}
+
+.cs-booking-create-page .cs-page-head {
+	margin-bottom: 2.5rem;
+}
+
+.cs-booking-create-page .cs-booking-create-head {
+	text-align: center;
+	display: grid;
+	gap: 0.45rem;
+}
+
+.cs-booking-create-page .cs-booking-create-title {
+	line-height: 1.12;
+}
+
+.cs-booking-create-page .cs-booking-create-title-accent {
+	color: var(--cs-primary);
+}
+
+.cs-booking-create-page .cs-booking-create-subtitle {
+	font-size: 0.98rem;
+}
+
+.cs-booking-create-page .cs-form-stack {
+	gap: 1.75rem;
+}
+
+.cs-booking-create-page .cs-form-section {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.cs-booking-create-page .cs-section-hint {
+	letter-spacing: 0.08em;
+}
+
+.cs-booking-create-page .cs-form-grid {
+	gap: 1.5rem;
+}
+
+.cs-booking-create-page .cs-form-grid-vehicle,
+.cs-booking-create-page .cs-form-grid-basics,
+.cs-booking-create-page .cs-form-grid-service,
+.cs-booking-create-page .cs-form-grid-schedule,
+.cs-booking-create-page .cs-form-grid-priority,
+.cs-booking-create-page .cs-form-grid-contact,
+.cs-booking-create-page .cs-form-grid-notes {
+	align-items: start;
+}
+
+.cs-booking-create-page .cs-field-group {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cs-booking-create-page .cs-field-group-full {
+	grid-column: 1 / -1;
+}
+
+.cs-booking-create-page .cs-field-control {
+	min-height: 3.15rem;
+	font-weight: 700;
+}
+
+.cs-booking-create-page .cs-field-textarea {
+	min-height: 7.75rem;
+}
+
+.cs-booking-create-page .cs-note {
+	border-radius: 1rem;
+}
+
+.cs-booking-create-page .cs-prefill-note {
+	align-items: flex-start;
+	gap: 0;
+}
+
+.cs-booking-create-page .cs-prefill-note-icon {
+	margin-top: 0.15rem;
+}
+
+.cs-booking-create-page .cs-prefill-note-content {
+	display: grid;
+	gap: 0.3rem;
+}
+
+.cs-booking-create-page .cs-prefill-note-title {
+	line-height: 1.2;
+}
+
+.cs-booking-create-page .cs-prefill-note-text {
+	line-height: 1.45;
+}
+
+.cs-booking-create-page .cs-form-actions {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.cs-booking-create-page .cs-form-footnote {
+	letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+	.cs-booking-create-page .cs-booking-create-container {
+		padding-top: 1.5rem;
+	}
+}

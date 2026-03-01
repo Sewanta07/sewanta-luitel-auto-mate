@@ -1,0 +1,173 @@
+.cs-rent-vehicles-page .cs-rent-grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-main {
+	width: min(1180px, 100%);
+	margin-inline: auto;
+}
+
+.cs-rent-vehicles-page .cs-rent-head {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-title {
+	line-height: 1.1;
+}
+
+.cs-rent-vehicles-page .cs-rent-subtitle {
+	max-width: 62ch;
+}
+
+.cs-rent-vehicles-page .cs-rent-alert {
+	border-radius: 1rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-alert-list {
+	margin: 0;
+}
+
+.cs-rent-vehicles-page .cs-rent-empty {
+	line-height: 1.5;
+}
+
+.cs-rent-vehicles-page .cs-rent-grid > div {
+	box-shadow: var(--cs-shadow-soft);
+	border-radius: 1.25rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-title {
+	line-height: 1.2;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-details {
+	line-height: 1.45;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-owner-inline,
+.cs-rent-vehicles-page .cs-rent-card-rate,
+.cs-rent-vehicles-page .cs-rent-card-plate {
+	align-items: center;
+}
+
+.cs-rent-vehicles-page .cs-rent-chip {
+	font-weight: 700;
+}
+
+.cs-rent-vehicles-page .cs-rent-chip-dot {
+	display: inline-block;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-actions {
+	margin-top: auto;
+}
+
+.cs-rent-vehicles-page .cs-rent-request-btn {
+	font-weight: 700;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-image {
+	height: 12rem;
+	object-fit: cover;
+	width: 100%;
+}
+
+.cs-rent-vehicles-page .cs-rent-card-media-empty {
+	background: #f9fafb;
+}
+
+.cs-rent-vehicles-page #rent-modal-backdrop,
+.cs-rent-vehicles-page .cs-rent-modal-backdrop {
+	backdrop-filter: blur(2px);
+}
+
+.cs-rent-vehicles-page #rent-modal,
+.cs-rent-vehicles-page .cs-rent-modal {
+	border-radius: 1.5rem;
+	box-shadow: 0 20px 40px rgba(17, 24, 39, 0.2);
+}
+
+.cs-rent-vehicles-page .cs-rent-modal-title {
+	line-height: 1.2;
+}
+
+.cs-rent-vehicles-page .cs-rent-modal-summary {
+	border: 1px solid #eef2f7;
+}
+
+.cs-rent-vehicles-page .cs-rent-modal-image {
+	flex-shrink: 0;
+}
+
+.cs-rent-vehicles-page .cs-rent-modal-rate {
+	font-weight: 700;
+}
+
+.cs-rent-vehicles-page .cs-rent-form-grid {
+	align-items: start;
+}
+
+.cs-rent-vehicles-page .cs-rent-field-group {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-field-label {
+	letter-spacing: 0.06em;
+}
+
+.cs-rent-vehicles-page .cs-rent-field-control {
+	width: 100%;
+	box-sizing: border-box;
+	min-height: 2.9rem;
+}
+
+.cs-rent-vehicles-page .cs-rent-field-textarea {
+	min-height: 6.2rem;
+	resize: vertical;
+}
+
+.cs-rent-vehicles-page .cs-rent-form-actions {
+	align-items: center;
+}
+
+.cs-rent-vehicles-page .cs-rent-cancel-btn,
+.cs-rent-vehicles-page .cs-rent-submit-btn {
+	font-weight: 700;
+}
+
+.cs-rent-vehicles-page #rent-request-form input,
+.cs-rent-vehicles-page #rent-request-form textarea {
+	box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+	.cs-rent-vehicles-page .cs-rent-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.cs-rent-vehicles-page .cs-rent-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.cs-rent-vehicles-page .cs-rent-modal-body {
+		padding: 1.25rem;
+	}
+
+	.cs-rent-vehicles-page .cs-rent-form-actions .cs-rent-cancel-btn,
+	.cs-rent-vehicles-page .cs-rent-form-actions .cs-rent-submit-btn {
+		width: 100%;
+	}
+}

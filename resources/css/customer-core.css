@@ -1,0 +1,14 @@
+@import './customer/customer.css';
+@import './customer/pages/services.css';
+@import './customer/pages/bookings-index.css';
+@import './customer/pages/booking-create.css';
+@import './customer/pages/rentals.css';
+@import './customer/pages/messages.css';
+@import './customer/pages/profile.css';
+@import './customer/pages/vehicles.css';
+@import './customer/pages/bookings-show.css';
+@import './customer/pages/bookings-invoice.css';
+@import './customer/pages/vehicles-edit.css';
+@import './customer/pages/rent-vehicles.css';
+@import './customer/pages/owner-earnings.css';
+@import './customer/pages/owner-rental-history.css';

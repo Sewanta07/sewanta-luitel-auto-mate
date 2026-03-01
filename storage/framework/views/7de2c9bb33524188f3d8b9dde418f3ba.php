@@ -27,15 +27,15 @@ foreach ($attributes->all() as $__key => $__value) {
 }
 
 unset($__defined_vars, $__key, $__value); ?>
-<div class="p-4 rounded-2xl bg-white shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5">
-  <div class="flex items-center">
-    <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: <?php echo e($bgColor); ?>; color: <?php echo e($textColor); ?>;">
+<div class="cs-status-card p-4 rounded-2xl bg-white shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5">
+  <div class="cs-status-card-inner flex items-center">
+    <div class="cs-status-card-icon-wrap cs-status-card-accent-<?php echo e($accent); ?> w-12 h-12 rounded-lg flex items-center justify-center">
       <?php echo $icon ?? ''; ?>
 
     </div>
-    <div class="ml-4">
-      <div class="text-sm text-gray-500"><?php echo e($title); ?></div>
-      <div class="text-2xl font-semibold text-gray-900"><?php echo e($count); ?></div>
+    <div class="cs-status-card-body ml-4">
+      <div class="cs-status-card-title text-sm text-gray-500"><?php echo e($title); ?></div>
+      <div class="cs-status-card-count text-2xl font-semibold text-gray-900"><?php echo e($count); ?></div>
     </div>
   </div>
 </div>

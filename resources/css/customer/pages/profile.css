@@ -1,0 +1,185 @@
+.cs-profile-page .cs-profile-grid {
+	display: grid;
+	gap: 2rem;
+}
+
+.cs-profile-page {
+	padding-top: 1rem;
+}
+
+.cs-profile-page .cs-profile-main {
+	width: min(1180px, 100%);
+	margin-inline: auto;
+}
+
+.cs-profile-page .cs-profile-head {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.cs-profile-page .cs-profile-title {
+	line-height: 1.1;
+}
+
+.cs-profile-page .cs-profile-subtitle {
+	max-width: 56ch;
+}
+
+.cs-profile-page .cs-alert {
+	border-radius: 1rem;
+}
+
+.cs-profile-page .cs-alert-title {
+	font-weight: 700;
+}
+
+.cs-profile-page .cs-alert-list {
+	margin: 0;
+}
+
+.cs-profile-page .cs-profile-card {
+	background: var(--cs-white);
+	border: 1px solid var(--cs-border);
+	border-radius: 1.5rem;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-profile-page .cs-profile-card-title,
+.cs-profile-page .cs-security-title,
+.cs-profile-page .cs-personal-title,
+.cs-profile-page .cs-vehicles-title {
+	line-height: 1.25;
+}
+
+.cs-profile-page .cs-profile-card-body {
+	padding: 1.5rem;
+}
+
+.cs-profile-page .cs-profile-avatar {
+	width: 8rem;
+	height: 8rem;
+	border-radius: 9999px;
+	overflow: hidden;
+}
+
+.cs-profile-page .cs-profile-avatar-wrap {
+	position: relative;
+	display: inline-block;
+}
+
+.cs-profile-page .cs-profile-avatar-fallback {
+	font-size: 2.25rem;
+}
+
+.cs-profile-page .cs-profile-photo-trigger {
+	box-shadow: 0 12px 22px -16px rgba(251, 146, 60, 0.85);
+}
+
+.cs-profile-page .cs-profile-photo-submit,
+.cs-profile-page .cs-security-submit,
+.cs-profile-page .cs-personal-submit {
+	font-weight: 700;
+}
+
+.cs-profile-page .cs-field-group {
+	display: grid;
+	gap: 0.15rem;
+}
+
+.cs-profile-page .cs-field-label {
+	letter-spacing: 0.06em;
+}
+
+.cs-profile-page .cs-field-input {
+	width: 100%;
+}
+
+.cs-profile-page .cs-password-wrap {
+	position: relative;
+}
+
+.cs-profile-page .cs-password-toggle {
+	line-height: 1;
+}
+
+.cs-profile-page input,
+.cs-profile-page select,
+.cs-profile-page textarea {
+	min-height: 2.9rem;
+	box-sizing: border-box;
+}
+
+.cs-profile-page .cs-vehicles-table-wrap {
+	overflow-x: auto;
+}
+
+.cs-profile-page .cs-vehicles-th {
+	white-space: nowrap;
+}
+
+.cs-profile-page .cs-vehicles-row {
+	background: transparent;
+}
+
+.cs-profile-page .cs-vehicle-summary {
+	display: flex;
+	align-items: center;
+}
+
+.cs-profile-page .cs-vehicle-icon-wrap {
+	flex-shrink: 0;
+}
+
+.cs-profile-page .cs-vehicle-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.cs-profile-page .cs-vehicle-action-edit,
+.cs-profile-page .cs-vehicle-action-remove {
+	text-decoration: none;
+}
+
+.cs-profile-page .cs-vehicles-empty {
+	line-height: 1.5;
+}
+
+.cs-profile-page table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.cs-profile-page thead th {
+	font-size: 0.72rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+}
+
+.cs-profile-page tbody tr {
+	transition: background-color 0.2s ease;
+}
+
+.cs-profile-page tbody tr:hover {
+	background: #f9fafb;
+}
+
+@media (min-width: 1024px) {
+	.cs-profile-page .cs-profile-grid {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	}
+}
+
+@media (max-width: 768px) {
+	.cs-profile-page .cs-profile-main {
+		padding-inline: 1rem;
+	}
+
+	.cs-profile-page .cs-personal-actions {
+		justify-content: stretch;
+	}
+
+	.cs-profile-page .cs-personal-submit {
+		width: 100%;
+	}
+}

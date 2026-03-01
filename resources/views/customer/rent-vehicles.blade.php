@@ -1,49 +1,49 @@
-@extends('layouts.app')
+@extends('layouts.customer-core')
 
 @section('title', 'Rent Vehicles - AutoMate')
 
 @section('content')
 @include('customer.navbar')
 
-<div class="min-h-screen bg-gray-50 pb-12">
-    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Rent Vehicles</h1>
-            <p class="text-gray-500 mt-1">Browse available vehicles and request a rental when you find the right one.</p>
+<div class="cs-page cs-rent-vehicles-page min-h-screen bg-gray-50 pb-12">
+    <main class="cs-rent-main max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="cs-rent-head mb-6">
+            <h1 class="cs-rent-title text-3xl font-bold text-gray-900">Rent Vehicles</h1>
+            <p class="cs-rent-subtitle text-gray-500 mt-1">Browse available vehicles and request a rental when you find the right one.</p>
         </div>
 
         @if(session('success'))
-            <div class="mb-6 p-4 rounded-2xl bg-green-50 border border-green-100 text-green-800 flex items-center animate-fade-in">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <div class="cs-rent-alert cs-rent-alert-success mb-6 p-4 rounded-2xl bg-green-50 border border-green-100 text-green-800 flex items-center animate-fade-in">
+                <svg class="cs-rent-alert-icon w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 flex items-center animate-fade-in">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="cs-rent-alert cs-rent-alert-error mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 flex items-center animate-fade-in">
+                <svg class="cs-rent-alert-icon w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 {{ session('error') }}
             </div>
         @endif
 
         @if($errors->any())
-            <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 animate-fade-in">
-                <p class="font-semibold mb-2">Could not submit rental request:</p>
-                <ul class="list-disc pl-5 space-y-1 text-sm">
+            <div class="cs-rent-alert cs-rent-alert-error mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-800 animate-fade-in">
+                <p class="cs-rent-alert-title font-semibold mb-2">Could not submit rental request:</p>
+                <ul class="cs-rent-alert-list list-disc pl-5 space-y-1 text-sm">
                     @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li class="cs-rent-alert-item">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
 
         @if($vehicles->count() === 0)
-            <div class="bg-white rounded-3xl border border-dashed border-gray-200 p-10 text-center">
-                <h3 class="text-xl font-semibold text-gray-900">No vehicles available right now</h3>
-                <p class="text-gray-500 mt-2">Check back soon for new listings.</p>
+            <div class="cs-rent-empty bg-white rounded-3xl border border-dashed border-gray-200 p-10 text-center">
+                <h3 class="cs-rent-empty-title text-xl font-semibold text-gray-900">No vehicles available right now</h3>
+                <p class="cs-rent-empty-text text-gray-500 mt-2">Check back soon for new listings.</p>
             </div>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="cs-rent-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($vehicles as $vehicle)
                     @php
                         $allImages = [];
@@ -66,80 +66,50 @@
                         ];
                     @endphp
 
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition duration-300 flex flex-col group">
+                    <div class="cs-rent-card bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition duration-300 flex flex-col group">
                         <!-- Image Gallery Section -->
-                        <div class="relative h-48 bg-gray-100 overflow-hidden">
+                        <div class="cs-rent-card-media relative h-48 bg-gray-100 overflow-hidden">
                             <!-- Main Image -->
                             @if(count($allImages) > 0)
-                                <div class="relative h-full" x-data="{ currentImage: 0, images: {{ json_encode($allImages) }} }">
-                                    <img :src="'{{ asset('storage') }}/' + images[currentImage]" 
-                                         class="w-full h-full object-cover transition-opacity duration-300"
-                                         alt="{{ $vehicle->vehicle_name ?? $vehicle->brand }}">
-                                    
-                                    <!-- Image Counter -->
-                                    @if(count($allImages) > 1)
-                                        <div class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                                            <span x-text="currentImage + 1"></span>/<span>{{ count($allImages) }}</span>
-                                        </div>
-
-                                        <!-- Image Navigation -->
-                                        <button @click="currentImage = (currentImage - 1 + images.length) % images.length"
-                                                class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                                        </button>
-                                        <button @click="currentImage = (currentImage + 1) % images.length"
-                                                class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                        </button>
-
-                                        <!-- Thumbnail Strip -->
-                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-2 flex gap-1 overflow-x-auto">
-                                            <template x-for="(img, idx) in images" :key="idx">
-                                                <button @click="currentImage = idx"
-                                                        :class="currentImage === idx ? 'ring-2 ring-white' : 'opacity-60 hover:opacity-100'"
-                                                        class="flex-shrink-0 w-10 h-10 rounded border border-white/50 overflow-hidden transition">
-                                                    <img :src="'{{ asset('storage') }}/' + img" class="w-full h-full object-cover">
-                                                </button>
-                                            </template>
-                                        </div>
-                                    @endif
-                                </div>
+                                <img src="{{ asset('storage/' . $allImages[0]) }}"
+                                     class="cs-rent-card-image w-full h-full object-cover"
+                                     alt="{{ $vehicle->vehicle_name ?? $vehicle->brand }}">
                             @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"/></svg>
+                                <div class="cs-rent-card-media-empty w-full h-full flex items-center justify-center text-gray-400">
+                                    <svg class="cs-rent-card-media-empty-icon w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"/></svg>
                                 </div>
                             @endif
 
-                            <span class="absolute top-3 left-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 shadow-sm">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-600 mr-2"></span>
+                            <span class="cs-rent-chip cs-rent-chip-available absolute top-3 left-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 shadow-sm">
+                                <span class="cs-rent-chip-dot w-1.5 h-1.5 rounded-full bg-green-600 mr-2"></span>
                                 Available
                             </span>
                         </div>
-                        <div class="p-6 flex-1">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="text-xl font-bold text-gray-900">
+                        <div class="cs-rent-card-body p-6 flex-1">
+                            <div class="cs-rent-card-head flex items-center justify-between mb-3">
+                                <h3 class="cs-rent-card-title text-xl font-bold text-gray-900">
                                     {{ $vehicle->vehicle_name ?: ($vehicle->brand . ' ' . $vehicle->model) }}
                                 </h3>
                             </div>
-                            <p class="text-sm text-gray-500 mb-2">{{ $vehicle->vehicle_type ?? 'Vehicle' }} • {{ $vehicle->fuel_type ?? 'Fuel N/A' }} • {{ $vehicle->transmission_type ?? 'Transmission N/A' }}</p>
-                            <p class="text-xs text-gray-400 mb-3">
-                                <span class="inline-flex items-center">
-                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <p class="cs-rent-card-details text-sm text-gray-500 mb-2">{{ $vehicle->vehicle_type ?? 'Vehicle' }} • {{ $vehicle->fuel_type ?? 'Fuel N/A' }} • {{ $vehicle->transmission_type ?? 'Transmission N/A' }}</p>
+                            <p class="cs-rent-card-owner text-xs text-gray-400 mb-3">
+                                <span class="cs-rent-card-owner-inline inline-flex items-center">
+                                    <svg class="cs-rent-card-owner-icon w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                     Owner: {{ $isAdminVehicle ? 'AutoMate Service Center' : ($vehicle->customer->name ?? 'N/A') }}
                                 </span>
                             </p>
-                            <div class="flex items-center text-lg font-bold text-[#ff5a1f] mb-3">
-                                <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div class="cs-rent-card-rate flex items-center text-lg font-bold text-[#ff5a1f] mb-3">
+                                <svg class="cs-rent-card-rate-icon w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 Rs. {{ $displayRate !== null ? number_format($displayRate, 2) : 'N/A' }} / day
                             </div>
-                            <div class="flex items-center text-xs font-mono bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg w-fit">
-                                <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="cs-rent-card-plate flex items-center text-xs font-mono bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg w-fit">
+                                <svg class="cs-rent-card-plate-icon w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M13 7h.01M13 11h.01M13 15h.01M17 7h.01M17 11h.01M17 15h.01"></path>
                                 </svg>
                                 {{ $vehicle->plate_number }}
                             </div>
                         </div>
-                        <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-50">
+                        <div class="cs-rent-card-actions px-6 py-4 bg-gray-50/50 border-t border-gray-50">
                             <button
                                 type="button"
                                 onclick="openRentModalFromButton(this)"
@@ -151,7 +121,7 @@
                                 data-vehicle-owner="{{ $vehiclePayload['owner'] }}"
                                 data-vehicle-rate="{{ $vehiclePayload['rate'] }}"
                                 data-vehicle-image="{{ $vehiclePayload['image'] ?? '' }}"
-                                class="w-full px-4 py-2.5 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100"
+                                class="cs-rent-request-btn w-full px-4 py-2.5 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100"
                             >
                                 Request Rent
                             </button>
@@ -160,74 +130,74 @@
                 @endforeach
             </div>
 
-            <div id="rent-modal-backdrop" class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm px-4 sm:px-6 pt-20 sm:pt-24 pb-6 hidden items-start justify-center overflow-y-auto">
-                <div id="rent-modal" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-8rem)] overflow-y-auto">
-                    <div class="p-5 sm:p-8">
-                        <div class="flex items-start justify-between mb-6">
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-900">Request Vehicle Rent</h2>
-                                <p class="text-sm text-gray-500 mt-1">Provide rental details to send your request.</p>
+            <div id="rent-modal-backdrop" class="cs-rent-modal-backdrop fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm px-4 sm:px-6 pt-20 sm:pt-24 pb-6 hidden items-start justify-center overflow-y-auto">
+                <div id="rent-modal" class="cs-rent-modal bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-8rem)] overflow-y-auto">
+                    <div class="cs-rent-modal-body p-5 sm:p-8">
+                        <div class="cs-rent-modal-head flex items-start justify-between mb-6">
+                            <div class="cs-rent-modal-copy">
+                                <h2 class="cs-rent-modal-title text-2xl font-bold text-gray-900">Request Vehicle Rent</h2>
+                                <p class="cs-rent-modal-subtitle text-sm text-gray-500 mt-1">Provide rental details to send your request.</p>
                             </div>
-                            <button type="button" onclick="closeRentModal()" class="p-2 rounded-lg hover:bg-gray-100 transition">
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button type="button" onclick="closeRentModal()" class="cs-rent-modal-close p-2 rounded-lg hover:bg-gray-100 transition">
+                                <svg class="cs-rent-modal-close-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>
 
-                        <div class="bg-gray-50 rounded-2xl p-4 sm:p-5 mb-6">
-                            <div class="flex items-start gap-4">
-                                <img id="modal-vehicle-image" src="" alt="Selected vehicle" class="w-24 h-20 rounded-xl object-cover border border-gray-200 hidden">
-                                <div class="min-w-0">
-                                    <h3 id="modal-vehicle-name" class="text-lg font-bold text-gray-900"></h3>
-                                    <p id="modal-vehicle-details" class="text-sm text-gray-600"></p>
-                                    <p class="text-xs text-gray-500 mt-1">Owner: <span id="modal-vehicle-owner"></span></p>
-                                    <p class="text-sm font-bold text-[#ff5a1f] mt-1">Rs. <span id="modal-vehicle-rate"></span> / day</p>
+                        <div class="cs-rent-modal-summary bg-gray-50 rounded-2xl p-4 sm:p-5 mb-6">
+                            <div class="cs-rent-modal-summary-inner flex items-start gap-4">
+                                <img id="modal-vehicle-image" src="" alt="Selected vehicle" class="cs-rent-modal-image w-24 h-20 rounded-xl object-cover border border-gray-200 hidden">
+                                <div class="cs-rent-modal-meta min-w-0">
+                                    <h3 id="modal-vehicle-name" class="cs-rent-modal-vehicle-name text-lg font-bold text-gray-900"></h3>
+                                    <p id="modal-vehicle-details" class="cs-rent-modal-vehicle-details text-sm text-gray-600"></p>
+                                    <p class="cs-rent-modal-owner text-xs text-gray-500 mt-1">Owner: <span id="modal-vehicle-owner"></span></p>
+                                    <p class="cs-rent-modal-rate text-sm font-bold text-[#ff5a1f] mt-1">Rs. <span id="modal-vehicle-rate"></span> / day</p>
                                 </div>
                             </div>
                         </div>
 
-                        <form id="rent-request-form" action="{{ route('rent-vehicles.request') }}" method="POST" class="space-y-4">
+                        <form id="rent-request-form" action="{{ route('rent-vehicles.request') }}" method="POST" class="cs-rent-form space-y-4">
                             @csrf
                             <input type="hidden" id="rent-vehicle-id" name="vehicle_id" value="">
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Start Date</label>
-                                    <input type="date" id="rent-start-date" name="start_date" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="{{ date('Y-m-d') }}">
+                            <div class="cs-rent-form-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="cs-rent-field-group">
+                                    <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Start Date</label>
+                                    <input type="date" id="rent-start-date" name="start_date" required class="cs-rent-field-control w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="{{ date('Y-m-d') }}">
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">End Date</label>
-                                    <input type="date" id="rent-end-date" name="end_date" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="{{ date('Y-m-d') }}">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contact Number</label>
-                                    <input type="tel" name="renter_contact" value="{{ old('renter_contact') }}" placeholder="Your contact number" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pickup Location</label>
-                                    <input type="text" name="pickup_location" value="{{ old('pickup_location') }}" placeholder="Where to pickup" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                <div class="cs-rent-field-group">
+                                    <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">End Date</label>
+                                    <input type="date" id="rent-end-date" name="end_date" required class="cs-rent-field-control w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" min="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Notes (Optional)</label>
-                                <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Any extra request details...">{{ old('notes') }}</textarea>
+                            <div class="cs-rent-form-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="cs-rent-field-group">
+                                    <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contact Number</label>
+                                    <input type="tel" name="renter_contact" value="{{ old('renter_contact') }}" placeholder="Your contact number" class="cs-rent-field-control w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                </div>
+                                <div class="cs-rent-field-group">
+                                    <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pickup Location</label>
+                                    <input type="text" name="pickup_location" value="{{ old('pickup_location') }}" placeholder="Where to pickup" class="cs-rent-field-control w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                                </div>
                             </div>
 
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Service Booking Link (Optional)</label>
-                                <input type="text" name="service_link" value="{{ old('service_link') }}" placeholder="Paste booking link if applicable" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                            <div class="cs-rent-field-group">
+                                <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Notes (Optional)</label>
+                                <textarea name="notes" rows="3" class="cs-rent-field-control cs-rent-field-textarea w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]" placeholder="Any extra request details...">{{ old('notes') }}</textarea>
                             </div>
 
-                            <div class="pt-2 flex flex-col sm:flex-row justify-end gap-3">
-                                <button type="button" onclick="closeRentModal()" class="px-6 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition">
+                            <div class="cs-rent-field-group">
+                                <label class="cs-rent-field-label block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Service Booking Link (Optional)</label>
+                                <input type="text" name="service_link" value="{{ old('service_link') }}" placeholder="Paste booking link if applicable" class="cs-rent-field-control w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f]">
+                            </div>
+
+                            <div class="cs-rent-form-actions pt-2 flex flex-col sm:flex-row justify-end gap-3">
+                                <button type="button" onclick="closeRentModal()" class="cs-rent-cancel-btn px-6 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition">
                                     Cancel
                                 </button>
-                                <button type="submit" class="px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100">
+                                <button type="submit" class="cs-rent-submit-btn px-8 py-3 rounded-xl bg-[#ff5a1f] text-white font-bold hover:bg-[#e64b15] transition shadow-lg shadow-orange-100">
                                     Send Rent Request
                                 </button>
                             </div>

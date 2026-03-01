@@ -1,0 +1,208 @@
+.cs-vehicles-page .cs-vehicles-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 1rem;
+}
+
+.cs-vehicles-page .cs-vehicles-head button,
+.cs-vehicles-page .cs-vehicles-head a {
+	text-decoration: none;
+}
+
+.cs-vehicles-page .cs-vehicles-grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+.cs-vehicles-page .cs-vehicle-alert {
+	border-radius: 1rem;
+}
+
+.cs-vehicles-page .cs-vehicle-alert-list {
+	margin: 0;
+}
+
+.cs-vehicles-page .cs-vehicles-main,
+.cs-vehicles-page .cs-vehicles-head-copy,
+.cs-vehicles-page .cs-vehicles-tabs-wrap,
+.cs-vehicles-page .cs-vehicles-tabs,
+.cs-vehicles-page .cs-vehicles-tab-panel,
+.cs-vehicles-page .cs-vehicle-modal,
+.cs-vehicles-page .cs-vehicle-modal-body,
+.cs-vehicles-page .cs-vehicle-form,
+.cs-vehicles-page .cs-vehicle-form-grid,
+.cs-vehicles-page .cs-vehicle-form-actions,
+.cs-vehicles-page .cs-vehicle-upload-stack,
+.cs-vehicles-page .cs-vehicle-upload-group,
+.cs-vehicles-page .cs-vehicle-gallery-item {
+	box-sizing: border-box;
+}
+
+.cs-vehicles-page .cs-vehicles-title,
+.cs-vehicles-page .cs-vehicle-modal-title {
+	line-height: 1.2;
+}
+
+.cs-vehicles-page .cs-vehicle-field-control,
+.cs-vehicles-page .cs-vehicle-upload-input {
+	box-sizing: border-box;
+}
+
+.cs-vehicles-page .cs-vehicle-gallery-preview {
+	align-items: stretch;
+}
+
+.cs-vehicles-page .cs-vehicle-gallery-image {
+	width: 100%;
+}
+
+.cs-vehicles-page .cs-vehicle-upload-area-highlight {
+	outline: none;
+}
+
+.cs-vehicles-page .cs-vehicle-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-vehicles-page .cs-vehicle-card-media {
+	position: relative;
+	overflow: hidden;
+}
+
+.cs-vehicles-page .cs-vehicle-card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cs-vehicles-page .cs-vehicle-status-chip,
+.cs-vehicles-page .cs-vehicle-rent-chip {
+	font-weight: 700;
+}
+
+.cs-vehicles-page .cs-vehicle-card-summary {
+	align-items: flex-start;
+}
+
+.cs-vehicles-page .cs-vehicle-tone-blue {
+	background-color: #eff6ff;
+	color: #2563eb;
+}
+
+.cs-vehicles-page .cs-vehicle-tone-green {
+	background-color: #f0fdf4;
+	color: #10b981;
+}
+
+.cs-vehicles-page .cs-vehicle-tone-purple {
+	background-color: #f5f3ff;
+	color: #7c3aed;
+}
+
+.cs-vehicles-page .cs-vehicle-tone-red {
+	background-color: #fef2f2;
+	color: #ef4444;
+}
+
+.cs-vehicles-page .cs-vehicle-card-title {
+	line-height: 1.25;
+}
+
+.cs-vehicles-page .cs-vehicle-card-rate {
+	font-weight: 700;
+}
+
+.cs-vehicles-page .cs-vehicle-card-plate {
+	letter-spacing: 0.01em;
+}
+
+.cs-vehicles-page .cs-vehicle-card-actions {
+	margin-top: auto;
+}
+
+.cs-vehicles-page .cs-vehicle-action-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+}
+
+.cs-vehicles-page .cs-vehicle-service-link {
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.cs-vehicles-page .cs-vehicle-pending-box {
+	border-radius: 0.75rem;
+}
+
+.cs-vehicles-page .cs-vehicle-pending-item {
+	align-items: center;
+}
+
+.cs-vehicles-page .cs-vehicle-pending-btn,
+.cs-vehicles-page .cs-vehicle-toggle-rent,
+.cs-vehicles-page .cs-vehicle-marketplace-btn,
+.cs-vehicles-page .cs-vehicle-return-btn,
+.cs-vehicles-page .cs-vehicle-empty-cta {
+	font-weight: 700;
+}
+
+.cs-vehicles-page .cs-vehicle-empty {
+	line-height: 1.5;
+}
+
+.cs-vehicles-page .cs-vehicle-empty-title {
+	line-height: 1.25;
+}
+
+.cs-vehicles-page #vehicle-modal-backdrop {
+	backdrop-filter: blur(2px);
+}
+
+.cs-vehicles-page #vehicle-modal {
+	border-radius: 1.5rem;
+}
+
+.cs-vehicles-page #vehicle-modal input,
+.cs-vehicles-page #vehicle-modal select,
+.cs-vehicles-page #vehicle-modal textarea {
+	box-sizing: border-box;
+}
+
+.cs-vehicles-page .cs-modal-open {
+	overflow: hidden;
+}
+
+@keyframes csVehicleFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.cs-vehicles-page .animate-fade-in {
+	animation: csVehicleFadeIn 0.3s ease-out forwards;
+}
+
+@media (min-width: 768px) {
+	.cs-vehicles-page .cs-vehicles-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.cs-vehicles-page .cs-vehicles-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}

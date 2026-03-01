@@ -1,0 +1,53 @@
+.cs-bookings-show-page .cs-booking-status {
+	display: inline-block;
+	letter-spacing: 0.08em;
+}
+
+.cs-bookings-show-page .cs-page {
+	padding-top: 1.5rem;
+}
+
+.cs-bookings-show-page .cs-booking-info-grid > div {
+	border-radius: 1rem;
+	box-shadow: var(--cs-shadow-soft);
+}
+
+.cs-bookings-show-page .cs-booking-info-grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+.cs-bookings-show-page .cs-timeline {
+	display: grid;
+	gap: 2rem;
+}
+
+.cs-bookings-show-page .cs-timeline > div {
+	position: relative;
+}
+
+.cs-bookings-show-page table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.cs-bookings-show-page thead th {
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+}
+
+.cs-bookings-show-page tbody tr {
+	transition: background-color 0.2s ease;
+}
+
+.cs-bookings-show-page tbody tr:hover {
+	background: #f9fafb;
+}
+
+@media (min-width: 768px) {
+	.cs-bookings-show-page .cs-booking-info-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
