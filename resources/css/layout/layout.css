@@ -1,0 +1,11 @@
+.app-layout-body {
+	margin: 0;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.app-layout-root {
+	min-height: 100vh;
+	background: #f9fafb;
+}

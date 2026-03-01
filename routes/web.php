@@ -178,6 +178,13 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
             ->middleware('role:admin')
             ->name('admin.analytics');
 
+        Route::get('/transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])
+            ->middleware('role:admin')
+            ->name('admin.transactions');
+        Route::get('/transactions/export', [\App\Http\Controllers\Admin\TransactionController::class, 'exportCsv'])
+            ->middleware('role:admin')
+            ->name('admin.transactions.export');
+
 
         // Contact Messages
         Route::get('/contact-messages', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.contact-messages.index');

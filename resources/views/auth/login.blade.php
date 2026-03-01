@@ -1,49 +1,40 @@
-@extends('layouts.app')
+@extends('layouts.public-core')
 
 @section('title', 'Login - AutoMate')
 
 @section('content')
-<div class="min-h-screen flex bg-white">
-    <!-- Left Side: Image/Branding (Hidden on mobile) -->
-    <div class="hidden lg:flex lg:w-1/2 relative bg-gray-900 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-900/60 to-black/60 z-10"></div>
-        <img src="https://images.unsplash.com/photo-1486006920555-c77dcf18193c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="absolute inset-0 w-full h-full object-cover">
-        
-        <div class="relative z-20 flex flex-col justify-end p-16 text-white h-full">
-            <h1 class="text-4xl font-bold mb-4">Welcome back to AutoMate</h1>
-            <p class="text-lg text-gray-200">Manage your vehicle service, track repairs, and stay on the road with confidence.</p>
-        </div>
-    </div>
+<div class="ap-page ap-page-login">
+    <div class="ap-login-shell">
+        <aside class="ap-login-media" aria-hidden="true">
+            <div class="ap-login-overlay"></div>
+            <img src="{{ asset('assets/auth/images/auth-hero.jpg') }}" alt="Auto service workshop" class="ap-login-image">
+            <div class="ap-login-copy">
+                <h1 class="ap-login-copy-title">Welcome back to AutoMate</h1>
+                <p class="ap-login-copy-text">Manage your vehicle service, track repairs, and stay on the road with confidence.</p>
+            </div>
+        </aside>
 
-    <!-- Right Side: Login Form -->
-    <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-12 lg:px-24 xl:px-32 py-12">
-        <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <a href="{{ route('index') }}" class="flex items-center mb-8">
-                <span class="text-3xl font-extrabold tracking-tight text-[#ff5a1f]">AutoMate</span>
-            </a>
-            
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Sign in to your account</h2>
-            <p class="text-gray-600 mb-10">
-                Or <a href="{{ route('register') }}" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">create a new account</a>
-            </p>
-        </div>
+        <main class="ap-login-panel">
+            <div class="ap-auth-container">
+                <a href="{{ route('index') }}" class="ap-brand-link">
+                    <img src="{{ asset('assets/branding/company-logo.png') }}" alt="AutoMate" class="ap-logo-image">
+                </a>
 
-        <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                @csrf
+                <h2 class="ap-auth-title">Sign in to your account</h2>
+                <p class="ap-auth-subtitle">
+                    Or <a href="{{ route('register') }}" class="ap-link">create a new account</a>
+                </p>
 
-                @if ($errors->any())
-                    <div class="rounded-xl bg-red-50 p-4 border border-red-100">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
-                                <div class="mt-2 text-sm text-red-700">
-                                    <ul class="list-disc pl-5 space-y-1">
+                <form method="POST" action="{{ route('login') }}" class="ap-form">
+                    @csrf
+
+                    @if ($errors->any())
+                        <div class="ap-alert ap-alert-error">
+                            <div class="ap-alert-row">
+                                <img src="{{ asset('assets/auth/icons/alert-circle.svg') }}" alt="Error" class="ap-icon-sm ap-icon-img ap-alert-icon">
+                                <div>
+                                    <h3 class="ap-alert-title">There were errors with your submission</h3>
+                                    <ul class="ap-error-list">
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
@@ -51,58 +42,43 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
 
-                <div>
-                    <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
-                    <div class="mt-2 relative rounded-md shadow-sm">
-                        <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" value="{{ old('email') }}" placeholder="you@example.com">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-                    <div class="mt-2 relative rounded-md shadow-sm">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 focus:ring-[#ff5a1f] focus:border-[#ff5a1f] sm:text-sm shadow-sm placeholder-gray-400" placeholder="••••••••">
-                        <button type="button" onclick="togglePasswordVisibility('password', 'password-toggle')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition">
-                            <svg id="password-toggle" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-[#ff5a1f] focus:ring-[#ff5a1f] border-gray-300 rounded" {{ old('remember') ? 'checked' : '' }}>
-                        <label for="remember" class="ml-2 block text-sm text-gray-600">Remember me</label>
+                    <div class="ap-field">
+                        <label for="email" class="ap-label">Email address</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required class="ap-input" value="{{ old('email') }}" placeholder="you@example.com">
                     </div>
 
-                    <div class="text-sm">
-                        <a href="{{ route('password.request') }}" class="font-medium text-[#ff5a1f] hover:text-[#e64b15]">Forgot your password?</a>
+                    <div class="ap-field">
+                        <label for="password" class="ap-label">Password</label>
+                        <div class="ap-input-wrap">
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="ap-input ap-input-password" placeholder="••••••••">
+                            <button type="button" onclick="togglePasswordVisibility('password', 'password-toggle')" class="ap-password-toggle" aria-label="Toggle password visibility">
+                                <img src="{{ asset('assets/auth/icons/eye.svg') }}" id="password-toggle" alt="Show password" class="ap-icon-sm ap-icon-img ap-password-icon">
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#ff5a1f] hover:bg-[#e64b15] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff5a1f] transition transform hover:-translate-y-0.5 shadow-lg shadow-orange-100">
+                    <div class="ap-form-meta">
+                        <label for="remember" class="ap-checkbox-row">
+                            <input id="remember" name="remember" type="checkbox" class="ap-checkbox" {{ old('remember') ? 'checked' : '' }}>
+                            <span>Remember me</span>
+                        </label>
+
+                        <a href="{{ route('password.request') }}" class="ap-link ap-link-sm">Forgot your password?</a>
+                    </div>
+
+                    <button type="submit" class="ap-btn ap-btn-primary ap-btn-full">
                         Sign in
                     </button>
-                </div>
-            </form>
+                </form>
 
-            <div class="mt-10">
-                <div class="relative">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-200"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">Secured by AutoMate</span>
-                    </div>
+                <div class="ap-separator-wrap">
+                    <div class="ap-separator"></div>
+                    <span class="ap-separator-label">Secured by AutoMate</span>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </div>
 
@@ -113,10 +89,10 @@ function togglePasswordVisibility(fieldId, iconId) {
     
     if (field.type === 'password') {
         field.type = 'text';
-        icon.classList.add('text-[#ff5a1f]');
+        icon.classList.add('ap-icon-active');
     } else {
         field.type = 'password';
-        icon.classList.remove('text-[#ff5a1f]');
+        icon.classList.remove('ap-icon-active');
     }
 }
 </script>

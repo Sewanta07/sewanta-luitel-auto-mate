@@ -78,6 +78,52 @@ class MessageMonitorController extends Controller
     {
         abort_if($customer->role !== 'customer' || $staff->role !== 'staff', 404);
 
+        $conversationList = DB::table('messages as m')
+            ->join('users as sender', 'sender.id', '=', 'm.sender_id')
+            ->join('users as receiver', 'receiver.id', '=', 'm.receiver_id')
+            ->where(function ($q) {
+                $q->where(function ($qq) {
+                    $qq->where('sender.role', 'customer')->where('receiver.role', 'staff');
+                })->orWhere(function ($qq) {
+                    $qq->where('sender.role', 'staff')->where('receiver.role', 'customer');
+                });
+            })
+            ->selectRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END as customer_id,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END as staff_id,\n                MAX(m.created_at) as last_message_at,\n                COUNT(*) as total_messages,\n                SUM(CASE WHEN m.is_read = 0 THEN 1 ELSE 0 END) as unread_count\n            ")
+            ->groupByRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END\n            ")
+            ->orderByDesc('last_message_at')
+            ->limit(100)
+            ->get();
+
+        $customerIds = $conversationList->pluck('customer_id')->unique()->values();
+        $staffIds = $conversationList->pluck('staff_id')->unique()->values();
+
+        $users = User::query()
+            ->whereIn('id', $customerIds->merge($staffIds)->unique()->values())
+            ->get()
+            ->keyBy('id');
+
+        $lastMessages = Message::query()
+            ->where(function ($q) use ($conversationList) {
+                foreach ($conversationList as $conversation) {
+                    $q->orWhere(function ($qq) use ($conversation) {
+                        $qq->where('sender_id', $conversation->customer_id)
+                            ->where('receiver_id', $conversation->staff_id);
+                    })->orWhere(function ($qq) use ($conversation) {
+                        $qq->where('sender_id', $conversation->staff_id)
+                            ->where('receiver_id', $conversation->customer_id);
+                    });
+                }
+            })
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy(function ($message) {
+                $pair = [(int) $message->sender_id, (int) $message->receiver_id];
+                sort($pair);
+
+                return implode('-', $pair);
+            })
+            ->map(fn ($items) => $items->first());
+
         $messages = Message::query()
             ->with(['sender', 'receiver'])
             ->where(function ($q) use ($customer, $staff) {
@@ -103,6 +149,9 @@ class MessageMonitorController extends Controller
         return view('admin.messages-conversation', [
             'customer' => $customer,
             'staff' => $staff,
+            'conversationList' => $conversationList,
+            'users' => $users,
+            'lastMessages' => $lastMessages,
             'messages' => $messages,
             'conversationId' => $conversationId,
         ]);

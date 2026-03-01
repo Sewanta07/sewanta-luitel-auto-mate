@@ -35,6 +35,12 @@
             </a>
 
             
+            <a href="<?php echo e(route('admin.transactions')); ?>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition <?php echo e(request()->routeIs('admin.transactions*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'); ?>">
+                <svg class="mr-3 h-5 w-5 <?php echo e(request()->routeIs('admin.transactions*') ? 'text-[#ff5a1f]' : 'text-gray-400 group-hover:text-gray-500'); ?> transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Transactions
+            </a>
+
+            
             <a href="<?php echo e(route('admin.contact-messages.index')); ?>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition <?php echo e(request()->routeIs('admin.contact-messages*') ? 'bg-orange-50 text-[#ff5a1f]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'); ?>">
                 <svg class="mr-3 h-5 w-5 <?php echo e(request()->routeIs('admin.contact-messages*') ? 'text-[#ff5a1f]' : 'text-gray-400 group-hover:text-gray-500'); ?> transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 Contact Messages
@@ -118,7 +124,7 @@
 
 
 
-<?php if (! $__env->hasRenderedOnce('cea5b640-7088-471b-bab0-1cbbe9f6a5dc')): $__env->markAsRenderedOnce('cea5b640-7088-471b-bab0-1cbbe9f6a5dc'); ?>
+<?php if (! $__env->hasRenderedOnce('66cf8d00-56f5-420d-8c5c-0e815543d6ab')): $__env->markAsRenderedOnce('66cf8d00-56f5-420d-8c5c-0e815543d6ab'); ?>
     <?php $__env->startPush('scripts'); ?>
         <script>
             document.addEventListener('DOMContentLoaded', () => {

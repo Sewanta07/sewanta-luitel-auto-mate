@@ -20,8 +20,8 @@
     
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-50">
+<body class="app-layout-body">
+    <div class="app-layout-root">
         <?php echo $__env->yieldContent('content'); ?>
     </div>
 

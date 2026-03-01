@@ -20,8 +20,8 @@
     
     @stack('styles')
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-50">
+<body class="app-layout-body">
+    <div class="app-layout-root">
         @yield('content')
     </div>
 
