@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'My Vehicles - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -54,7 +52,7 @@
 </div>
 
 
-<div id="vehicle-modal-backdrop" class="cs-vehicle-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden flex items-start sm:items-center justify-center p-4 sm:p-6 overflow-y-auto">
+<div id="vehicle-modal-backdrop" class="cs-vehicle-modal-backdrop fixed inset-0 bg-black/50 z-[60] items-start sm:items-center justify-center p-4 sm:p-6 overflow-y-auto" style="display: none;">
     <div id="vehicle-modal" class="cs-vehicle-modal bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 my-4 sm:my-0">
         <div class="cs-vehicle-modal-body p-5 sm:p-8">
             <div class="cs-vehicle-modal-head flex items-center justify-between mb-8">
@@ -167,9 +165,8 @@
     function openVehicleModal() {
         const backdrop = document.getElementById('vehicle-modal-backdrop');
         const modal = document.getElementById('vehicle-modal');
-        
-        backdrop.classList.remove('hidden');
-        backdrop.classList.add('flex');
+
+        backdrop.style.display = 'flex';
         
         setTimeout(() => {
             modal.classList.remove('scale-95', 'opacity-0');
@@ -185,8 +182,7 @@
         modal.classList.add('scale-95', 'opacity-0');
         
         setTimeout(() => {
-            backdrop.classList.add('hidden');
-            backdrop.classList.remove('flex');
+            backdrop.style.display = 'none';
         }, 300);
     }
 

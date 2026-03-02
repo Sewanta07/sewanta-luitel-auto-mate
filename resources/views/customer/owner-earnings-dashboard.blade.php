@@ -249,7 +249,7 @@
 </div>
 
 {{-- Withdrawal Request Modal --}}
-<div id="withdrawal-modal-backdrop" class="cs-owner-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+<div id="withdrawal-modal-backdrop" class="cs-owner-modal-backdrop fixed inset-0 bg-black/50 z-[60] items-center justify-center p-4" style="display: none;">
     <div id="withdrawal-modal" class="cs-owner-modal bg-white rounded-3xl shadow-2xl max-w-md w-full transform scale-95 opacity-0 transition-all duration-300">
         <div class="cs-owner-modal-body p-8">
             <div class="cs-owner-modal-head flex items-center justify-between mb-6">
@@ -304,7 +304,7 @@
 function openWithdrawalModal() {
     const backdrop = document.getElementById('withdrawal-modal-backdrop');
     const modal = document.getElementById('withdrawal-modal');
-    backdrop.classList.remove('hidden');
+    backdrop.style.display = 'flex';
     setTimeout(() => {
         modal.classList.remove('scale-95', 'opacity-0');
         modal.classList.add('scale-100', 'opacity-100');
@@ -317,7 +317,7 @@ function closeWithdrawalModal() {
     modal.classList.remove('scale-100', 'opacity-100');
     modal.classList.add('scale-95', 'opacity-0');
     setTimeout(() => {
-        backdrop.classList.add('hidden');
+        backdrop.style.display = 'none';
     }, 300);
 }
 

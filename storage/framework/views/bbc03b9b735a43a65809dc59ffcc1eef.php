@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Notifications - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>

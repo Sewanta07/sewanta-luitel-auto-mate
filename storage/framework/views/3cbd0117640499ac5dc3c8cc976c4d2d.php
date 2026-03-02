@@ -5,13 +5,13 @@
       
       
       <div class="cs-cnav-brand-wrap flex-shrink-0">
-        <a href="<?php echo e(route('index')); ?>" class="cs-cnav-brand-link flex items-center space-x-2 group">
+        <a href="<?php echo e(route('dashboard.customer')); ?>" class="cs-cnav-brand-link flex items-center space-x-2 group">
           <img src="<?php echo e(asset('assets/branding/company-logo.png')); ?>" alt="AutoMate" class="customer-logo-image">
         </a>
       </div>
 
       
-      <div class="cs-cnav-links-wrap hidden lg:flex flex-1 justify-center">
+      <div class="cs-cnav-links-wrap hidden md:flex flex-1 justify-center">
         <div class="cs-cnav-links flex items-center space-x-2">
           <a href="<?php echo e(route('dashboard.customer')); ?>" 
              class="cs-cnav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 <?php echo e(request()->routeIs('dashboard.customer') ? 'text-[#ff5a1f] bg-orange-50 cs-cnav-link-active' : 'text-gray-600 hover:text-[#ff5a1f] hover:bg-gray-50 cs-cnav-link-idle'); ?>">
@@ -50,7 +50,7 @@
 
       
       <div class="cs-cnav-actions flex items-center space-x-4">
-        <button id="customerMobileMenuButton" type="button" class="cs-cnav-mobile-toggle lg:hidden p-2.5 rounded-xl text-gray-500 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all" aria-label="Toggle mobile menu">
+        <button id="customerMobileMenuButton" type="button" class="cs-cnav-mobile-toggle md:hidden p-2.5 rounded-xl text-gray-500 hover:text-[#ff5a1f] hover:bg-orange-50 transition-all" aria-label="Toggle mobile menu">
           <svg class="cs-cnav-mobile-toggle-icon w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         
@@ -126,7 +126,7 @@
   </div>
 
   
-  <div id="customerMobileMenu" class="cs-cnav-mobile-menu hidden lg:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
+  <div id="customerMobileMenu" class="cs-cnav-mobile-menu hidden md:hidden bg-white border-t border-gray-50 p-4 space-y-1 shadow-inner">
     
     <a href="<?php echo e(route('dashboard.customer')); ?>" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">Dashboard</a>
     <a href="<?php echo e(route('customer.vehicles')); ?>" class="cs-cnav-mobile-link block p-4 rounded-xl text-sm font-bold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a1f] transition-all">My Vehicles</a>

@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'My Bookings - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>

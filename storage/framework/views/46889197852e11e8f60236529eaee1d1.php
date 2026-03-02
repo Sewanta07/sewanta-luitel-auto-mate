@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'My Profile - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>

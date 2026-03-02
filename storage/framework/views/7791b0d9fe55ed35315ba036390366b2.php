@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Customer Dashboard - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -66,12 +64,12 @@
                     <p class="text-xs text-gray-500 mt-1">All your service requests</p>
                 </a>
 
-                <a href="<?php echo e(route('bookings.index')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-green-500">
+                <a href="<?php echo e(route('owner.earnings.dashboard')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-green-500">
                     <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-green-50">
                         <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     </div>
-                    <p class="font-semibold text-gray-900 text-sm">Make Payment</p>
-                    <p class="text-xs text-gray-500 mt-1">Pay outstanding invoices</p>
+                    <p class="font-semibold text-gray-900 text-sm">My Earnings</p>
+                    <p class="text-xs text-gray-500 mt-1">View my Earnings</p>
                 </a>
 
                 <a href="<?php echo e(route('customer.profile')); ?>" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-purple-600">

@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Rent Vehicles - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>

@@ -10,6 +10,7 @@ use App\Models\CustomerUser;
 use App\Models\InventoryItem;
 use App\Models\Payment;
 use App\Models\Rental;
+use App\Models\RentalRequest;
 use App\Models\ServiceBooking;
 use App\Models\WithdrawalRequest;
 
@@ -93,22 +94,66 @@ class DashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $assignedRentals = RentalRequest::where('assigned_staff_id', $user->id)
+            ->whereNotIn('status', ['Completed', 'Cancelled', 'Rejected'])
+            ->get();
+
         $stats = [
             'total' => $bookings->count(),
             'assigned' => $bookings->whereIn('status', ['Assigned'])->count(),
             'in_progress' => $bookings->whereIn('status', ['Customer Accepted', 'In Progress'])->count(),
-            'waiting_parts' => $bookings->where('status', 'Waiting for Parts')->count(),
-            'completed' => $bookings->where('status', 'Completed')->count(),
-            'completed_today' => $bookings->where('status', 'Completed')
-                ->filter(function($booking) {
-                    return $booking->updated_at->isToday();
-                })->count(),
+            'assigned_rentals' => $assignedRentals->count(),
+            'ready_pickup_rentals' => $assignedRentals->where('status', 'Ready for Pickup')->count(),
         ];
 
         // Recent bookings (last 5)
         $recentBookings = $bookings->take(5);
 
-        return view('dashboard.staff', compact('user', 'stats', 'recentBookings'));
+        // Recent assigned rentals (last 5, excluding closed statuses)
+        $recentAssignedRentals = $assignedRentals
+            ->load(['vehicle', 'renter', 'owner'])
+            ->sortByDesc('created_at')
+            ->take(5)
+            ->values();
+
+        $recentWork = $recentBookings->map(function ($booking) {
+            return [
+                'type' => 'booking',
+                'id' => $booking->id,
+                'status' => $booking->status,
+                'created_at' => $booking->created_at,
+                'title' => trim(($booking->service_type ?? 'Service') . ' - ' . ($booking->vehicle_model ?? 'Vehicle')),
+                'subtitle' => 'Owner: ' . ($booking->customer->name ?? 'Unknown') . ' • ' . ($booking->booking_code ?? 'N/A') . ' • ' . ($booking->vehicle_number ?? 'N/A'),
+                'date_label' => $booking->preferred_date ? Carbon::parse($booking->preferred_date)->format('M d') : 'N/A',
+                'time_label' => $booking->preferred_time_slot ?? 'N/A',
+                'action_url' => route('staff.services.show', $booking->id),
+                'action_label' => 'View',
+            ];
+        })->merge(
+            $recentAssignedRentals->map(function ($rental) {
+                $vehicleName = $rental->vehicle->vehicle_name
+                    ?? trim(($rental->vehicle->brand ?? '') . ' ' . ($rental->vehicle->model ?? 'Vehicle'));
+
+                return [
+                    'type' => 'rental',
+                    'id' => $rental->id,
+                    'status' => $rental->status,
+                    'created_at' => $rental->created_at,
+                    'title' => $vehicleName,
+                    'subtitle' => 'Renter: ' . ($rental->renter->name ?? 'Unknown') . ' • ' .
+                        (optional($rental->start_date)->format('M d') ?? 'N/A') . ' - ' .
+                        (optional($rental->end_date)->format('M d') ?? 'N/A'),
+                    'date_label' => optional($rental->start_date)->format('M d') ?? 'N/A',
+                    'time_label' => 'Rental',
+                    'action_url' => route('staff.rentals.inspection', $rental->id),
+                    'action_label' => 'Manage',
+                ];
+            })
+        )->sortByDesc('created_at')
+            ->take(10)
+            ->values();
+
+        return view('dashboard.staff', compact('user', 'stats', 'recentWork'));
     }
 
     /**
