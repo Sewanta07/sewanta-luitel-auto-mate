@@ -21,6 +21,7 @@ class CustomerController extends Controller
     {
         $staff = Auth::user();
         $staffUser = ChatUserResolver::forAuthenticated();
+        abort_unless((bool) $staffUser, 401);
         
         // Get all customers who have bookings assigned to this staff
         $customers = CustomerUser::whereHas('bookings', function($query) use ($staff) {
@@ -42,14 +43,29 @@ class CustomerController extends Controller
                 : 0;
         }
 
-        return view('staff.customers', compact('customers'));
+        $firstCustomer = $customers->first();
+
+        if ($firstCustomer) {
+            return redirect()->route('staff.customers.messages', $firstCustomer->id);
+        }
+
+        return view('staff.messages', [
+            'customer' => null,
+            'customers' => $customers,
+            'messages' => collect(),
+            'bookings' => collect(),
+            'staffChatUserId' => $staffUser->id,
+            'customerChatUserId' => null,
+            'conversationId' => null,
+        ]);
     }
 
-    public function messages($customerId)
+    public function messages(Request $request, $customerId)
     {
         $staff = Auth::user();
         $staffUser = ChatUserResolver::forAuthenticated();
         abort_unless((bool) $staffUser, 401);
+        $openConversation = $request->boolean('open');
 
         $customers = CustomerUser::where(function ($query) use ($staff) {
             $query->whereHas('bookings', function ($q) use ($staff) {
@@ -66,6 +82,18 @@ class CustomerController extends Controller
                     ->where('is_read', false)
                     ->count()
                 : 0;
+        }
+
+        if (!$openConversation) {
+            return view('staff.messages', [
+                'customer' => null,
+                'customers' => $customers,
+                'messages' => collect(),
+                'bookings' => collect(),
+                'staffChatUserId' => $staffUser->id,
+                'customerChatUserId' => null,
+                'conversationId' => null,
+            ]);
         }
 
         $customer = CustomerUser::findOrFail($customerId);
@@ -170,6 +198,6 @@ class CustomerController extends Controller
             ]);
         }
 
-        return redirect()->route('staff.customers.messages', $customerId)->with('success', 'Message sent successfully!');
+        return redirect()->route('staff.customers.messages', ['customer' => $customerId, 'open' => 1])->with('success', 'Message sent successfully!');
     }
 }

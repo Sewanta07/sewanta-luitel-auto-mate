@@ -12,6 +12,22 @@
                 <div>
                     <h1 class="text-3xl font-black text-gray-900">Payment Receipt</h1>
                     <p class="text-gray-500 mt-1">{{ ucfirst(str_replace('_', ' ', $payment->type)) }}</p>
+                    <div class="mt-3 space-y-1">
+                        <p class="text-sm font-black text-gray-800">{{ config('billing.company_name', config('app.name', 'AutoMate')) }}</p>
+                        <p class="text-xs text-gray-500">{{ config('billing.tagline', 'Vehicle Service & Rental Management') }}</p>
+                        @if(config('billing.address'))
+                            <p class="text-xs text-gray-500">{{ config('billing.address') }}</p>
+                        @endif
+                        <p class="text-xs text-gray-500">
+                            {{ config('billing.website') }} • {{ config('billing.email') }}
+                            @if(config('billing.phone'))
+                                • {{ config('billing.phone') }}
+                            @endif
+                            @if(config('billing.vat'))
+                                • VAT: {{ config('billing.vat') }}
+                            @endif
+                        </p>
+                    </div>
                 </div>
                 <span class="px-3 py-1 text-xs font-black uppercase tracking-widest rounded-full bg-green-50 text-green-600">Paid</span>
             </div>

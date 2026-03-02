@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ServiceStatusUpdated;
 use App\Models\Payment;
 use App\Models\ServiceBooking;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -275,6 +276,27 @@ class ServiceBookingController extends Controller
         }
 
         return view('customer.bookings.invoice', compact('booking'));
+    }
+
+    /**
+     * Download invoice PDF for completed bookings.
+     */
+    public function downloadInvoice($id)
+    {
+        $booking = ServiceBooking::where('id', $id)
+            ->where('customer_id', Auth::id())
+            ->with('parts')
+            ->firstOrFail();
+
+        if ($booking->status !== 'Completed') {
+            return redirect()->back()->with('success', 'Invoice is available after completion.');
+        }
+
+        $pdf = Pdf::loadView('customer.bookings.invoice-pdf', [
+            'booking' => $booking,
+        ])->setPaper('a4');
+
+        return $pdf->download('invoice-' . $booking->booking_code . '.pdf');
     }
 
     /**

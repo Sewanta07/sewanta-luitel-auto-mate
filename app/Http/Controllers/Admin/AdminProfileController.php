@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rules\Password;
 
 class AdminProfileController extends Controller
 {
@@ -52,41 +53,26 @@ class AdminProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'current_address' => 'nullable|string|max:500',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if (is_null($user->email_verified_at)) {
-            $validated['email_verified_at'] = now();
-        }
-
         // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            // Delete old profile image if exists
-            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
-                Storage::disk('public')->delete($user->profile_image);
-            }
-
-            // Store new image
-            $imagePath = $request->file('profile_image')->store('profile_images', 'public');
-            $validated['profile_image'] = $imagePath;
-        } else {
-            // Keep existing image if no new one uploaded
-            unset($validated['profile_image']);
+        if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            Storage::disk('public')->delete($user->profile_image);
         }
+
+        $imagePath = $request->file('profile_image')->store('profile_images', 'public');
+        $validated['profile_image'] = $imagePath;
 
         $user->update($validated);
 
-        return back()->with('success', 'Profile updated successfully!');
+        return back()->with('success', 'Profile photo updated successfully!');
     }
 
     /**
-     * Update the admin password.
+     * Send password reset link for the authenticated admin.
      */
-    public function updatePassword(Request $request)
+    public function sendPasswordResetLink(Request $request)
     {
         $user = Auth::user();
         
@@ -95,21 +81,43 @@ class AdminProfileController extends Controller
             return redirect()->route('dashboard.' . $this->getUserRole($user));
         }
 
-        $validated = $request->validate([
-            'current_password' => 'required',
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        try {
+            $status = Password::broker('admins')->sendResetLink([
+                'email' => (string) $user->email,
+            ]);
+        } catch (\Throwable $exception) {
+            Log::error('Admin password reset link send failed', [
+                'admin_id' => $user->id,
+                'email' => (string) $user->email,
+                'error' => $exception->getMessage(),
+            ]);
 
-        // Check current password
-        if (!Hash::check($validated['current_password'], $user->password)) {
-            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+            if (config('app.debug')) {
+                /** @var \Illuminate\Auth\Passwords\PasswordBroker $broker */
+                $broker = app(PasswordBrokerManager::class)->broker('admins');
+                $token = $broker->createToken($user);
+                $resetUrl = route('password.reset', [
+                    'token' => $token,
+                    'email' => (string) $user->email,
+                ]);
+
+                return back()
+                    ->with('success', 'SMTP is failing, but a temporary reset link was generated for local debugging.')
+                    ->with('password_reset_url', $resetUrl);
+            }
+
+            return back()->withErrors([
+                'password_reset' => 'Unable to send reset email right now. Please check MAIL settings (SMTP username/app password) and try again.',
+            ]);
         }
 
-        $user->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('success', 'Password reset link sent to your admin email.');
+        }
 
-        return back()->with('success', 'Password updated successfully!');
+        return back()->withErrors([
+            'password_reset' => __($status),
+        ]);
     }
 
     /**

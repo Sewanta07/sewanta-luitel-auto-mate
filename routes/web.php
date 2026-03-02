@@ -69,6 +69,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
         Route::post('bookings/{id}/cancel', [\App\Http\Controllers\ServiceBookingController::class, 'cancel'])->name('bookings.cancel');
         Route::post('bookings/{id}/reschedule', [\App\Http\Controllers\ServiceBookingController::class, 'reschedule'])->name('bookings.reschedule');
         Route::post('bookings/{id}/accept', [\App\Http\Controllers\ServiceBookingController::class, 'accept'])->name('bookings.accept');
+        Route::get('bookings/{id}/invoice/download', [\App\Http\Controllers\ServiceBookingController::class, 'downloadInvoice'])->name('bookings.invoice.download');
         Route::get('bookings/{id}/invoice', [\App\Http\Controllers\ServiceBookingController::class, 'invoice'])->name('bookings.invoice');
         Route::get('/vehicles', [\App\Http\Controllers\VehicleController::class, 'index'])->name('customer.vehicles');
         Route::post('/vehicles', [\App\Http\Controllers\VehicleController::class, 'store'])->name('vehicles.store');
@@ -167,7 +168,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
 
         Route::get('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class, 'index'])->name('admin.profile');
         Route::post('/profile/update', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updateProfile'])->name('admin.profile.update');
-        Route::post('/profile/password', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('admin.profile.password');
+        Route::post('/profile/password/reset-link', [\App\Http\Controllers\Admin\AdminProfileController::class, 'sendPasswordResetLink'])->name('admin.profile.password.reset-link');
 
         Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users');
         Route::get('/users/{id}', [UserManagementController::class, 'show'])->name('admin.users.show');

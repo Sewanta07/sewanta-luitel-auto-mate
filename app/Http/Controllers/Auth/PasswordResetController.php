@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\CustomerUser;
 use App\Models\StaffMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 
 class PasswordResetController extends Controller
@@ -24,8 +25,8 @@ class PasswordResetController extends Controller
 
     /**
      * Send a password reset link to the user's email.
-     * Only allows customers and staff, NOT admin.
-     * Searches in customers and staff_members tables.
+        * Allows customers, staff, and admins.
+        * Searches in customers, staff_members, and admins tables.
      */
     public function sendResetLink(Request $request)
     {
@@ -40,13 +41,18 @@ class PasswordResetController extends Controller
             'email.email' => 'Please enter a valid email address.',
         ]);
 
-        // Check both customers and staff_members tables (case-insensitive)
+        // Check customers, staff_members, and admins tables (case-insensitive)
         $user = CustomerUser::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
         $broker = 'customers';
         
         if (!$user) {
             $user = StaffMember::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
             $broker = 'staff_members';
+        }
+
+        if (!$user) {
+            $user = Admin::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
+            $broker = 'admins';
         }
 
         // If email doesn't exist
@@ -57,9 +63,21 @@ class PasswordResetController extends Controller
         }
 
         // Send the password reset link using the correct broker
-        $status = Password::broker($broker)->sendResetLink(
-            ['email' => $email]
-        );
+        try {
+            $status = Password::broker($broker)->sendResetLink(
+                ['email' => $email]
+            );
+        } catch (\Throwable $exception) {
+            Log::error('Password reset link send failed', [
+                'email' => $email,
+                'broker' => $broker,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'email' => 'Unable to send reset email right now. Please verify SMTP credentials and try again.',
+            ])->withInput($request->only('email'));
+        }
 
         if ($status === Password::RESET_LINK_SENT) {
             return back()->with('status', __($status));
@@ -83,8 +101,8 @@ class PasswordResetController extends Controller
 
     /**
      * Reset the user's password.
-     * Only allows customers and staff, NOT admin.
-     * Searches in customers and staff_members tables.
+        * Allows customers, staff, and admins.
+        * Searches in customers, staff_members, and admins tables.
      */
     public function resetPassword(Request $request)
     {
@@ -97,13 +115,18 @@ class PasswordResetController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Check both customers and staff_members tables (case-insensitive)
+        // Check customers, staff_members, and admins tables (case-insensitive)
         $user = CustomerUser::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
         $broker = 'customers';
         
         if (!$user) {
             $user = StaffMember::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
             $broker = 'staff_members';
+        }
+
+        if (!$user) {
+            $user = Admin::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
+            $broker = 'admins';
         }
 
         // If email doesn't exist

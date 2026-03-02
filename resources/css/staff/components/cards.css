@@ -11,16 +11,9 @@
 .sf-msg-chat-shell,
 .sf-prof-account-card,
 .sf-prof-form-card,
-.sf-ridx-stat,
-.sf-ridx-card,
-.sf-ridx-meta-card,
-.sf-rins-vehicle-card,
-.sf-rins-form-card,
 .sf-slog-stat-card,
 .sf-slog-filter-panel,
-.sf-slog-panel,
-.sf-svcshow-quick-card,
-.sf-svcshow-card {
+.sf-slog-panel {
     background: #ffffff;
     border: 1px solid #f3f4f6;
     border-radius: 1rem;

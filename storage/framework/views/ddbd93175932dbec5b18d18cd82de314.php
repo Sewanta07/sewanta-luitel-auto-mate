@@ -114,7 +114,7 @@
 
             <div class="cs-invoice-actions mt-6 flex gap-3">
                 <a href="<?php echo e(route('bookings.index')); ?>" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-center hover:bg-gray-200">Back to Bookings</a>
-                <button class="flex-1 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18]">Download PDF</button>
+                <a href="<?php echo e(route('bookings.invoice.download', $booking->id)); ?>" class="flex-1 px-6 py-3 bg-[#ff5a1f] text-white font-black rounded-xl hover:bg-[#e44d18] text-center">Download PDF</a>
             </div>
         </div>
     </div>

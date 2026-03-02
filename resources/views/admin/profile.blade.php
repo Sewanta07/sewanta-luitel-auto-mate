@@ -7,7 +7,7 @@
         {{-- Page Header --}}
         <div class="ad-prof-head">
             <h1 class="ad-prof-title">My Profile</h1>
-            <p class="ad-prof-subtitle">Manage your profile information and credentials.</p>
+            <p class="ad-prof-subtitle">Sensitive account data is locked. Only profile photo and password reset are available.</p>
         </div>
 
         @if(session('success'))
@@ -18,6 +18,10 @@
                     </div>
                     <div class="ad-prof-alert-content">
                         <p class="ad-prof-alert-text">{{ session('success') }}</p>
+                        @if(session('password_reset_url'))
+                            <p class="ad-prof-alert-text">Use this reset link now (local/debug):</p>
+                            <a href="{{ session('password_reset_url') }}" class="ad-prof-link">{{ session('password_reset_url') }}</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -80,7 +84,7 @@
                                 @if($admin->email_verified_at)
                                     <span class="ad-prof-text-success">Verified</span>
                                 @else
-                                    <span class="ad-prof-text-warning">Not Verified</span>
+                                    <span class="ad-prof-text-warning">Verified</span>
                                 @endif
                             </div>
                             <div class="ad-prof-detail-row">
@@ -99,22 +103,14 @@
                         </div>
                         <h3 class="ad-prof-section-title">Security</h3>
                     </div>
-                    <form action="{{ route('admin.profile.password') }}" method="POST" class="ad-prof-form-stack-sm">
+                    <form action="{{ route('admin.profile.password.reset-link') }}" method="POST" class="ad-prof-form-stack-sm">
                         @csrf
                         <div class="ad-prof-field">
-                            <label class="ad-prof-label">Current Password</label>
-                            <input type="password" name="current_password" required class="ad-prof-input ad-prof-input-soft">
-                        </div>
-                        <div class="ad-prof-field">
-                            <label class="ad-prof-label">New Password</label>
-                            <input type="password" name="password" required class="ad-prof-input ad-prof-input-soft">
-                        </div>
-                        <div class="ad-prof-field">
-                            <label class="ad-prof-label">Confirm New Password</label>
-                            <input type="password" name="password_confirmation" required class="ad-prof-input ad-prof-input-soft">
+                            <label class="ad-prof-label">Password Reset</label>
+                            <p class="ad-prof-upload-note">Send a secure reset link to your admin email: {{ $admin->email }}</p>
                         </div>
                         <button type="submit" class="ad-prof-btn ad-prof-btn-dark ad-prof-btn-full">
-                            Update Password
+                            Send Reset Link
                         </button>
                     </form>
                 </div>
@@ -155,34 +151,30 @@
                             </div>
                         </div>
 
-                        {{-- Full Name --}}
                         <div class="ad-prof-field">
                             <label class="ad-prof-label">Full Name</label>
-                            <input type="text" name="name" value="{{ old('name', $admin->name) }}" required class="ad-prof-input ad-prof-input-strong">
+                            <input type="text" value="{{ $admin->name }}" readonly class="ad-prof-input ad-prof-input-soft">
                         </div>
 
-                        {{-- Email Address --}}
                         <div class="ad-prof-field">
                             <label class="ad-prof-label">Email Address</label>
-                            <input type="email" name="email" value="{{ old('email', $admin->email) }}" required class="ad-prof-input ad-prof-input-strong">
+                            <input type="email" value="{{ $admin->email }}" readonly class="ad-prof-input ad-prof-input-soft">
                         </div>
 
-                        {{-- Phone Number --}}
                         <div class="ad-prof-field">
                             <label class="ad-prof-label">Phone Number</label>
-                            <input type="tel" name="phone" value="{{ old('phone', $admin->phone) }}" class="ad-prof-input ad-prof-input-strong">
+                            <input type="text" value="{{ $admin->phone ?: 'N/A' }}" readonly class="ad-prof-input ad-prof-input-soft">
                         </div>
 
-                        {{-- Address --}}
                         <div class="ad-prof-field">
                             <label class="ad-prof-label">Address</label>
-                            <textarea name="current_address" rows="3" class="ad-prof-input ad-prof-input-strong">{{ old('current_address', $admin->current_address) }}</textarea>
+                            <textarea rows="3" readonly class="ad-prof-input ad-prof-input-soft">{{ $admin->current_address ?: 'N/A' }}</textarea>
                         </div>
 
                         {{-- Submit Button --}}
                         <div class="ad-prof-actions">
                             <button type="submit" class="ad-prof-btn ad-prof-btn-primary ad-prof-btn-full">
-                                Save Changes
+                                Update Profile Photo
                             </button>
                         </div>
                     </form>

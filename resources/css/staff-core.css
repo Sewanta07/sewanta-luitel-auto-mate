@@ -3,7 +3,6 @@
 @import "./staff/components/navbar.css";
 @import "./staff/pages/dashboard.css";
 @import "./staff/pages/bookings.css";
-@import "./staff/pages/customers.css";
 @import "./staff/pages/inventory.css";
 @import "./staff/pages/messages.css";
 @import "./staff/pages/service-logs.css";
