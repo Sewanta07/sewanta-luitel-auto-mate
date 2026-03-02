@@ -1,0 +1,70 @@
+.ad-invc-page {
+    padding: 1.5rem;
+}
+.ad-invc-container {
+    max-width: 56rem;
+    margin: 0 auto;
+}
+.ad-invc-title {
+    margin: 0 0 1.5rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+.ad-invc-form {
+    display: grid;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+.ad-invc-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+}
+@media (min-width: 640px) {
+    .ad-invc-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.ad-invc-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+.ad-invc-input {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+.ad-invc-input:focus {
+    outline: 2px solid transparent;
+    border-color: #f97316;
+    box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.35);
+}
+.ad-invc-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+.ad-invc-btn {
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+.ad-invc-btn-ghost {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #374151;
+}
+.ad-invc-btn-primary {
+    background: #ff5a1f;
+    color: #fff;
+}

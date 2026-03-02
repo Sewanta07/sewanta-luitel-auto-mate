@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Staff Dashboard') - AutoMate</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/staff-core.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50">
     {{-- Navigation --}}

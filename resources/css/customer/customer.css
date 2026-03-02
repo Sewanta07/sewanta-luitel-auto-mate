@@ -9,14 +9,6 @@
 	--cs-shadow-soft: 0 8px 24px rgba(17, 24, 39, 0.08);
 }
 
-.customer-logo-image {
-	display: block;
-	height: 1.85rem;
-	width: auto;
-	max-width: 180px;
-	object-fit: contain;
-}
-
 .cs-page {
 	min-height: calc(100vh - 5rem);
 	background: var(--cs-bg);

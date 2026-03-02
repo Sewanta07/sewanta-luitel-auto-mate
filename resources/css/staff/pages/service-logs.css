@@ -1,0 +1,336 @@
+.sf-slog-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+    padding-bottom: 3rem;
+}
+.sf-slog-main {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+.sf-slog-head-wrap {
+    margin: 1rem 0 2rem;
+}
+.sf-slog-head {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+}
+.sf-slog-title {
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: #111827;
+}
+.sf-slog-subtitle {
+    margin: 0.5rem 0 0;
+    color: #4b5563;
+}
+.sf-slog-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, #f97316, #ea580c);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+.sf-slog-refresh-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+.sf-slog-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.sf-slog-stat-card,
+.sf-slog-filter-panel,
+.sf-slog-panel {
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+}
+.sf-slog-stat-card {
+    padding: 1.5rem;
+}
+.sf-slog-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.sf-slog-stat-label {
+    margin: 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #9ca3af;
+    letter-spacing: 0.08em;
+}
+.sf-slog-stat-value {
+    margin: 0.5rem 0 0;
+    font-size: 1.875rem;
+    font-weight: 900;
+}
+.sf-slog-stat-value-green {
+    color: #16a34a;
+}
+.sf-slog-stat-value-blue {
+    color: #2563eb;
+}
+.sf-slog-stat-help {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.sf-slog-stat-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sf-slog-stat-icon-green {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+.sf-slog-stat-icon-blue {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.sf-slog-stat-svg {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+.sf-slog-filter-panel {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+.sf-slog-filter-title {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #111827;
+}
+.sf-slog-filter-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.sf-slog-filter-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+.sf-slog-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+}
+.sf-slog-filter-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+.sf-slog-filter-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 700;
+    border: 0;
+    cursor: pointer;
+}
+.sf-slog-filter-btn-primary {
+    background: #f97316;
+    color: #fff;
+}
+.sf-slog-filter-btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+.sf-slog-panel {
+    overflow: hidden;
+}
+.sf-slog-panel-head {
+    padding: 1rem 1.5rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #f3f4f6;
+}
+.sf-slog-panel-title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #111827;
+}
+.sf-slog-panel-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #2563eb;
+}
+.sf-slog-table-wrap {
+    overflow: auto;
+}
+.sf-slog-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.sf-slog-th,
+.sf-slog-td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+}
+.sf-slog-th {
+    background: #f9fafb;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 900;
+    color: #6b7280;
+}
+.sf-slog-th-right,
+.sf-slog-right {
+    text-align: right;
+}
+.sf-slog-tbody tr {
+    border-top: 1px solid #f3f4f6;
+}
+.sf-slog-row:hover {
+    background: #f9fafb;
+}
+.sf-slog-date,
+.sf-slog-vehicle,
+.sf-slog-service,
+.sf-slog-cost {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+.sf-slog-time,
+.sf-slog-plate,
+.sf-slog-notes {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.sf-slog-booking-chip {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 900;
+    font-size: 0.875rem;
+}
+.sf-slog-view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: #fff7ed;
+    color: #ea580c;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+.sf-slog-view-icon {
+    width: 1rem;
+    height: 1rem;
+}
+.sf-slog-empty-cell {
+    padding: 3rem;
+    text-align: center;
+}
+.sf-slog-empty-icon {
+    width: 4rem;
+    height: 4rem;
+    color: #d1d5db;
+    margin: 0 auto 1rem;
+}
+.sf-slog-empty-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #6b7280;
+}
+.sf-slog-empty-copy {
+    margin: 0.25rem 0 0;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+.sf-slog-pagination-shell {
+    background: #f9fafb;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+.sf-slog-pagination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.sf-slog-pagination-meta {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+.sf-slog-strong {
+    font-weight: 700;
+}
+.sf-slog-pagination-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.sf-slog-page-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 0;
+}
+.sf-slog-page-btn-ghost {
+    border: 2px solid #d1d5db;
+    color: #374151;
+    background: #fff;
+}
+.sf-slog-page-btn-primary {
+    background: #f97316;
+    color: #fff;
+}
+.sf-slog-page-btn-disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+}
+@media (min-width: 640px) {
+    .sf-slog-main {
+        padding: 1.5rem;
+    }
+    .sf-slog-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sf-slog-filter-form {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+@media (min-width: 768px) {
+    .sf-slog-head {
+        flex-direction: row;
+        align-items: center;
+    }
+    .sf-slog-main {
+        padding: 2rem;
+    }
+}

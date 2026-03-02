@@ -1,0 +1,245 @@
+.ad-rpay-page {
+    padding: 2rem 0;
+}
+
+.ad-rpay-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+    .ad-rpay-container {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .ad-rpay-container {
+        padding: 0 2rem;
+    }
+}
+
+.ad-rpay-head {
+    margin-bottom: 2rem;
+}
+
+.ad-rpay-back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.ad-rpay-back-link:hover {
+    color: #1e40af;
+}
+
+.ad-rpay-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.ad-rpay-subtitle {
+    margin: 0;
+    color: #4b5563;
+}
+
+.ad-rpay-alert {
+    margin-bottom: 1.5rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.ad-rpay-alert-success {
+    border-color: #bbf7d0;
+    color: #166534;
+    background: #f0fdf4;
+}
+
+.ad-rpay-alert-error {
+    border-color: #fecaca;
+    color: #991b1b;
+    background: #fef2f2;
+}
+
+.ad-rpay-panel {
+    overflow: hidden;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ad-rpay-mb-8 {
+    margin-bottom: 2rem;
+}
+
+.ad-rpay-section-head {
+    padding: 1rem 1.5rem;
+    color: #fff;
+}
+
+.ad-rpay-section-head-blue {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+.ad-rpay-section-head-gray {
+    background: linear-gradient(90deg, #4b5563, #374151);
+}
+
+.ad-rpay-section-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+}
+
+.ad-rpay-section-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.9;
+}
+
+.ad-rpay-table-wrap {
+    overflow-x: auto;
+}
+
+.ad-rpay-table {
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+.ad-rpay-table thead {
+    background: #f9fafb;
+}
+
+.ad-rpay-table th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.ad-rpay-table td {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #111827;
+}
+
+.ad-rpay-row-pending {
+    background: #fefce8;
+}
+
+.ad-rpay-strong,
+.ad-rpay-owner-name {
+    font-weight: 700;
+    color: #111827;
+}
+
+.ad-rpay-amount {
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.ad-rpay-note {
+    max-width: 20rem;
+    color: #4b5563;
+}
+
+.ad-rpay-date,
+.ad-rpay-inline-muted {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #6b7280;
+}
+
+.ad-rpay-mt-1 {
+    margin-top: 0.25rem;
+}
+
+.ad-rpay-commission {
+    color: #ea580c;
+}
+
+.ad-rpay-owner-amount {
+    font-weight: 700;
+    color: #15803d;
+}
+
+.ad-rpay-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+}
+
+.ad-rpay-badge-green {
+    background: #dcfce7;
+    color: #166534;
+}
+.ad-rpay-badge-blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+.ad-rpay-badge-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.ad-rpay-badge-yellow {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.ad-rpay-actions-inline {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ad-rpay-btn {
+    border: 0;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+}
+
+.ad-rpay-btn-pay {
+    background: #16a34a;
+}
+
+.ad-rpay-btn-pay:hover {
+    background: #15803d;
+}
+
+.ad-rpay-btn-reject {
+    background: #dc2626;
+}
+
+.ad-rpay-btn-reject:hover {
+    background: #b91c1c;
+}
+
+.ad-rpay-empty {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #6b7280;
+}

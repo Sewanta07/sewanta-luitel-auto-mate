@@ -1,4 +1,5 @@
 @import './customer/customer.css';
+@import './customer/components/navbar.css';
 @import './customer/pages/services.css';
 @import './customer/pages/bookings-index.css';
 @import './customer/pages/booking-create.css';
@@ -12,3 +13,4 @@
 @import './customer/pages/rent-vehicles.css';
 @import './customer/pages/owner-earnings.css';
 @import './customer/pages/owner-rental-history.css';
+@import './customer/pages/dashboard-customer.css';

@@ -2,23 +2,27 @@
 
 @section('title', 'Customer Dashboard - AutoMate')
 
+@push('styles')
+    @vite(['resources/css/customer-core.css'])
+@endpush
+
 @section('content')
 {{-- Include Navigation Bar --}}
 @include('customer.navbar')
 
-<div class="min-h-screen bg-gray-50" x-data="{ supportModalOpen: false }">
-    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+<div class="cs-dash-page" x-data="{ supportModalOpen: false }">
+    <main class="cs-dash-main">
         {{-- Left column: main content --}}
-        <section class="lg:col-span-3 space-y-6">
+        <section class="cs-dash-content">
             {{-- Welcome Section --}}
-            <div class="p-6 rounded-2xl bg-white shadow-sm flex items-center justify-between">
+            <div class="cs-dash-welcome-card">
                 <div>
-                    <h2 class="text-2xl font-semibold text-gray-900">Welcome back 👋</h2>
-                    <p class="text-sm text-gray-600 mt-1">Let's get your vehicle running smoothly — request a service when you're ready.</p>
+                    <h2 class="cs-dash-welcome-title">Welcome back 👋</h2>
+                    <p class="cs-dash-welcome-subtitle">Let's get your vehicle running smoothly — request a service when you're ready.</p>
                 </div>
-                <div class="hidden sm:flex items-center space-x-4">
-                    <div class="text-sm text-gray-500">Member since</div>
-                    <div class="text-sm font-medium text-gray-900">{{ \Carbon\Carbon::parse($user->created_at)->format('M Y') }}</div>
+                <div class="cs-dash-member-meta">
+                    <div class="cs-dash-member-label">Member since</div>
+                    <div class="cs-dash-member-value">{{ \Carbon\Carbon::parse($user->created_at)->format('M Y') }}</div>
                 </div>
             </div>
 
@@ -49,43 +53,43 @@
 
 
             {{-- Quick Action Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="{{ route('bookings.create') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-orange-500">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-orange-50">
+            <div class="cs-dash-actions-grid">
+                <a href="{{ route('bookings.create') }}" class="cs-dash-action-card cs-dash-action-card-orange">
+                    <div class="cs-dash-action-icon-wrap cs-dash-action-icon-wrap-orange">
                         <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </div>
-                    <p class="font-semibold text-gray-900 text-sm">Request Service</p>
-                    <p class="text-xs text-gray-500 mt-1">Book a new appointment</p>
+                    <p class="cs-dash-action-title">Request Service</p>
+                    <p class="cs-dash-action-subtitle">Book a new appointment</p>
                 </a>
 
-                <a href="{{ route('bookings.index') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-blue-600">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-blue-50">
+                <a href="{{ route('bookings.index') }}" class="cs-dash-action-card cs-dash-action-card-blue">
+                    <div class="cs-dash-action-icon-wrap cs-dash-action-icon-wrap-blue">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </div>
-                    <p class="font-semibold text-gray-900 text-sm">View Bookings</p>
-                    <p class="text-xs text-gray-500 mt-1">All your service requests</p>
+                    <p class="cs-dash-action-title">View Bookings</p>
+                    <p class="cs-dash-action-subtitle">All your service requests</p>
                 </a>
 
-                <a href="{{ route('owner.earnings.dashboard') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-green-500">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-green-50">
+                <a href="{{ route('owner.earnings.dashboard') }}" class="cs-dash-action-card cs-dash-action-card-green">
+                    <div class="cs-dash-action-icon-wrap cs-dash-action-icon-wrap-green">
                         <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     </div>
-                    <p class="font-semibold text-gray-900 text-sm">My Earnings</p>
-                    <p class="text-xs text-gray-500 mt-1">View my Earnings</p>
+                    <p class="cs-dash-action-title">My Earnings</p>
+                    <p class="cs-dash-action-subtitle">View my Earnings</p>
                 </a>
 
-                <a href="{{ route('customer.profile') }}" class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition border-l-4 border-l-purple-600">
-                    <div class="w-10 h-10 rounded-full mb-3 flex items-center justify-center bg-purple-50">
+                <a href="{{ route('customer.profile') }}" class="cs-dash-action-card cs-dash-action-card-purple">
+                    <div class="cs-dash-action-icon-wrap cs-dash-action-icon-wrap-purple">
                         <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 15a3 3 0 100-6 3 3 0 000 6z"/></svg>
                     </div>
-                    <p class="font-semibold text-gray-900 text-sm">My Profile</p>
-                    <p class="text-xs text-gray-500 mt-1">Manage your account</p>
+                    <p class="cs-dash-action-title">My Profile</p>
+                    <p class="cs-dash-action-subtitle">Manage your account</p>
                 </a>
             </div>
 
             {{-- Service Progress Section --}}
-            <div class="p-6 rounded-2xl bg-white shadow-sm">
-                <h3 class="text-lg font-bold text-gray-900 mb-6">Service Progress</h3>
+            <div class="cs-dash-card">
+                <h3 class="cs-dash-card-title">Service Progress</h3>
                 
                 @php
                     // Get the most recent in-progress or pending booking
@@ -112,18 +116,18 @@
                 @endphp
                 
                 @if($activeBooking)
-                    <div class="space-y-4">
+                    <div class="cs-dash-progress-wrap">
                         {{-- Progress Line --}}
-                        <div class="flex items-center justify-between">
+                        <div class="cs-dash-progress-track">
                             @foreach($stages as $stage => $statuses)
                                 @php $stageIndex = array_search($stage, array_keys($stages)) + 1; @endphp
-                                <div class="flex flex-col items-center flex-1">
+                                <div class="cs-dash-progress-step">
                                     {{-- Circle --}}
-                                    <div class="w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all font-bold text-sm
+                                    <div class="cs-dash-progress-dot
                                         @if($stageIndex <= $currentStage)
-                                            bg-[#ff5a1f] text-white shadow-lg
+                                            cs-dash-progress-dot-active
                                         @else
-                                            bg-gray-200 text-gray-500
+                                            cs-dash-progress-dot-inactive
                                         @endif
                                     ">
                                         @if($stageIndex < $currentStage)
@@ -133,16 +137,16 @@
                                         @endif
                                     </div>
                                     {{-- Label --}}
-                                    <p class="text-xs font-semibold text-center text-gray-900">{{ $stage }}</p>
+                                    <p class="cs-dash-progress-label">{{ $stage }}</p>
                                 </div>
                                 
                                 {{-- Connector Line --}}
                                 @if($stageIndex < count($stages))
-                                    <div class="flex-1 h-1 mx-2 mb-8 rounded-full transition-all
+                                    <div class="cs-dash-progress-line
                                         @if($stageIndex < $currentStage)
-                                            bg-[#ff5a1f]
+                                            cs-dash-progress-line-active
                                         @else
-                                            bg-gray-200
+                                            cs-dash-progress-line-inactive
                                         @endif
                                     "></div>
                                 @endif
@@ -150,20 +154,20 @@
                         </div>
                         
                         {{-- Current Status Info --}}
-                        <div class="mt-6 p-4 rounded-lg border-l-4 border-l-orange-500 bg-orange-50">
-                            <p class="text-sm text-gray-600 font-medium">Current Status</p>
-                            <p class="text-lg font-bold text-gray-900 mt-1">{{ $activeBooking->status }}</p>
-                            <p class="text-xs text-gray-500 mt-2">Request {{ $activeBooking->created_at->diffForHumans() }}</p>
+                        <div class="cs-dash-status-box">
+                            <p class="cs-dash-status-label">Current Status</p>
+                            <p class="cs-dash-status-value">{{ $activeBooking->status }}</p>
+                            <p class="cs-dash-status-meta">Request {{ $activeBooking->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
                 @else
-                    <div class="text-center py-8">
-                        <div class="w-16 h-16 rounded-full bg-gray-100 mx-auto mb-3 flex items-center justify-center">
+                    <div class="cs-dash-empty-state">
+                        <div class="cs-dash-empty-icon-wrap">
                             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <p class="text-gray-600 font-medium">No active services</p>
-                        <p class="text-sm text-gray-500 mt-1">Your completed services will show here</p>
-                        <a href="{{ route('bookings.create') }}" class="mt-4 inline-flex items-center px-4 py-2 text-white rounded-lg text-sm font-medium bg-[#ff5a1f] hover:bg-[#e64b15] transition-colors">Request a Service</a>
+                        <p class="cs-dash-empty-title">No active services</p>
+                        <p class="cs-dash-empty-subtitle">Your completed services will show here</p>
+                        <a href="{{ route('bookings.create') }}" class="cs-dash-btn-primary">Request a Service</a>
                     </div>
                 @endif
             </div>
@@ -171,8 +175,8 @@
             {{-- Recent Bookings Section --}}
             <div>
                 @if($recentBookings->count() > 0)
-                    <div class="p-6 rounded-2xl bg-white shadow-sm">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Bookings</h3>
+                    <div class="cs-dash-card">
+                        <h3 class="cs-dash-card-title cs-dash-card-title-tight">Recent Bookings</h3>
                         <div class="space-y-3">
                             @foreach($recentBookings as $booking)
                                 @php
@@ -204,17 +208,17 @@
                                 </a>
                             @endforeach
                         </div>
-                        <a href="{{ route('bookings.index') }}" class="mt-4 text-sm text-[#ff5a1f] font-semibold hover:text-[#e44d18] block text-center">View All Bookings →</a>
+                        <a href="{{ route('bookings.index') }}" class="cs-dash-all-link">View All Bookings →</a>
                     </div>
                 @else
-                    <div class="p-10 rounded-2xl bg-white shadow-sm text-center">
-                        <div class="mx-auto w-32 h-32 flex items-center justify-center rounded-full text-white mb-6 bg-[#ff5a1f]">
+                    <div class="cs-dash-empty-panel">
+                        <div class="cs-dash-empty-panel-icon">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a4 4 0 11-5.6 5.6L3 18l3 1 5.1-5.1a4 4 0 001.6-4.6l-2-4.1z"></path></svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900">No service requests yet</h3>
-                        <p class="text-sm text-gray-500 mt-2">You don't have any active service requests. When you need help, we are just a click away.</p>
-                        <div class="mt-6">
-                            <a href="{{ route('bookings.create') }}" class="inline-flex items-center px-4 py-2 text-white rounded-lg shadow transition bg-[#ff5a1f] hover:bg-[#e64b15]">Request Service</a>
+                        <h3 class="cs-dash-empty-panel-title">No service requests yet</h3>
+                        <p class="cs-dash-empty-panel-subtitle">You don't have any active service requests. When you need help, we are just a click away.</p>
+                        <div class="cs-dash-empty-panel-action">
+                            <a href="{{ route('bookings.create') }}" class="cs-dash-btn-primary">Request Service</a>
                         </div>
                     </div>
                 @endif
@@ -222,7 +226,7 @@
         </section>
 
         {{-- Right column: sidebar with shortcuts --}}
-        <aside class="space-y-4">
+        <aside class="cs-dash-aside">
             {{-- Support Card --}}
             <div class="p-6 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-xl">
                 <div class="flex items-start space-x-4">

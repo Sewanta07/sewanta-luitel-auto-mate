@@ -1,0 +1,407 @@
+.cs-dash-page {
+    min-height: 100vh;
+    background: #f9fafb;
+}
+
+.cs-dash-main {
+    width: min(80rem, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 1.5rem 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .cs-dash-main {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .cs-dash-content {
+        grid-column: span 3 / span 3;
+    }
+}
+
+.cs-dash-content {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.cs-dash-welcome-card,
+.cs-dash-card,
+.cs-dash-action-card,
+.cs-dash-empty-panel {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.cs-dash-welcome-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cs-dash-welcome-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cs-dash-welcome-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.cs-dash-member-meta {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .cs-dash-member-meta {
+        display: flex;
+    }
+}
+
+.cs-dash-member-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.cs-dash-member-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.cs-dash-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .cs-dash-actions-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .cs-dash-actions-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.cs-dash-action-card {
+    display: block;
+    padding: 1rem;
+    border-left: 4px solid transparent;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.cs-dash-action-card:hover {
+    box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08);
+}
+
+.cs-dash-action-card-orange { border-left-color: #f97316; }
+.cs-dash-action-card-blue { border-left-color: #2563eb; }
+.cs-dash-action-card-green { border-left-color: #22c55e; }
+.cs-dash-action-card-purple { border-left-color: #9333ea; }
+
+.cs-dash-action-icon-wrap {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cs-dash-action-icon-wrap-orange { background: #fff7ed; }
+.cs-dash-action-icon-wrap-blue { background: #eff6ff; }
+.cs-dash-action-icon-wrap-green { background: #f0fdf4; }
+.cs-dash-action-icon-wrap-purple { background: #faf5ff; }
+
+.cs-dash-action-title {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cs-dash-action-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.cs-dash-card {
+    padding: 1.5rem;
+}
+
+.cs-dash-card-title {
+    margin: 0 0 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cs-dash-card-title-tight {
+    margin-bottom: 1rem;
+}
+
+.cs-dash-progress-wrap {
+    display: grid;
+    gap: 1rem;
+}
+
+.cs-dash-progress-track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cs-dash-progress-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cs-dash-progress-dot {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.cs-dash-progress-dot-active {
+    color: #ffffff;
+    background: #ff5a1f;
+    box-shadow: 0 10px 20px rgba(255, 90, 31, 0.25);
+}
+
+.cs-dash-progress-dot-inactive {
+    color: #6b7280;
+    background: #e5e7eb;
+}
+
+.cs-dash-progress-label {
+    margin: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cs-dash-progress-line {
+    flex: 1;
+    height: 0.25rem;
+    margin: 0 0.5rem 2rem;
+    border-radius: 9999px;
+}
+
+.cs-dash-progress-line-active { background: #ff5a1f; }
+.cs-dash-progress-line-inactive { background: #e5e7eb; }
+
+.cs-dash-status-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-left: 4px solid #f97316;
+    border-radius: 0.5rem;
+    background: #fff7ed;
+}
+
+.cs-dash-status-label {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.cs-dash-status-value {
+    margin: 0.25rem 0 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cs-dash-status-meta {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.cs-dash-empty-state {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.cs-dash-empty-icon-wrap {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 0.75rem;
+    border-radius: 9999px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cs-dash-empty-title {
+    margin: 0;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.cs-dash-empty-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.cs-dash-btn-primary {
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    background: #ff5a1f;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.cs-dash-btn-primary:hover {
+    background: #e64b15;
+}
+
+.cs-dash-all-link {
+    margin-top: 1rem;
+    display: block;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ff5a1f;
+    text-decoration: none;
+}
+
+.cs-dash-all-link:hover {
+    color: #e44d18;
+}
+
+.cs-dash-empty-panel {
+    padding: 2.5rem;
+    text-align: center;
+}
+
+.cs-dash-empty-panel-icon {
+    width: 8rem;
+    height: 8rem;
+    margin: 0 auto 1.5rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    background: #ff5a1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cs-dash-empty-panel-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cs-dash-empty-panel-subtitle {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.cs-dash-empty-panel-action {
+    margin-top: 1.5rem;
+}
+
+.cs-dash-aside {
+    display: grid;
+    gap: 1rem;
+}
+
+.cs-dash-support-card {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background: linear-gradient(to bottom right, #14b8a6, #0d9488);
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.12);
+}
+
+.cs-dash-support-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.cs-dash-support-icon-wrap {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.cs-dash-support-copy {
+    flex: 1;
+}
+
+.cs-dash-support-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cs-dash-support-subtitle {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+}
+
+.cs-dash-support-btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    color: #0d9488;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cs-dash-support-btn:hover {
+    background: #f0fdfa;
+}

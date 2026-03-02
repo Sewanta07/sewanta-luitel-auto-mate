@@ -7,8 +7,15 @@
 
     <title>@yield('title', 'AutoMate - Smart Vehicle Service Management')</title>
 
-    <!-- Tailwind CSS via Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @php
+        $viteAssets = ['resources/css/app.css', 'resources/js/app.js'];
+
+        if (request()->routeIs('staff.*') || request()->routeIs('dashboard.staff')) {
+            $viteAssets[] = 'resources/css/staff-core.css';
+        }
+    @endphp
+
+    @vite($viteAssets)
     
     @stack('styles')
 </head>

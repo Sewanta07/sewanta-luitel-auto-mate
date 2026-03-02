@@ -3,147 +3,147 @@
 @section('title', 'Rental Requests')
 
 @section('content')
-<div class="py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="mb-8">
-        <a href="{{ route('admin.rentals.dashboard') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4 font-semibold transition">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="ad-rreq-page">
+    <div class="ad-rreq-container">
+    <div class="ad-rreq-back-wrap">
+        <a href="{{ route('admin.rentals.dashboard') }}" class="ad-rreq-back-link">
+            <svg class="ad-rreq-back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
             Back to Dashboard
         </a>
     </div>
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Rental Requests Management</h1>
-        <p class="text-gray-600">Approve requests and assign staff for vehicle handover</p>
+    <div class="ad-rreq-head">
+        <h1 class="ad-rreq-title">Rental Requests Management</h1>
+        <p class="ad-rreq-subtitle">Approve requests and assign staff for vehicle handover</p>
     </div>
 
     @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+    <div class="ad-rreq-alert ad-rreq-alert-success">
         {{ session('success') }}
     </div>
     @endif
 
     @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+    <div class="ad-rreq-alert ad-rreq-alert-error">
         {{ session('error') }}
     </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+    <div class="ad-rreq-panel">
+        <div class="ad-rreq-table-wrap">
+            <table class="ad-rreq-table">
+                <thead>
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Renter</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Owner</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dates</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cost</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Damage</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Damage Payment</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>Renter</th>
+                        <th>Owner</th>
+                        <th>Dates</th>
+                        <th>Cost</th>
+                        <th>Damage</th>
+                        <th>Damage Payment</th>
+                        <th>Status</th>
+                        <th>Staff</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody>
                     @forelse($requests as $rental)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ $rental->id }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                    <tr>
+                        <td class="ad-rreq-strong">#{{ $rental->id }}</td>
+                        <td>
                             {{ $rental->vehicle->vehicle_name ?: ($rental->vehicle->brand . ' ' . $rental->vehicle->model) }}
                             <br>
-                            <span class="text-xs text-gray-500">{{ $rental->vehicle->plate_number }}</span>
+                            <span class="ad-rreq-inline-muted">{{ $rental->vehicle->plate_number }}</span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td>
                             {{ $rental->renter->name }}
                             <br>
-                            <span class="text-xs text-gray-500">{{ $rental->renter->email }}</span>
+                            <span class="ad-rreq-inline-muted">{{ $rental->renter->email }}</span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
+                        <td class="ad-rreq-muted">
                             @if($rental->vehicle->is_service_center_vehicle)
-                                <span class="font-semibold text-blue-600">Service Center</span>
+                                <span class="ad-rreq-service-center">Service Center</span>
                             @else
                                 {{ $rental->owner->name ?? 'Customer' }}
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="ad-rreq-muted">
                             {{ \Carbon\Carbon::parse($rental->start_date)->format('M d, Y') }}
                             <br>
                             {{ \Carbon\Carbon::parse($rental->end_date)->format('M d, Y') }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        <td class="ad-rreq-strong">
                             Rs. {{ number_format($rental->total_cost, 2) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td>
                             @if($rental->has_damage)
                                 Rs. {{ number_format($rental->damage_charge ?? 0, 2) }}
                                 @if($rental->damage_description)
-                                    <div class="text-xs text-gray-500 mt-1">{{ $rental->damage_description }}</div>
+                                    <div class="ad-rreq-inline-muted ad-rreq-mt-1">{{ $rental->damage_description }}</div>
                                 @endif
                             @else
-                                <span class="text-gray-400">None</span>
+                                <span class="ad-rreq-none">None</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                @if(($rental->damage_payment_status ?? 'Unpaid') === 'Paid') bg-green-100 text-green-800
-                                @elseif(($rental->damage_payment_status ?? 'Unpaid') === 'Not Required') bg-gray-100 text-gray-700
-                                @else bg-yellow-100 text-yellow-800 @endif">
+                        <td>
+                            <span class="ad-rreq-badge
+                                @if(($rental->damage_payment_status ?? 'Unpaid') === 'Paid') ad-rreq-badge-green
+                                @elseif(($rental->damage_payment_status ?? 'Unpaid') === 'Not Required') ad-rreq-badge-gray
+                                @else ad-rreq-badge-yellow @endif">
                                 {{ $rental->damage_payment_status ?? 'Unpaid' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td>
                             @php
-                                $statusColors = [
-                                    'Pending' => 'bg-yellow-100 text-yellow-800',
-                                    'Approved' => 'bg-green-100 text-green-800',
-                                    'Ready for Pickup' => 'bg-blue-100 text-blue-800',
-                                    'Picked Up' => 'bg-indigo-100 text-indigo-800',
-                                    'In Use' => 'bg-purple-100 text-purple-800',
-                                    'Returned' => 'bg-gray-100 text-gray-800',
-                                    'Completed' => 'bg-green-100 text-green-800',
-                                    'Rejected' => 'bg-red-100 text-red-800',
+                                $statusClasses = [
+                                    'Pending' => 'ad-rreq-badge-yellow',
+                                    'Approved' => 'ad-rreq-badge-green',
+                                    'Ready for Pickup' => 'ad-rreq-badge-blue',
+                                    'Picked Up' => 'ad-rreq-badge-indigo',
+                                    'In Use' => 'ad-rreq-badge-purple',
+                                    'Returned' => 'ad-rreq-badge-gray',
+                                    'Completed' => 'ad-rreq-badge-green',
+                                    'Rejected' => 'ad-rreq-badge-red',
                                 ];
                             @endphp
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $statusColors[$rental->status] ?? 'bg-gray-100 text-gray-800' }}">
+                            <span class="ad-rreq-badge {{ $statusClasses[$rental->status] ?? 'ad-rreq-badge-gray' }}">
                                 {{ $rental->status }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm">
+                        <td>
                             @if($rental->assignedStaff)
-                                <span class="text-gray-900">{{ $rental->assignedStaff->name }}</span>
+                                <span>{{ $rental->assignedStaff->name }}</span>
                             @else
                                 <button onclick="assignStaff({{ $rental->id }})" 
-                                        class="text-blue-600 hover:text-blue-800 text-xs font-semibold">
+                                        class="ad-rreq-link-btn">
                                     Assign Staff
                                 </button>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-sm">
+                        <td>
                             @if($rental->status === 'Pending')
-                            <div class="flex gap-2">
+                            <div class="ad-rreq-actions-inline">
                                 <form action="{{ route('admin.rentals.requests.approve', $rental) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold">
+                                    <button type="submit" class="ad-rreq-btn ad-rreq-btn-approve">
                                         Approve
                                     </button>
                                 </form>
                                 <button onclick="rejectRequest({{ $rental->id }})" 
-                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold">
+                                        class="ad-rreq-btn ad-rreq-btn-reject">
                                     Reject
                                 </button>
                             </div>
                             @else
-                                <span class="text-gray-400 text-xs">{{ $rental->status }}</span>
+                                <span class="ad-rreq-status-note">{{ $rental->status }}</span>
                             @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="11" class="px-6 py-8 text-center text-gray-500">No rental requests found</td>
+                        <td colspan="11" class="ad-rreq-empty">No rental requests found</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -153,17 +153,17 @@
 </div>
 
 <!-- Assign Staff Modal -->
-<div id="assignStaffModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-md w-full">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800">Assign Staff</h2>
+<div id="assignStaffModal" class="ad-rreq-modal-overlay ad-hidden">
+    <div class="ad-rreq-modal">
+        <div class="ad-rreq-modal-head">
+            <h2 class="ad-rreq-modal-title">Assign Staff</h2>
         </div>
         
-        <form id="assignStaffForm" method="POST" class="p-6">
+        <form id="assignStaffForm" method="POST" class="ad-rreq-modal-form">
             @csrf
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium mb-2">Select Staff Member *</label>
-                <select name="staff_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <div class="ad-rreq-field">
+                <label class="ad-rreq-label">Select Staff Member *</label>
+                <select name="staff_id" required class="ad-rreq-input">
                     <option value="">-- Choose Staff --</option>
                     @foreach($staff as $member)
                     <option value="{{ $member->id }}">{{ $member->name }} - {{ $member->position ?? 'Staff' }}</option>
@@ -171,12 +171,12 @@
                 </select>
             </div>
             
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+            <div class="ad-rreq-modal-actions">
+                <button type="submit" class="ad-rreq-btn ad-rreq-btn-primary ad-rreq-btn-grow">
                     Assign Staff
                 </button>
-                <button type="button" onclick="document.getElementById('assignStaffModal').classList.add('hidden')" 
-                        class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button type="button" onclick="document.getElementById('assignStaffModal').classList.add('ad-hidden')" 
+                        class="ad-rreq-btn ad-rreq-btn-ghost">
                     Cancel
                 </button>
             </div>
@@ -185,27 +185,27 @@
 </div>
 
 <!-- Reject Modal -->
-<div id="rejectModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-md w-full">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800">Reject Rental Request</h2>
+<div id="rejectModal" class="ad-rreq-modal-overlay ad-hidden">
+    <div class="ad-rreq-modal">
+        <div class="ad-rreq-modal-head">
+            <h2 class="ad-rreq-modal-title">Reject Rental Request</h2>
         </div>
         
-        <form id="rejectForm" method="POST" class="p-6">
+        <form id="rejectForm" method="POST" class="ad-rreq-modal-form">
             @csrf
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium mb-2">Rejection Reason *</label>
+            <div class="ad-rreq-field">
+                <label class="ad-rreq-label">Rejection Reason *</label>
                 <textarea name="rejection_reason" required rows="4" 
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          class="ad-rreq-input"
                           placeholder="Explain why this rental request is rejected..."></textarea>
             </div>
             
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+            <div class="ad-rreq-modal-actions">
+                <button type="submit" class="ad-rreq-btn ad-rreq-btn-danger ad-rreq-btn-grow">
                     Reject Request
                 </button>
-                <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden')" 
-                        class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button type="button" onclick="document.getElementById('rejectModal').classList.add('ad-hidden')" 
+                        class="ad-rreq-btn ad-rreq-btn-ghost">
                     Cancel
                 </button>
             </div>
@@ -216,12 +216,12 @@
 <script>
 function assignStaff(rentalId) {
     document.getElementById('assignStaffForm').action = `/admin/rentals/requests/${rentalId}/assign-staff`;
-    document.getElementById('assignStaffModal').classList.remove('hidden');
+    document.getElementById('assignStaffModal').classList.remove('ad-hidden');
 }
 
 function rejectRequest(rentalId) {
     document.getElementById('rejectForm').action = `/admin/rentals/requests/${rentalId}/reject`;
-    document.getElementById('rejectModal').classList.remove('hidden');
+    document.getElementById('rejectModal').classList.remove('ad-hidden');
 }
 </script>
 @endsection

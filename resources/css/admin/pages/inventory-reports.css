@@ -1,0 +1,78 @@
+.ad-invr-page {
+    padding: 1.5rem;
+}
+.ad-invr-container {
+    max-width: 72rem;
+    margin: 0 auto;
+}
+.ad-invr-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+.ad-invr-title {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+.ad-invr-btn {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.ad-invr-btn-ghost {
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    background: #fff;
+}
+.ad-invr-panel {
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+.ad-invr-table-wrap {
+    overflow-x: auto;
+}
+.ad-invr-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.ad-invr-table thead {
+    background: #f9fafb;
+}
+.ad-invr-table th {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9ca3af;
+    text-align: left;
+}
+.ad-invr-table td {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+}
+.ad-invr-muted {
+    color: #4b5563;
+}
+.ad-invr-strong {
+    font-weight: 600;
+    color: #111827;
+}
+.ad-invr-text-red {
+    color: #dc2626;
+}
+.ad-invr-text-green {
+    color: #16a34a;
+}
+.ad-invr-empty {
+    text-align: center;
+    color: #6b7280;
+    padding: 1.5rem;
+}

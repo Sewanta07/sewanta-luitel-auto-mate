@@ -7,7 +7,7 @@
     <title>@yield('title', 'Admin Dashboard') - AutoMate</title>
 
     <!-- Tailwind CSS via Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/admin-core.css', 'resources/js/app.js'])
 
     <!-- Chart.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

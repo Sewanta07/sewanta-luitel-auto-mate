@@ -7,8 +7,15 @@
 
     <title><?php echo $__env->yieldContent('title', 'AutoMate - Smart Vehicle Service Management'); ?></title>
 
-    <!-- Tailwind CSS via Vite -->
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+    <?php
+        $viteAssets = ['resources/css/app.css', 'resources/js/app.js'];
+
+        if (request()->routeIs('staff.*') || request()->routeIs('dashboard.staff')) {
+            $viteAssets[] = 'resources/css/staff-core.css';
+        }
+    ?>
+
+    <?php echo app('Illuminate\Foundation\Vite')($viteAssets); ?>
     
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>

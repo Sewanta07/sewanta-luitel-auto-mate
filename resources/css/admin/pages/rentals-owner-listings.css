@@ -1,0 +1,194 @@
+.ad-rol-page {
+    padding: 2rem 0;
+}
+
+.ad-rol-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+    .ad-rol-container {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .ad-rol-container {
+        padding: 0 2rem;
+    }
+}
+
+.ad-rol-head {
+    margin-bottom: 2rem;
+}
+
+.ad-rol-back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.ad-rol-back-link:hover {
+    color: #1e40af;
+}
+
+.ad-rol-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.ad-rol-subtitle {
+    margin: 0;
+    color: #4b5563;
+}
+
+.ad-rol-alert {
+    margin-bottom: 1.5rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.ad-rol-alert-success {
+    border-color: #bbf7d0;
+    color: #166534;
+    background: #f0fdf4;
+}
+
+.ad-rol-panel {
+    overflow: hidden;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ad-rol-table-wrap {
+    overflow-x: auto;
+}
+
+.ad-rol-table {
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+.ad-rol-table thead {
+    background: #f9fafb;
+}
+
+.ad-rol-table th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.ad-rol-table td {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #111827;
+}
+
+.ad-rol-inline-muted,
+.ad-rol-muted {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #6b7280;
+}
+
+.ad-rol-strong {
+    font-weight: 600;
+}
+
+.ad-rol-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+}
+
+.ad-rol-badge-green {
+    background: #dcfce7;
+    color: #166534;
+}
+.ad-rol-badge-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.ad-rol-badge-yellow {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.ad-rol-actions-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ad-rol-input {
+    width: 11rem;
+    margin-bottom: 0.25rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #111827;
+}
+
+.ad-rol-input:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+}
+
+.ad-rol-btn {
+    border: 0;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+}
+
+.ad-rol-btn-approve {
+    background: #16a34a;
+}
+
+.ad-rol-btn-approve:hover {
+    background: #15803d;
+}
+
+.ad-rol-btn-reject {
+    background: #dc2626;
+}
+
+.ad-rol-btn-reject:hover {
+    background: #b91c1c;
+}
+
+.ad-rol-empty {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #6b7280;
+}

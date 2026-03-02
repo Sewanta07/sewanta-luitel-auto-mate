@@ -1,0 +1,202 @@
+.ad-topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.ad-topnav-container {
+    width: min(80rem, calc(100% - 2rem));
+    margin-inline: auto;
+}
+
+.ad-topnav-row {
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ad-topnav-brand-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ad-topnav-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.ad-topnav-brand-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #ff5a1f;
+}
+
+.ad-topnav-brand-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.ad-topnav-brand-accent {
+    color: #ff5a1f;
+}
+
+.ad-topnav-brand-tag {
+    margin-left: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #111827;
+}
+
+.ad-topnav-menu {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .ad-topnav-menu {
+        display: flex;
+    }
+}
+
+.ad-topnav-link {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ad-topnav-link:hover {
+    background: #f3f4f6;
+}
+
+.ad-topnav-link-active {
+    color: #ff5a1f;
+    background: #fff7ed;
+}
+
+.ad-topnav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ad-topnav-divider {
+    width: 1px;
+    height: 1.5rem;
+    margin-inline: 0.5rem;
+    background: #e5e7eb;
+}
+
+.ad-topnav-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ad-topnav-user-name {
+    display: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+@media (min-width: 640px) {
+    .ad-topnav-user-name {
+        display: inline;
+    }
+}
+
+.ad-topnav-logout {
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: #9ca3af;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ad-topnav-logout:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.ad-topnav-logout-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.ad-topnav-mobile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: #374151;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ad-topnav-mobile-btn:hover {
+    background: #f3f4f6;
+}
+
+@media (min-width: 768px) {
+    .ad-topnav-mobile-btn {
+        display: none;
+    }
+}
+
+.ad-topnav-mobile-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.ad-topnav-mobile-menu {
+    display: none;
+    padding: 0.75rem 1rem;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 767px) {
+    .ad-topnav-mobile-menu {
+        display: grid;
+        gap: 0.5rem;
+    }
+}
+
+.ad-topnav-mobile-link {
+    display: block;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.ad-topnav-mobile-link:hover {
+    background: #f3f4f6;
+}

@@ -1,0 +1,400 @@
+.ad-msgc-main {
+    max-width: 80rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.ad-msgc-head {
+    margin: 1rem 0 1.5rem;
+}
+
+.ad-msgc-title {
+    margin: 0;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.ad-msgc-subtitle {
+    margin: 0.25rem 0 0;
+    color: #6b7280;
+}
+
+.ad-msgc-filter-card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+}
+
+.ad-msgc-filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.ad-msgc-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.ad-msgc-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.ad-msgc-input {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #111827;
+    background: #fff;
+}
+
+.ad-msgc-input:focus {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.2);
+    border-color: #fdba74;
+}
+
+.ad-msgc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ad-msgc-btn-primary {
+    color: #fff;
+    background: #ff5a1f;
+}
+
+.ad-msgc-btn-primary:hover {
+    background: #e64b15;
+}
+
+.ad-msgc-btn-muted {
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.ad-msgc-btn-muted:hover {
+    background: #e5e7eb;
+}
+
+.ad-msgc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .ad-msgc-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ad-msgc-list-col {
+        grid-column: span 1 / span 1;
+    }
+
+    .ad-msgc-thread-col {
+        grid-column: span 2 / span 2;
+    }
+}
+
+.ad-msgc-list-card,
+.ad-msgc-thread-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.ad-msgc-list-head,
+.ad-msgc-thread-head {
+    padding: 1.5rem;
+    color: #fff;
+    background: linear-gradient(to right, #ff5a1f, #f97316);
+}
+
+.ad-msgc-list-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.ad-msgc-list-body {
+    max-height: 37.5rem;
+    overflow-y: auto;
+    background: #fff;
+}
+
+.ad-msgc-list-item {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    border-top: 1px solid #f3f4f6;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.ad-msgc-list-item:first-child {
+    border-top: 0;
+}
+
+.ad-msgc-list-item:hover {
+    background: #fff7ed;
+}
+
+.ad-msgc-list-item.is-active {
+    border-left-color: #ff5a1f;
+    background: #fff7ed;
+}
+
+.ad-msgc-list-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.ad-msgc-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-weight: 700;
+    color: #fff;
+    background: #ff5a1f;
+}
+
+.ad-msgc-avatar-small {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.ad-msgc-avatar-large {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.ad-msgc-avatar-soft {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ad-msgc-list-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.ad-msgc-name,
+.ad-msgc-with,
+.ad-msgc-snippet {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ad-msgc-name {
+    font-weight: 700;
+    color: #111827;
+}
+
+.ad-msgc-with {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #6b7280;
+}
+
+.ad-msgc-snippet {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #4b5563;
+}
+
+.ad-msgc-unread {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: 700;
+    color: #fff;
+    background: #dc2626;
+}
+
+.ad-msgc-empty {
+    padding: 2rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.ad-msgc-empty-text {
+    margin: 0;
+    font-weight: 500;
+}
+
+.ad-msgc-thread-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 43.75rem;
+}
+
+.ad-msgc-thread-head {
+    border-bottom: 1px solid #fed7aa;
+}
+
+.ad-msgc-thread-head-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ad-msgc-thread-title {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.ad-msgc-thread-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #ffedd5;
+}
+
+.ad-msgc-thread-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: #f9fafb;
+}
+
+.ad-msgc-message-row {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.ad-msgc-message-row.is-customer {
+    justify-content: flex-start;
+}
+
+.ad-msgc-message-row.is-staff {
+    justify-content: flex-end;
+}
+
+.ad-msgc-message-inner {
+    max-width: 20rem;
+}
+
+@media (min-width: 1024px) {
+    .ad-msgc-message-inner {
+        max-width: 28rem;
+    }
+}
+
+.ad-msgc-message-author {
+    margin: 0 0 0.375rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+}
+
+.ad-msgc-message-author.is-customer {
+    color: #111827;
+}
+
+.ad-msgc-message-author.is-staff {
+    color: #ff5a1f;
+    text-align: right;
+}
+
+.ad-msgc-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+}
+
+.ad-msgc-bubble.is-customer {
+    color: #111827;
+    background: #e5e7eb;
+    border-bottom-left-radius: 0;
+}
+
+.ad-msgc-bubble.is-staff {
+    color: #fff;
+    background: #ff5a1f;
+    border-bottom-right-radius: 0;
+}
+
+.ad-msgc-message-text {
+    margin: 0;
+    word-break: break-word;
+}
+
+.ad-msgc-message-time {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.ad-msgc-message-time.is-customer {
+    color: #4b5563;
+}
+
+.ad-msgc-message-time.is-staff {
+    color: #ffedd5;
+}
+
+.ad-msgc-thread-empty {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+}
+
+.ad-msgc-thread-foot {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #6b7280;
+    background: #fff;
+}
+
+.ad-msgc-pagination {
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
+}

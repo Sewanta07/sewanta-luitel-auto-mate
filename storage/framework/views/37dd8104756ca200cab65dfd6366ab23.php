@@ -7,7 +7,7 @@
     <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> - AutoMate</title>
 
     <!-- Tailwind CSS via Vite -->
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/css/admin-core.css', 'resources/js/app.js']); ?>
 
     <!-- Chart.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

@@ -3,45 +3,45 @@
 @section('title', 'Service Invoice')
 
 @section('content')
-<div class="py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+<div class="ad-sinv-page">
+    <div class="ad-sinv-container">
+        <div class="ad-sinv-panel">
+            <div class="ad-sinv-head">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Service Invoice</h1>
-                    <p class="text-gray-500 mt-1">Booking {{ $booking->booking_code }}</p>
+                    <h1 class="ad-sinv-title">Service Invoice</h1>
+                    <p class="ad-sinv-subtitle">Booking {{ $booking->booking_code }}</p>
                 </div>
-                <span class="px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-green-50 text-green-600">{{ $booking->status }}</span>
+                <span class="ad-sinv-badge ad-sinv-badge-green">{{ $booking->status }}</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="ad-sinv-grid-2">
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Customer</p>
-                    <p class="text-lg font-bold text-gray-900">{{ $booking->customer->name ?? 'N/A' }}</p>
-                    <p class="text-sm text-gray-500">{{ $booking->customer->email ?? 'N/A' }}</p>
+                    <p class="ad-sinv-meta-label">Customer</p>
+                    <p class="ad-sinv-meta-title">{{ $booking->customer->name ?? 'N/A' }}</p>
+                    <p class="ad-sinv-meta-subtitle">{{ $booking->customer->email ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Staff</p>
-                    <p class="text-lg font-bold text-gray-900">{{ $booking->staff->name ?? 'Unassigned' }}</p>
-                    <p class="text-sm text-gray-500">{{ $booking->staff->email ?? '' }}</p>
+                    <p class="ad-sinv-meta-label">Staff</p>
+                    <p class="ad-sinv-meta-title">{{ $booking->staff->name ?? 'Unassigned' }}</p>
+                    <p class="ad-sinv-meta-subtitle">{{ $booking->staff->email ?? '' }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vehicle</p>
-                    <p class="text-lg font-bold text-gray-900">{{ $booking->vehicle_model }}</p>
-                    <p class="text-sm text-gray-500">{{ $booking->vehicle_number }} • {{ $booking->vehicle_type }}</p>
+                    <p class="ad-sinv-meta-label">Vehicle</p>
+                    <p class="ad-sinv-meta-title">{{ $booking->vehicle_model }}</p>
+                    <p class="ad-sinv-meta-subtitle">{{ $booking->vehicle_number }} • {{ $booking->vehicle_type }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Service</p>
-                    <p class="text-lg font-bold text-gray-900">{{ $booking->service_type }}</p>
-                    <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($booking->preferred_date)->format('M d, Y') }} • {{ $booking->preferred_time_slot }}</p>
+                    <p class="ad-sinv-meta-label">Service</p>
+                    <p class="ad-sinv-meta-title">{{ $booking->service_type }}</p>
+                    <p class="ad-sinv-meta-subtitle">{{ \Carbon\Carbon::parse($booking->preferred_date)->format('M d, Y') }} • {{ $booking->preferred_time_slot }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Priority</p>
-                    <p class="text-sm font-bold text-gray-900">{{ $booking->service_priority }}</p>
+                    <p class="ad-sinv-meta-label">Priority</p>
+                    <p class="ad-sinv-meta-small">{{ $booking->service_priority }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Location</p>
-                    <p class="text-sm font-bold text-gray-900">{{ $booking->service_location_type }}</p>
+                    <p class="ad-sinv-meta-label">Location</p>
+                    <p class="ad-sinv-meta-small">{{ $booking->service_location_type }}</p>
                 </div>
             </div>
 
@@ -49,65 +49,65 @@
             @php($serviceTotal = (float) ($booking->service_cost ?? 0) + (float) ($booking->spare_parts_cost ?? 0) + (float) $partsTotal)
             @php($displayTotal = $serviceTotal)
 
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <h3 class="text-sm font-bold text-gray-700 mb-4">Parts Used</h3>
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100">
+            <div class="ad-sinv-section">
+                <h3 class="ad-sinv-section-title">Parts Used</h3>
+                <div class="ad-sinv-table-panel">
+                    <table class="ad-sinv-table">
+                        <thead>
                             <tr>
-                                <th class="px-4 py-3">Part</th>
-                                <th class="px-4 py-3 text-center">Qty</th>
-                                <th class="px-4 py-3 text-right">Unit Price</th>
-                                <th class="px-4 py-3 text-right">Total</th>
+                                <th>Part</th>
+                                <th class="ad-sinv-align-center">Qty</th>
+                                <th class="ad-sinv-align-right">Unit Price</th>
+                                <th class="ad-sinv-align-right">Total</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody>
                             @forelse($booking->parts as $part)
                                 <tr>
-                                    <td class="px-4 py-3 text-gray-900">{{ $part->part_name }}</td>
-                                    <td class="px-4 py-3 text-center text-gray-500">{{ $part->pivot->quantity }}</td>
-                                    <td class="px-4 py-3 text-right text-gray-500">Rs. {{ number_format($part->pivot->unit_price, 2) }}</td>
-                                    <td class="px-4 py-3 text-right text-gray-900 font-medium">Rs. {{ number_format($part->pivot->total_cost, 2) }}</td>
+                                    <td>{{ $part->part_name }}</td>
+                                    <td class="ad-sinv-align-center ad-sinv-muted">{{ $part->pivot->quantity }}</td>
+                                    <td class="ad-sinv-align-right ad-sinv-muted">Rs. {{ number_format($part->pivot->unit_price, 2) }}</td>
+                                    <td class="ad-sinv-align-right ad-sinv-strong">Rs. {{ number_format($part->pivot->total_cost, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">No parts recorded.</td>
+                                    <td colspan="4" class="ad-sinv-empty">No parts recorded.</td>
                                 </tr>
                             @endforelse
                         </tbody>
-                        <tfoot class="bg-gray-50 font-bold text-gray-900">
+                        <tfoot>
                             <tr>
-                                <td colspan="3" class="px-4 py-3 text-right">Parts Total</td>
-                                <td class="px-4 py-3 text-right text-[#ff5a1f]">Rs. {{ number_format($partsTotal, 2) }}</td>
+                                <td colspan="3" class="ad-sinv-align-right">Parts Total</td>
+                                <td class="ad-sinv-align-right ad-sinv-accent">Rs. {{ number_format($partsTotal, 2) }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
 
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-bold text-gray-500">Service Cost</p>
-                    <p class="text-xl font-bold text-gray-900">Rs. {{ number_format($booking->service_cost ?? 0, 2) }}</p>
+            <div class="ad-sinv-section">
+                <div class="ad-sinv-summary-row">
+                    <p class="ad-sinv-summary-label">Service Cost</p>
+                    <p class="ad-sinv-summary-value">Rs. {{ number_format($booking->service_cost ?? 0, 2) }}</p>
                 </div>
-                <div class="flex items-center justify-between mt-3">
-                    <p class="text-sm font-bold text-gray-500">Spare Parts Cost</p>
-                    <p class="text-xl font-bold text-gray-900">Rs. {{ number_format($booking->spare_parts_cost ?? 0, 2) }}</p>
+                <div class="ad-sinv-summary-row ad-sinv-summary-row-gap">
+                    <p class="ad-sinv-summary-label">Spare Parts Cost</p>
+                    <p class="ad-sinv-summary-value">Rs. {{ number_format($booking->spare_parts_cost ?? 0, 2) }}</p>
                 </div>
-                <div class="flex items-center justify-between mt-4">
-                    <p class="text-sm font-bold text-gray-500">Total Payable</p>
-                    <p class="text-2xl font-black text-[#ff5a1f]">Rs. {{ number_format($displayTotal, 2) }}</p>
+                <div class="ad-sinv-summary-row ad-sinv-summary-row-total">
+                    <p class="ad-sinv-summary-label">Total Payable</p>
+                    <p class="ad-sinv-total">Rs. {{ number_format($displayTotal, 2) }}</p>
                 </div>
-                <div class="flex items-center justify-between mt-4">
-                    <p class="text-sm font-bold text-gray-500">Payment Status</p>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ ($booking->payment_status ?? 'pending') === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                <div class="ad-sinv-summary-row ad-sinv-summary-row-total">
+                    <p class="ad-sinv-summary-label">Payment Status</p>
+                    <span class="ad-sinv-badge {{ ($booking->payment_status ?? 'pending') === 'paid' ? 'ad-sinv-badge-green' : 'ad-sinv-badge-yellow' }}">
                         {{ ucfirst($booking->payment_status ?? 'pending') }}
                     </span>
                 </div>
             </div>
 
-            <div class="mt-8 flex gap-3">
-                <a href="{{ route('admin.services') }}" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl text-center hover:bg-gray-200">Back to Services</a>
+            <div class="ad-sinv-actions">
+                <a href="{{ route('admin.services') }}" class="ad-sinv-back-btn">Back to Services</a>
             </div>
         </div>
     </div>

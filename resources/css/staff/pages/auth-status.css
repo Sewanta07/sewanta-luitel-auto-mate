@@ -1,0 +1,105 @@
+.sf-auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9fafb;
+    padding: 3rem 1rem;
+}
+.sf-auth-shell {
+    width: 100%;
+    max-width: 28rem;
+    display: grid;
+    gap: 2rem;
+}
+.sf-auth-brand-wrap,
+.sf-auth-footer {
+    text-align: center;
+}
+.sf-auth-brand {
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+}
+.sf-auth-card {
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1.5rem;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+.sf-auth-card-body {
+    padding: 2rem;
+    text-align: center;
+}
+.sf-auth-icon-wrap {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sf-auth-icon {
+    width: 2rem;
+    height: 2rem;
+}
+.sf-auth-icon-wrap-pending {
+    background: #fef3c7;
+}
+.sf-auth-icon-wrap-rejected {
+    background: #fee2e2;
+}
+.sf-auth-icon-pending {
+    color: #ca8a04;
+}
+.sf-auth-icon-rejected {
+    color: #dc2626;
+}
+.sf-auth-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+.sf-auth-copy {
+    margin: 0 0 2rem;
+    color: #4b5563;
+    line-height: 1.6;
+}
+.sf-auth-actions {
+    border-top: 1px solid #f3f4f6;
+    padding-top: 1.5rem;
+}
+.sf-auth-actions-stack {
+    display: grid;
+    gap: 0.75rem;
+}
+.sf-auth-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+.sf-auth-btn-primary {
+    background: #ff5a1f;
+    border: 1px solid #ff5a1f;
+    color: #fff;
+}
+.sf-auth-btn-secondary {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+.sf-auth-footer-copy {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}

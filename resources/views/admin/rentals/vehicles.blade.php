@@ -3,109 +3,109 @@
 @section('title', 'Manage Rental Vehicles')
 
 @section('content')
-<div class="py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8">
-            <a href="{{ route('admin.rentals.dashboard') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4 font-semibold transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="ad-rveh-page">
+    <div class="ad-rveh-container">
+        <div class="ad-rveh-back-wrap">
+            <a href="{{ route('admin.rentals.dashboard') }}" class="ad-rveh-back-link">
+                <svg class="ad-rveh-back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 Back to Dashboard
             </a>
         </div>
-        <div class="flex justify-between items-center mb-8">
+        <div class="ad-rveh-head">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Manage Rental Vehicles</h1>
-                <p class="text-gray-600">Manage service center vehicles and approved customer-listed vehicles</p>
+                <h1 class="ad-rveh-title">Manage Rental Vehicles</h1>
+                <p class="ad-rveh-subtitle">Manage service center vehicles and approved customer-listed vehicles</p>
             </div>
-            <button onclick="document.getElementById('addVehicleModal').classList.remove('hidden')" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+            <button onclick="document.getElementById('addVehicleModal').classList.remove('ad-hidden')" 
+                    class="ad-rveh-btn ad-rveh-btn-primary ad-rveh-btn-lg">
                 + Add Rental Vehicle
             </button>
         </div>
 
     @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+    <div class="ad-rveh-alert ad-rveh-alert-success">
         {{ session('success') }}
     </div>
     @endif
 
     <!-- Vehicles Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="ad-rveh-grid">
         @forelse($vehicles as $vehicle)
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="ad-rveh-card">
             @if($vehicle->image_path)
-            <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_name }}" class="w-full h-48 object-cover">
+            <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_name }}" class="ad-rveh-image">
             @else
-            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="ad-rveh-image-placeholder">
+                <svg class="ad-rveh-image-placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
             </div>
             @endif
             
-            <div class="p-5">
-                <div class="flex items-center gap-2 mb-2">
-                    <h3 class="text-xl font-semibold text-gray-800">{{ $vehicle->vehicle_name }}</h3>
+            <div class="ad-rveh-card-body">
+                <div class="ad-rveh-card-title-row">
+                    <h3 class="ad-rveh-card-title">{{ $vehicle->vehicle_name }}</h3>
                     @if($vehicle->customer_id)
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                        <span class="ad-rveh-badge ad-rveh-badge-blue">
                             Customer Listed
                         </span>
                     @else
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                        <span class="ad-rveh-badge ad-rveh-badge-purple">
                             Service Center
                         </span>
                     @endif
                 </div>
-                <p class="text-gray-600 text-sm mb-4">{{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->year }})</p>
+                <p class="ad-rveh-card-subtitle">{{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->year }})</p>
                 
-                <div class="space-y-2 mb-4">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Type:</span>
-                        <span class="font-medium text-gray-800">{{ $vehicle->vehicle_type }}</span>
+                <div class="ad-rveh-details">
+                    <div class="ad-rveh-detail-row">
+                        <span class="ad-rveh-detail-label">Type:</span>
+                        <span class="ad-rveh-detail-value">{{ $vehicle->vehicle_type }}</span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Daily Rate:</span>
-                        <span class="font-bold text-blue-600">Rs. {{ number_format($vehicle->daily_rate, 2) }}</span>
+                    <div class="ad-rveh-detail-row">
+                        <span class="ad-rveh-detail-label">Daily Rate:</span>
+                        <span class="ad-rveh-detail-value ad-rveh-detail-value-blue">Rs. {{ number_format($vehicle->daily_rate, 2) }}</span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Security Deposit:</span>
-                        <span class="font-medium text-gray-800">Rs. {{ number_format($vehicle->security_deposit ?? 0, 2) }}</span>
+                    <div class="ad-rveh-detail-row">
+                        <span class="ad-rveh-detail-label">Security Deposit:</span>
+                        <span class="ad-rveh-detail-value">Rs. {{ number_format($vehicle->security_deposit ?? 0, 2) }}</span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Status:</span>
+                    <div class="ad-rveh-detail-row">
+                        <span class="ad-rveh-detail-label">Status:</span>
                         @if($vehicle->is_listed_for_rent)
-                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Active</span>
+                            <span class="ad-rveh-badge ad-rveh-badge-green">Active</span>
                         @else
-                            <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">Inactive</span>
+                            <span class="ad-rveh-badge ad-rveh-badge-gray">Inactive</span>
                         @endif
                     </div>
                     @if($vehicle->customer_id)
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Owner:</span>
-                        <span class="font-medium text-gray-800">{{ $vehicle->customer->name ?? 'N/A' }}</span>
+                    <div class="ad-rveh-detail-row">
+                        <span class="ad-rveh-detail-label">Owner:</span>
+                        <span class="ad-rveh-detail-value">{{ $vehicle->customer->name ?? 'N/A' }}</span>
                     </div>
                     @endif
                 </div>
 
-                <div class="flex gap-2">
+                <div class="ad-rveh-actions-row">
                     @if(!$vehicle->customer_id)
                     <button onclick="editVehicle({{ $vehicle->id }}, '{{ $vehicle->vehicle_name }}', {{ $vehicle->daily_rate }}, {{ $vehicle->security_deposit ?? 0 }}, {{ $vehicle->is_listed_for_rent ? 'true' : 'false' }});" 
-                            class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition">
+                            class="ad-rveh-btn ad-rveh-btn-edit ad-rveh-btn-grow">
                         Edit
                     </button>
-                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="flex-1" onsubmit="return confirm('Delete this vehicle?');">
+                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="ad-rveh-form-grow" onsubmit="return confirm('Delete this vehicle?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
+                        <button type="submit" class="ad-rveh-btn ad-rveh-btn-delete ad-rveh-btn-full">
                             Delete
                         </button>
                     </form>
                     @else
-                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="w-full" onsubmit="return confirm('Delete this customer-listed vehicle?');">
+                    <form action="{{ route('admin.rentals.vehicles.destroy', $vehicle) }}" method="POST" class="ad-rveh-form-full" onsubmit="return confirm('Delete this customer-listed vehicle?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
+                        <button type="submit" class="ad-rveh-btn ad-rveh-btn-delete ad-rveh-btn-full">
                             Delete Listing
                         </button>
                     </form>
@@ -114,13 +114,13 @@
             </div>
         </div>
         @empty
-        <div class="col-span-3 text-center py-12">
-            <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="ad-rveh-empty">
+            <svg class="ad-rveh-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
             </svg>
-            <p class="text-gray-500 text-lg">No rental vehicles added yet</p>
-            <button onclick="document.getElementById('addVehicleModal').classList.remove('hidden')" 
-                    class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+            <p class="ad-rveh-empty-text">No rental vehicles added yet</p>
+            <button onclick="document.getElementById('addVehicleModal').classList.remove('ad-hidden')" 
+                    class="ad-rveh-btn ad-rveh-btn-primary ad-rveh-empty-btn">
                 Add Your First Vehicle
             </button>
         </div>
@@ -129,57 +129,57 @@
 </div>
 
 <!-- Add Vehicle Modal -->
-<div id="addVehicleModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-800">Add Rental Vehicle</h2>
-            <button onclick="document.getElementById('addVehicleModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="addVehicleModal" class="ad-rveh-modal-overlay ad-hidden">
+    <div class="ad-rveh-modal ad-rveh-modal-lg">
+        <div class="ad-rveh-modal-head">
+            <h2 class="ad-rveh-modal-title">Add Rental Vehicle</h2>
+            <button onclick="document.getElementById('addVehicleModal').classList.add('ad-hidden')" class="ad-rveh-modal-close">
+                <svg class="ad-rveh-modal-close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
         
-        <form action="{{ route('admin.rentals.vehicles.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <form action="{{ route('admin.rentals.vehicles.store') }}" method="POST" enctype="multipart/form-data" class="ad-rveh-modal-form">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Vehicle Name *</label>
-                    <input type="text" name="vehicle_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <div class="ad-rveh-form-grid">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Vehicle Name *</label>
+                    <input type="text" name="vehicle_name" required class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Brand *</label>
-                    <input type="text" name="brand" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Brand *</label>
+                    <input type="text" name="brand" required class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Model *</label>
-                    <input type="text" name="model" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Model *</label>
+                    <input type="text" name="model" required class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Year *</label>
-                    <input type="number" name="year" required min="1900" max="{{ date('Y') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Year *</label>
+                    <input type="number" name="year" required min="1900" max="{{ date('Y') }}" class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Plate Number *</label>
-                    <input type="text" name="plate_number" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Plate Number *</label>
+                    <input type="text" name="plate_number" required class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Vehicle Type *</label>
-                    <select name="vehicle_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Vehicle Type *</label>
+                    <select name="vehicle_type" required class="ad-rveh-input">
                         <option value="Car">Car</option>
                         <option value="Bike">Bike</option>
                         <option value="SUV">SUV</option>
                     </select>
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Fuel Type *</label>
-                    <select name="fuel_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Fuel Type *</label>
+                    <select name="fuel_type" required class="ad-rveh-input">
                         <option value="Petrol">Petrol</option>
                         <option value="Diesel">Diesel</option>
                         <option value="Electric">Electric</option>
@@ -187,41 +187,41 @@
                     </select>
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Transmission *</label>
-                    <select name="transmission_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Transmission *</label>
+                    <select name="transmission_type" required class="ad-rveh-input">
                         <option value="Manual">Manual</option>
                         <option value="Automatic">Automatic</option>
                     </select>
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Daily Rate (Rs.) *</label>
-                    <input type="number" name="daily_rate" required min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Daily Rate (Rs.) *</label>
+                    <input type="number" name="daily_rate" required min="0" step="0.01" class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Security Deposit (Rs.)</label>
-                    <input type="number" name="security_deposit" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Security Deposit (Rs.)</label>
+                    <input type="number" name="security_deposit" min="0" step="0.01" class="ad-rveh-input">
                 </div>
                 
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 font-medium mb-2">Rental Rules</label>
-                    <textarea name="rental_rules" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                <div class="ad-rveh-field ad-rveh-span-2">
+                    <label class="ad-rveh-label">Rental Rules</label>
+                    <textarea name="rental_rules" rows="3" class="ad-rveh-input"></textarea>
                 </div>
                 
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 font-medium mb-2">Vehicle Image</label>
-                    <input type="file" name="vehicle_image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field ad-rveh-span-2">
+                    <label class="ad-rveh-label">Vehicle Image</label>
+                    <input type="file" name="vehicle_image" accept="image/*" class="ad-rveh-input">
                 </div>
             </div>
             
-            <div class="flex gap-4 mt-6">
-                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+            <div class="ad-rveh-modal-actions">
+                <button type="submit" class="ad-rveh-btn ad-rveh-btn-primary ad-rveh-btn-grow ad-rveh-btn-lg">
                     Add Vehicle
                 </button>
-                <button type="button" onclick="document.getElementById('addVehicleModal').classList.add('hidden')" 
-                        class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button type="button" onclick="document.getElementById('addVehicleModal').classList.add('ad-hidden')" 
+                        class="ad-rveh-btn ad-rveh-btn-ghost ad-rveh-btn-lg">
                     Cancel
                 </button>
             </div>
@@ -230,50 +230,50 @@
 </div>
 
 <!-- Edit Vehicle Modal -->
-<div id="editVehicleModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-md w-full">
-        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-800">Edit Vehicle</h2>
-            <button onclick="document.getElementById('editVehicleModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="editVehicleModal" class="ad-rveh-modal-overlay ad-hidden">
+    <div class="ad-rveh-modal ad-rveh-modal-sm">
+        <div class="ad-rveh-modal-head">
+            <h2 class="ad-rveh-modal-title">Edit Vehicle</h2>
+            <button onclick="document.getElementById('editVehicleModal').classList.add('ad-hidden')" class="ad-rveh-modal-close">
+                <svg class="ad-rveh-modal-close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
         
-        <form id="editVehicleForm" method="POST" class="p-6">
+        <form id="editVehicleForm" method="POST" class="ad-rveh-modal-form">
             @csrf
             @method('PUT')
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Vehicle Name *</label>
-                    <input type="text" id="edit_vehicle_name" name="vehicle_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <div class="ad-rveh-edit-stack">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Vehicle Name *</label>
+                    <input type="text" id="edit_vehicle_name" name="vehicle_name" required class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Daily Rate (Rs.) *</label>
-                    <input type="number" id="edit_daily_rate" name="daily_rate" required min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Daily Rate (Rs.) *</label>
+                    <input type="number" id="edit_daily_rate" name="daily_rate" required min="0" step="0.01" class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Security Deposit (Rs.)</label>
-                    <input type="number" id="edit_security_deposit" name="security_deposit" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-label">Security Deposit (Rs.)</label>
+                    <input type="number" id="edit_security_deposit" name="security_deposit" min="0" step="0.01" class="ad-rveh-input">
                 </div>
                 
-                <div>
-                    <label class="flex items-center">
-                        <input type="checkbox" id="edit_is_listed" name="is_listed_for_rent" value="1" class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
-                        <span class="ml-2 text-gray-700">Available for Rent</span>
+                <div class="ad-rveh-field">
+                    <label class="ad-rveh-checkbox-label">
+                        <input type="checkbox" id="edit_is_listed" name="is_listed_for_rent" value="1" class="ad-rveh-checkbox">
+                        <span class="ad-rveh-checkbox-text">Available for Rent</span>
                     </label>
                 </div>
             </div>
             
-            <div class="flex gap-4 mt-6">
-                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+            <div class="ad-rveh-modal-actions">
+                <button type="submit" class="ad-rveh-btn ad-rveh-btn-primary ad-rveh-btn-grow ad-rveh-btn-lg">
                     Update Vehicle
                 </button>
-                <button type="button" onclick="document.getElementById('editVehicleModal').classList.add('hidden')" 
-                        class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button type="button" onclick="document.getElementById('editVehicleModal').classList.add('ad-hidden')" 
+                        class="ad-rveh-btn ad-rveh-btn-ghost ad-rveh-btn-lg">
                     Cancel
                 </button>
             </div>
@@ -288,7 +288,7 @@ function editVehicle(id, name, dailyRate, securityDeposit, isListed) {
     document.getElementById('edit_daily_rate').value = dailyRate;
     document.getElementById('edit_security_deposit').value = securityDeposit;
     document.getElementById('edit_is_listed').checked = isListed;
-    document.getElementById('editVehicleModal').classList.remove('hidden');
+    document.getElementById('editVehicleModal').classList.remove('ad-hidden');
 }
 </script>
 @endsection

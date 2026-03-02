@@ -3,6 +3,7 @@
 @import './authentication/auth.css';
 @import './layout/layout.css';
 @import './customer/customer.css';
+@import './customer/components/navbar.css';
 @import './staff/staff.css';
 @import './admin/admin.css';
 

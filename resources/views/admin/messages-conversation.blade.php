@@ -1,44 +1,38 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Conversation Monitoring')
 
 @section('content')
-<div class="flex h-screen bg-gray-50 overflow-hidden">
-    <aside class="w-64 flex-shrink-0 z-30">
-        @include('components.admin-sidebar')
-    </aside>
-
-    <div class="flex-1 flex flex-col overflow-y-auto bg-gray-50 h-full w-full">
-        <main class="max-w-7xl w-full mx-auto p-6">
-            <div class="mb-6 mt-4">
-                <h1 class="text-3xl font-bold text-gray-900">Conversation Monitoring</h1>
-                <p class="text-gray-500 mt-1">Read-only view of customer and staff chat</p>
+<main class="ad-msgc-main">
+            <div class="ad-msgc-head">
+                <h1 class="ad-msgc-title">Conversation Monitoring</h1>
+                <p class="ad-msgc-subtitle">Read-only view of customer and staff chat</p>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 p-4 mb-6">
-                <form method="GET" action="{{ route('admin.messages.conversation', ['customer' => $customer->id, 'staff' => $staff->id]) }}" class="flex gap-4 items-end flex-wrap">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-                        <input type="date" name="date_from" value="{{ request('date_from') }}" class="rounded-lg border-gray-200" />
+            <div class="ad-msgc-filter-card">
+                <form method="GET" action="{{ route('admin.messages.conversation', ['customer' => $customer->id, 'staff' => $staff->id]) }}" class="ad-msgc-filter-form">
+                    <div class="ad-msgc-field">
+                        <label class="ad-msgc-label">From Date</label>
+                        <input type="date" name="date_from" value="{{ request('date_from') }}" class="ad-msgc-input" />
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-                        <input type="date" name="date_to" value="{{ request('date_to') }}" class="rounded-lg border-gray-200" />
+                    <div class="ad-msgc-field">
+                        <label class="ad-msgc-label">To Date</label>
+                        <input type="date" name="date_to" value="{{ request('date_to') }}" class="ad-msgc-input" />
                     </div>
-                    <button type="submit" class="px-6 py-2 bg-[#ff5a1f] text-white rounded-lg font-medium hover:bg-[#e64b15]">Filter</button>
-                    <a href="{{ route('admin.messages.conversation', ['customer' => $customer->id, 'staff' => $staff->id]) }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">Reset</a>
-                    <a href="{{ route('admin.messages') }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">Back</a>
+                    <button type="submit" class="ad-msgc-btn ad-msgc-btn-primary">Filter</button>
+                    <a href="{{ route('admin.messages.conversation', ['customer' => $customer->id, 'staff' => $staff->id]) }}" class="ad-msgc-btn ad-msgc-btn-muted">Reset</a>
+                    <a href="{{ route('admin.messages') }}" class="ad-msgc-btn ad-msgc-btn-muted">Back</a>
                 </form>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white">
-                            <h2 class="text-xl font-bold text-white">Conversations</h2>
+            <div class="ad-msgc-grid">
+                <div class="ad-msgc-list-col">
+                    <div class="ad-msgc-list-card">
+                        <div class="ad-msgc-list-head">
+                            <h2 class="ad-msgc-list-title">Conversations</h2>
                         </div>
 
-                        <div class="divide-y max-h-[600px] overflow-y-auto bg-white">
+                        <div class="ad-msgc-list-body">
                             @forelse($conversationList as $conversation)
                                 @php
                                     $listCustomer = $users[$conversation->customer_id] ?? null;
@@ -49,71 +43,71 @@
                                     $isActive = (int) $conversation->customer_id === (int) $customer->id && (int) $conversation->staff_id === (int) $staff->id;
                                 @endphp
                                 @if($listCustomer && $listStaff)
-                                    <a href="{{ route('admin.messages.conversation', ['customer' => $listCustomer->id, 'staff' => $listStaff->id]) }}" class="block p-4 hover:bg-orange-50 transition-colors border-l-4 {{ $isActive ? 'border-[#ff5a1f] bg-orange-50' : 'border-transparent' }}">
-                                        <div class="flex items-start gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-[#ff5a1f] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                    <a href="{{ route('admin.messages.conversation', ['customer' => $listCustomer->id, 'staff' => $listStaff->id]) }}" class="ad-msgc-list-item {{ $isActive ? 'is-active' : '' }}">
+                                        <div class="ad-msgc-list-row">
+                                            <div class="ad-msgc-avatar ad-msgc-avatar-small">
                                                 {{ strtoupper(substr($listCustomer->name ?? 'C', 0, 1)) }}
                                             </div>
-                                            <div class="min-w-0 flex-1">
-                                                <p class="font-bold text-gray-900 truncate">{{ $listCustomer->name }}</p>
-                                                <p class="text-xs text-gray-500 truncate">with {{ $listStaff->name }}</p>
-                                                <p class="text-xs text-gray-600 truncate mt-1">{{ $lastMessage?->message ?? 'No message preview' }}</p>
+                                            <div class="ad-msgc-list-content">
+                                                <p class="ad-msgc-name">{{ $listCustomer->name }}</p>
+                                                <p class="ad-msgc-with">with {{ $listStaff->name }}</p>
+                                                <p class="ad-msgc-snippet">{{ $lastMessage?->message ?? 'No message preview' }}</p>
                                             </div>
                                             @if((int) $conversation->unread_count > 0)
-                                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full flex-shrink-0">{{ (int) $conversation->unread_count }}</span>
+                                                <span class="ad-msgc-unread">{{ (int) $conversation->unread_count }}</span>
                                             @endif
                                         </div>
                                     </a>
                                 @endif
                             @empty
-                                <div class="p-8 text-center text-gray-500">
-                                    <p class="font-medium">No conversations yet</p>
+                                <div class="ad-msgc-empty">
+                                    <p class="ad-msgc-empty-text">No conversations yet</p>
                                 </div>
                             @endforelse
                         </div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full max-h-[700px]">
-                        <div class="p-6 bg-gradient-to-r from-[#ff5a1f] to-orange-500 text-white border-b">
-                            <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white font-bold text-lg">
+                <div class="ad-msgc-thread-col">
+                    <div class="ad-msgc-thread-card">
+                        <div class="ad-msgc-thread-head">
+                            <div class="ad-msgc-thread-head-row">
+                                <div class="ad-msgc-avatar ad-msgc-avatar-large ad-msgc-avatar-soft">
                                     {{ strtoupper(substr($customer->name ?? 'C', 0, 1)) }}
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-lg">{{ $customer->name }}</h3>
-                                    <p class="text-orange-100 text-sm">Customer ↔ {{ $staff->name }} (Staff)</p>
+                                    <h3 class="ad-msgc-thread-title">{{ $customer->name }}</h3>
+                                    <p class="ad-msgc-thread-subtitle">Customer ↔ {{ $staff->name }} (Staff)</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex-1 p-6 overflow-y-auto bg-gray-50" id="adminConversationContainer">
+                        <div class="ad-msgc-thread-body" id="adminConversationContainer">
                             @forelse($messages as $message)
                                 @php
                                     $isCustomer = (int) $message->sender_id === (int) $customer->id;
                                 @endphp
-                                <div class="mb-4 flex {{ $isCustomer ? 'justify-start' : 'justify-end' }}" data-message-id="{{ (int) $message->id }}">
-                                    <div class="max-w-xs lg:max-w-md">
-                                        <p class="text-xs font-semibold mb-1.5 {{ $isCustomer ? 'text-gray-900' : 'text-[#ff5a1f] text-right' }}">
+                                <div class="ad-msgc-message-row {{ $isCustomer ? 'is-customer' : 'is-staff' }}" data-message-id="{{ (int) $message->id }}">
+                                    <div class="ad-msgc-message-inner">
+                                        <p class="ad-msgc-message-author {{ $isCustomer ? 'is-customer' : 'is-staff' }}">
                                             {{ $isCustomer ? $customer->name : $staff->name }}
                                         </p>
-                                        <div class="px-4 py-3 rounded-2xl {{ $isCustomer ? 'bg-gray-200 text-gray-900 rounded-bl-none' : 'bg-[#ff5a1f] text-white rounded-br-none' }}">
-                                            <p class="break-words">{{ $message->message }}</p>
-                                            <p class="text-xs mt-2 {{ $isCustomer ? 'text-gray-600' : 'text-orange-50' }}">
+                                        <div class="ad-msgc-bubble {{ $isCustomer ? 'is-customer' : 'is-staff' }}">
+                                            <p class="ad-msgc-message-text">{{ $message->message }}</p>
+                                            <p class="ad-msgc-message-time {{ $isCustomer ? 'is-customer' : 'is-staff' }}">
                                                 {{ $message->created_at->format('M d, g:i A') }}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             @empty
-                                <div class="h-full flex items-center justify-center text-gray-500">
+                                <div class="ad-msgc-thread-empty">
                                     <p>No messages found for this conversation</p>
                                 </div>
                             @endforelse
                         </div>
 
-                        <div class="p-4 border-t bg-white text-sm text-gray-500">
+                        <div class="ad-msgc-thread-foot">
                             Monitoring mode: Admin can view messages only.
                         </div>
                     </div>
@@ -121,13 +115,11 @@
             </div>
 
             @if($messages->hasPages())
-                <div class="mt-6 px-2">
+                <div class="ad-msgc-pagination">
                     {{ $messages->links() }}
                 </div>
             @endif
-        </main>
-    </div>
-</div>
+</main>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -165,28 +157,23 @@
 
             const isCustomer = Number(payload.sender_id) === Number(customerId);
             const senderName = isCustomer ? customerName : staffName;
-            const wrapperClass = isCustomer ? 'justify-start' : 'justify-end';
-            const labelClass = isCustomer ? 'text-gray-900' : 'text-[#ff5a1f] text-right';
-            const bubbleClass = isCustomer
-                ? 'bg-gray-200 text-gray-900 rounded-bl-none'
-                : 'bg-[#ff5a1f] text-white rounded-br-none';
-            const timeClass = isCustomer ? 'text-gray-600' : 'text-orange-50';
+            const wrapperClass = isCustomer ? 'is-customer' : 'is-staff';
             const dateParts = formatDate(payload.created_at);
 
             const wrapper = document.createElement('div');
-            wrapper.className = `mb-4 flex ${wrapperClass}`;
+            wrapper.className = `ad-msgc-message-row ${wrapperClass}`;
             wrapper.dataset.messageId = String(payload.id);
             wrapper.innerHTML = `
-                <div class="max-w-xs lg:max-w-md">
-                    <p class="text-xs font-semibold mb-1.5 ${labelClass}">${senderName}</p>
-                    <div class="px-4 py-3 rounded-2xl ${bubbleClass}">
-                        <p class="break-words"></p>
-                        <p class="text-xs mt-2 ${timeClass}">${dateParts.day ?? ''} ${dateParts.time ?? ''}</p>
+                <div class="ad-msgc-message-inner">
+                    <p class="ad-msgc-message-author ${wrapperClass}">${senderName}</p>
+                    <div class="ad-msgc-bubble ${wrapperClass}">
+                        <p class="ad-msgc-message-text"></p>
+                        <p class="ad-msgc-message-time ${wrapperClass}">${dateParts.day ?? ''} ${dateParts.time ?? ''}</p>
                     </div>
                 </div>
             `;
 
-            const textNode = wrapper.querySelector('.break-words');
+            const textNode = wrapper.querySelector('.ad-msgc-message-text');
             if (textNode) {
                 textNode.textContent = payload.message ?? '';
             }

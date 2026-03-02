@@ -1,76 +1,76 @@
 <?php $__env->startSection('title', 'Transactions - AutoMate'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Transactions</h1>
-            <p class="text-gray-600">System income, failed payments, and payout transactions</p>
+<div class="ad-trx-page">
+    <div class="ad-trx-container">
+        <div class="ad-trx-head">
+            <h1 class="ad-trx-title">Transactions</h1>
+            <p class="ad-trx-subtitle">System income, failed payments, and payout transactions</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-4 mb-8">
-            <form method="GET" action="<?php echo e(route('admin.transactions')); ?>" class="flex flex-wrap gap-4 items-end">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-                    <input type="date" name="date_from" value="<?php echo e($dateFrom ?? request('date_from')); ?>" class="rounded-lg border-gray-300" />
+        <div class="ad-trx-filter-panel">
+            <form method="GET" action="<?php echo e(route('admin.transactions')); ?>" class="ad-trx-filter-form">
+                <div class="ad-trx-field">
+                    <label class="ad-trx-label">From Date</label>
+                    <input type="date" name="date_from" value="<?php echo e($dateFrom ?? request('date_from')); ?>" class="ad-trx-input" />
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-                    <input type="date" name="date_to" value="<?php echo e($dateTo ?? request('date_to')); ?>" class="rounded-lg border-gray-300" />
+                <div class="ad-trx-field">
+                    <label class="ad-trx-label">To Date</label>
+                    <input type="date" name="date_to" value="<?php echo e($dateTo ?? request('date_to')); ?>" class="ad-trx-input" />
                 </div>
-                <button type="submit" class="px-5 py-2 bg-[#ff5a1f] text-white rounded-lg font-semibold hover:opacity-90">Apply</button>
-                <a href="<?php echo e(route('admin.transactions')); ?>" class="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200">Reset</a>
-                <a href="<?php echo e(route('admin.transactions.export', ['date_from' => $dateFrom, 'date_to' => $dateTo])); ?>" class="px-5 py-2 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800">Export CSV</a>
+                <button type="submit" class="ad-trx-btn ad-trx-btn-primary">Apply</button>
+                <a href="<?php echo e(route('admin.transactions')); ?>" class="ad-trx-btn ad-trx-btn-ghost">Reset</a>
+                <a href="<?php echo e(route('admin.transactions.export', ['date_from' => $dateFrom, 'date_to' => $dateTo])); ?>" class="ad-trx-btn ad-trx-btn-dark">Export CSV</a>
             </form>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="text-gray-500 text-sm font-medium">Total Income</p>
-                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($totalIncome ?? 0), 2)); ?></h3>
+        <div class="ad-trx-stats-grid">
+            <div class="ad-trx-stat-card">
+                <p class="ad-trx-stat-label">Total Income</p>
+                <h3 class="ad-trx-stat-value">Rs. <?php echo e(number_format((float) ($totalIncome ?? 0), 2)); ?></h3>
             </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="text-gray-500 text-sm font-medium">Failed Transactions</p>
-                <h3 class="text-3xl font-bold text-gray-800 mt-2"><?php echo e(number_format(($failedPayments ?? collect())->count())); ?></h3>
-                <p class="text-xs text-red-600 mt-2">Amount: Rs. <?php echo e(number_format((float) ($totalFailedAmount ?? 0), 2)); ?></p>
+            <div class="ad-trx-stat-card">
+                <p class="ad-trx-stat-label">Failed Transactions</p>
+                <h3 class="ad-trx-stat-value"><?php echo e(number_format(($failedPayments ?? collect())->count())); ?></h3>
+                <p class="ad-trx-text-red ad-trx-stat-note">Amount: Rs. <?php echo e(number_format((float) ($totalFailedAmount ?? 0), 2)); ?></p>
             </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="text-gray-500 text-sm font-medium">Paid Out</p>
-                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($totalPayoutPaid ?? 0), 2)); ?></h3>
+            <div class="ad-trx-stat-card">
+                <p class="ad-trx-stat-label">Paid Out</p>
+                <h3 class="ad-trx-stat-value">Rs. <?php echo e(number_format((float) ($totalPayoutPaid ?? 0), 2)); ?></h3>
             </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="text-gray-500 text-sm font-medium">Pending Payout</p>
-                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <?php echo e(number_format((float) ($pendingPayoutAmount ?? 0), 2)); ?></h3>
-                <p class="text-xs text-gray-500 mt-2">Pending owner earnings: Rs. <?php echo e(number_format((float) ($ownerPendingEarnings ?? 0), 2)); ?></p>
+            <div class="ad-trx-stat-card">
+                <p class="ad-trx-stat-label">Pending Payout</p>
+                <h3 class="ad-trx-stat-value">Rs. <?php echo e(number_format((float) ($pendingPayoutAmount ?? 0), 2)); ?></h3>
+                <p class="ad-trx-stat-note">Pending owner earnings: Rs. <?php echo e(number_format((float) ($ownerPendingEarnings ?? 0), 2)); ?></p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-bold text-gray-900 mb-4">Income Transactions</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm">
+        <div class="ad-trx-grid-2 ad-trx-mb-8">
+            <div class="ad-trx-panel">
+                <h2 class="ad-trx-panel-title">Income Transactions</h2>
+                <div class="ad-trx-table-wrap">
+                    <table class="ad-trx-table">
                         <thead>
-                            <tr class="text-left text-gray-500 border-b">
-                                <th class="py-3 pr-4">Order</th>
-                                <th class="py-3 pr-4">Type</th>
-                                <th class="py-3 pr-4">Customer</th>
-                                <th class="py-3 pr-4">Amount</th>
-                                <th class="py-3 pr-4">Paid At</th>
+                            <tr>
+                                <th>Order</th>
+                                <th>Type</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Paid At</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php $__empty_1 = true; $__currentLoopData = $incomeTransactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                                <tr class="border-b last:border-0">
-                                    <td class="py-3 pr-4 text-gray-800 font-semibold"><?php echo e($payment->order_id); ?></td>
-                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(ucfirst(str_replace('_', ' ', $payment->type))); ?></td>
-                                    <td class="py-3 pr-4 text-gray-700"><?php echo e($payment->user->name ?? 'N/A'); ?></td>
-                                    <td class="py-3 pr-4 text-green-700 font-semibold">Rs. <?php echo e(number_format((float) $payment->amount, 2)); ?></td>
-                                    <td class="py-3 pr-4 text-gray-500"><?php echo e(optional($payment->paid_at ?? $payment->updated_at)->format('M d, Y h:i A')); ?></td>
+                                <tr>
+                                    <td class="ad-trx-strong"><?php echo e($payment->order_id); ?></td>
+                                    <td><?php echo e(ucfirst(str_replace('_', ' ', $payment->type))); ?></td>
+                                    <td><?php echo e($payment->user->name ?? 'N/A'); ?></td>
+                                    <td class="ad-trx-text-green ad-trx-strong">Rs. <?php echo e(number_format((float) $payment->amount, 2)); ?></td>
+                                    <td class="ad-trx-muted"><?php echo e(optional($payment->paid_at ?? $payment->updated_at)->format('M d, Y h:i A')); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
-                                    <td colspan="5" class="py-6 text-center text-gray-500">No paid transactions found.</td>
+                                    <td colspan="5" class="ad-trx-empty">No paid transactions found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -78,31 +78,31 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-bold text-gray-900 mb-4">Failed Transactions</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm">
+            <div class="ad-trx-panel">
+                <h2 class="ad-trx-panel-title">Failed Transactions</h2>
+                <div class="ad-trx-table-wrap">
+                    <table class="ad-trx-table">
                         <thead>
-                            <tr class="text-left text-gray-500 border-b">
-                                <th class="py-3 pr-4">Order</th>
-                                <th class="py-3 pr-4">Type</th>
-                                <th class="py-3 pr-4">Customer</th>
-                                <th class="py-3 pr-4">Amount</th>
-                                <th class="py-3 pr-4">Updated</th>
+                            <tr>
+                                <th>Order</th>
+                                <th>Type</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Updated</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php $__empty_1 = true; $__currentLoopData = $failedPayments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                                <tr class="border-b last:border-0">
-                                    <td class="py-3 pr-4 text-gray-800 font-semibold"><?php echo e($payment->order_id); ?></td>
-                                    <td class="py-3 pr-4 text-gray-700"><?php echo e(ucfirst(str_replace('_', ' ', $payment->type))); ?></td>
-                                    <td class="py-3 pr-4 text-gray-700"><?php echo e($payment->user->name ?? 'N/A'); ?></td>
-                                    <td class="py-3 pr-4 text-red-700 font-semibold">Rs. <?php echo e(number_format((float) $payment->amount, 2)); ?></td>
-                                    <td class="py-3 pr-4 text-gray-500"><?php echo e(optional($payment->updated_at)->format('M d, Y h:i A')); ?></td>
+                                <tr>
+                                    <td class="ad-trx-strong"><?php echo e($payment->order_id); ?></td>
+                                    <td><?php echo e(ucfirst(str_replace('_', ' ', $payment->type))); ?></td>
+                                    <td><?php echo e($payment->user->name ?? 'N/A'); ?></td>
+                                    <td class="ad-trx-text-red ad-trx-strong">Rs. <?php echo e(number_format((float) $payment->amount, 2)); ?></td>
+                                    <td class="ad-trx-muted"><?php echo e(optional($payment->updated_at)->format('M d, Y h:i A')); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
-                                    <td colspan="5" class="py-6 text-center text-gray-500">No failed transactions found.</td>
+                                    <td colspan="5" class="ad-trx-empty">No failed transactions found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -111,42 +111,41 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-4">Payout Transactions</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm">
+        <div class="ad-trx-panel">
+            <h2 class="ad-trx-panel-title">Payout Transactions</h2>
+            <div class="ad-trx-table-wrap">
+                <table class="ad-trx-table">
                     <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="py-3 pr-4">Owner</th>
-                            <th class="py-3 pr-4">Amount</th>
-                            <th class="py-3 pr-4">Status</th>
-                            <th class="py-3 pr-4">Requested</th>
-                            <th class="py-3 pr-4">Processed</th>
-                            <th class="py-3 pr-4">Processed By</th>
+                        <tr>
+                            <th>Owner</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Requested</th>
+                            <th>Processed</th>
+                            <th>Processed By</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $__empty_1 = true; $__currentLoopData = $payoutTransactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payout): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <tr class="border-b last:border-0">
-                                <td class="py-3 pr-4 text-gray-800 font-semibold"><?php echo e($payout->owner->name ?? 'N/A'); ?></td>
-                                <td class="py-3 pr-4 text-gray-700">Rs. <?php echo e(number_format((float) $payout->amount, 2)); ?></td>
-                                <td class="py-3 pr-4">
+                            <tr>
+                                <td class="ad-trx-strong"><?php echo e($payout->owner->name ?? 'N/A'); ?></td>
+                                <td>Rs. <?php echo e(number_format((float) $payout->amount, 2)); ?></td>
+                                <td>
                                     <?php
                                         $status = strtolower((string) $payout->status);
                                     ?>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                        <?php echo e($status === 'paid' ? 'bg-green-100 text-green-700' : ($status === 'rejected' ? 'bg-red-100 text-red-700' : ($status === 'approved' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'))); ?>">
+                                    <span class="ad-trx-badge <?php echo e($status === 'paid' ? 'ad-trx-badge-green' : ($status === 'rejected' ? 'ad-trx-badge-red' : ($status === 'approved' ? 'ad-trx-badge-blue' : 'ad-trx-badge-yellow'))); ?>">
                                         <?php echo e(ucfirst($status)); ?>
 
                                     </span>
                                 </td>
-                                <td class="py-3 pr-4 text-gray-500"><?php echo e(optional($payout->requested_at ?? $payout->created_at)->format('M d, Y h:i A')); ?></td>
-                                <td class="py-3 pr-4 text-gray-500"><?php echo e(optional($payout->processed_at)->format('M d, Y h:i A') ?? '-'); ?></td>
-                                <td class="py-3 pr-4 text-gray-700"><?php echo e(data_get($payout, 'processor.name', '-')); ?></td>
+                                <td class="ad-trx-muted"><?php echo e(optional($payout->requested_at ?? $payout->created_at)->format('M d, Y h:i A')); ?></td>
+                                <td class="ad-trx-muted"><?php echo e(optional($payout->processed_at)->format('M d, Y h:i A') ?? '-'); ?></td>
+                                <td><?php echo e(data_get($payout, 'processor.name', '-')); ?></td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="6" class="py-6 text-center text-gray-500">No payout transactions found.</td>
+                                <td colspan="6" class="ad-trx-empty">No payout transactions found.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

@@ -1,0 +1,28 @@
+.sf-card,
+.sf-work,
+.sf-auth-card,
+.sf-book-stat-card,
+.sf-book-panel,
+.sf-cus-card,
+.sf-cus-empty,
+.sf-inv-stat-card,
+.sf-inv-panel,
+.sf-msg-sidebar,
+.sf-msg-chat-shell,
+.sf-prof-account-card,
+.sf-prof-form-card,
+.sf-ridx-stat,
+.sf-ridx-card,
+.sf-ridx-meta-card,
+.sf-rins-vehicle-card,
+.sf-rins-form-card,
+.sf-slog-stat-card,
+.sf-slog-filter-panel,
+.sf-slog-panel,
+.sf-svcshow-quick-card,
+.sf-svcshow-card {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}

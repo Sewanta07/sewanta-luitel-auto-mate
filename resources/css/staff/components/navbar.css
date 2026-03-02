@@ -1,0 +1,237 @@
+.sf-topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.sf-topnav-container {
+    width: min(80rem, calc(100% - 2rem));
+    margin-inline: auto;
+}
+
+.sf-topnav-row {
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sf-topnav-brand-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.sf-topnav-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.sf-topnav-brand-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #ff5a1f;
+}
+
+.sf-topnav-brand-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.sf-topnav-brand-accent {
+    color: #ff5a1f;
+}
+
+.sf-topnav-brand-tag {
+    margin-left: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.sf-topnav-menu {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .sf-topnav-menu {
+        display: flex;
+    }
+}
+
+.sf-topnav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sf-topnav-link:hover {
+    background: #f3f4f6;
+}
+
+.sf-topnav-link-active {
+    color: #ff5a1f;
+    background: #fff7ed;
+}
+
+.sf-topnav-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    padding: 0 0.25rem;
+    border-radius: 9999px;
+    background: #ff5a1f;
+    color: #ffffff;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.sf-topnav-pill-danger {
+    background: #ef4444;
+}
+
+.sf-topnav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sf-topnav-profile-link {
+    display: none;
+    align-items: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.sf-topnav-profile-link:hover {
+    background: #f3f4f6;
+}
+
+@media (min-width: 768px) {
+    .sf-topnav-profile-link {
+        display: inline-flex;
+    }
+}
+
+.sf-topnav-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    border: 1px solid #bfdbfe;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.sf-topnav-divider {
+    width: 1px;
+    height: 1.5rem;
+    margin-inline: 0.25rem;
+    background: #e5e7eb;
+}
+
+.sf-topnav-logout {
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: #9ca3af;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sf-topnav-logout:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.sf-topnav-logout-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.sf-topnav-mobile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: #374151;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sf-topnav-mobile-btn:hover {
+    background: #f3f4f6;
+}
+
+@media (min-width: 768px) {
+    .sf-topnav-mobile-btn {
+        display: none;
+    }
+}
+
+.sf-topnav-mobile-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.sf-topnav-mobile-menu {
+    display: none;
+    padding: 0.75rem 1rem;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 767px) {
+    .sf-topnav-mobile-menu {
+        display: grid;
+        gap: 0.5rem;
+    }
+}
+
+.sf-topnav-mobile-link {
+    display: block;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.sf-topnav-mobile-link:hover {
+    background: #f3f4f6;
+}

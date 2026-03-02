@@ -5,36 +5,35 @@
 @section('content')
 @include('components.staff-navbar')
 
-<div class="min-h-screen bg-gray-50 pb-12">
-    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {{-- Page Header --}}
-        <div class="mb-8 mt-4">
-            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p class="mt-2 text-lg text-gray-600">Manage your profile information and credentials.</p>
+<div class="sf-prof-page">
+    <main class="sf-prof-main">
+        <div class="sf-prof-head">
+            <h1 class="sf-prof-title">My Profile</h1>
+            <p class="sf-prof-subtitle">Manage your profile information and credentials.</p>
         </div>
 
         @if(session('success'))
-            <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <div class="sf-prof-flash sf-prof-flash-success">
+                <div class="sf-prof-flash-row">
+                    <div class="sf-prof-flash-icon-wrap">
+                        <svg class="sf-prof-flash-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-700">{{ session('success') }}</p>
+                    <div class="sf-prof-flash-copy-wrap">
+                        <p class="sf-prof-flash-copy">{{ session('success') }}</p>
                     </div>
                 </div>
             </div>
         @endif
 
         @if($errors->any())
-            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+            <div class="sf-prof-flash sf-prof-flash-error">
+                <div class="sf-prof-flash-row">
+                    <div class="sf-prof-flash-icon-wrap">
+                        <svg class="sf-prof-flash-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
-                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                    <div class="sf-prof-flash-copy-wrap">
+                        <h3 class="sf-prof-error-title">There were errors with your submission</h3>
+                        <ul class="sf-prof-error-list">
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -44,113 +43,109 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column: Profile Card & Credentials -->
-            <div class="space-y-6">
-                 <!-- Account Info Card -->
-                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-6 text-center">
-                        <div class="inline-block relative">
-                            <div class="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden mx-auto mb-4 bg-gray-100 flex items-center justify-center">
+        <div class="sf-prof-grid">
+            <div class="sf-prof-left-col">
+                 <div class="sf-prof-account-card">
+                    <div class="sf-prof-account-main">
+                        <div class="sf-prof-avatar-wrap">
+                            <div class="sf-prof-avatar">
                                 @if($staff->profile_image)
-                                    <img src="{{ asset('storage/' . $staff->profile_image) }}" alt="Profile" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $staff->profile_image) }}" alt="Profile" class="sf-prof-avatar-img">
                                 @else
-                                    <span class="text-4xl font-bold text-[#ff5a1f]">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
+                                    <span class="sf-prof-avatar-initial">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
                                 @endif
                             </div>
                         </div>
-                        <h2 class="text-xl font-bold text-gray-900">{{ $staff->name }}</h2>
-                        <p class="text-sm text-gray-500 mb-2">{{ $staff->email }}</p>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <h2 class="sf-prof-name">{{ $staff->name }}</h2>
+                        <p class="sf-prof-email">{{ $staff->email }}</p>
+                        <span class="sf-prof-role-badge">
                             {{ ucfirst($staff->role ?? 'Staff') }}
                         </span>
                     </div>
-                    <div class="border-t border-gray-100 p-6 bg-gray-50">
-                        <h3 class="text-sm font-medium text-gray-900 mb-4">Account Details</h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Staff ID</span>
-                                <span class="font-mono font-medium text-gray-900">#{{ $staff->id }}</span>
+                    <div class="sf-prof-account-details">
+                        <h3 class="sf-prof-account-title">Account Details</h3>
+                        <div class="sf-prof-detail-list">
+                            <div class="sf-prof-detail-row">
+                                <span class="sf-prof-detail-key">Staff ID</span>
+                                <span class="sf-prof-detail-value sf-prof-detail-mono">#{{ $staff->id }}</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Position</span>
-                                <span class="font-medium text-gray-900">{{ $staff->position ?? 'Not set' }}</span>
+                            <div class="sf-prof-detail-row">
+                                <span class="sf-prof-detail-key">Position</span>
+                                <span class="sf-prof-detail-value">{{ $staff->position ?? 'Not set' }}</span>
                             </div>
-                             <div class="flex justify-between">
-                                <span class="text-gray-500">Experience</span>
-                                <span class="font-medium text-gray-900">{{ $staff->experience ?? 'Not set' }}</span>
+                             <div class="sf-prof-detail-row">
+                                <span class="sf-prof-detail-key">Experience</span>
+                                <span class="sf-prof-detail-value">{{ $staff->experience ?? 'Not set' }}</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Joined</span>
-                                <span class="font-medium text-gray-900">{{ $staff->created_at->format('M Y') }}</span>
+                            <div class="sf-prof-detail-row">
+                                <span class="sf-prof-detail-key">Joined</span>
+                                <span class="sf-prof-detail-value">{{ $staff->created_at->format('M Y') }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Edit Forms -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Edit Profile Form -->
-                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900">Edit Profile</h3>
+            <div class="sf-prof-right-col">
+                 <div class="sf-prof-form-card">
+                    <div class="sf-prof-form-card-head">
+                        <h3 class="sf-prof-form-card-title">Edit Profile</h3>
                     </div>
-                    <div class="p-6">
-                        <form method="POST" action="{{ route('staff.profile.update') }}" enctype="multipart/form-data" class="space-y-6">
+                    <div class="sf-prof-form-card-body">
+                        <form method="POST" action="{{ route('staff.profile.update') }}" enctype="multipart/form-data" class="sf-prof-form">
                             @csrf
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200" id="preview-container">
+                                <label class="sf-prof-label">Profile Photo</label>
+                                <div class="sf-prof-photo-row">
+                                    <div class="sf-prof-photo-preview" id="preview-container">
                                         @if($staff->profile_image)
-                                            <img src="{{ asset('storage/' . $staff->profile_image) }}" id="profile-preview" class="w-full h-full object-cover">
+                                            <img src="{{ asset('storage/' . $staff->profile_image) }}" id="profile-preview" class="sf-prof-photo-preview-img">
                                         @else
-                                            <svg class="h-8 w-8 text-gray-400" id="profile-placeholder" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                                            <svg class="sf-prof-photo-placeholder" id="profile-placeholder" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                                         @endif
                                     </div>
-                                    <div class="flex-1">
-                                        <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(this)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-[#ff5a1f] hover:file:bg-orange-100 transition">
-                                        <p class="mt-1 text-xs text-gray-500">JPG, GIF or PNG. Max size 2MB.</p>
+                                    <div class="sf-prof-photo-upload-wrap">
+                                        <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(this)" class="sf-prof-file-input">
+                                        <p class="sf-prof-help-text">JPG, GIF or PNG. Max size 2MB.</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="sf-prof-field-grid">
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                                    <input type="text" id="name" name="name" value="{{ old('name', $staff->name) }}" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <label for="name" class="sf-prof-label">Full Name</label>
+                                    <input type="text" id="name" name="name" value="{{ old('name', $staff->name) }}" required class="sf-prof-input">
                                 </div>
 
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                                    <input type="email" id="email" name="email" value="{{ old('email', $staff->email) }}" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <label for="email" class="sf-prof-label">Email Address</label>
+                                    <input type="email" id="email" name="email" value="{{ old('email', $staff->email) }}" required class="sf-prof-input">
                                 </div>
 
                                 <div>
-                                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                    <input type="tel" id="phone" name="phone" value="{{ old('phone', $staff->phone) }}" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <label for="phone" class="sf-prof-label">Phone</label>
+                                    <input type="tel" id="phone" name="phone" value="{{ old('phone', $staff->phone) }}" class="sf-prof-input">
                                 </div>
 
                                 <div>
-                                    <label for="position" class="block text-sm font-medium text-gray-700">Position</label>
-                                    <input type="text" id="position" name="position" value="{{ old('position', $staff->position) }}" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <label for="position" class="sf-prof-label">Position</label>
+                                    <input type="text" id="position" name="position" value="{{ old('position', $staff->position) }}" class="sf-prof-input">
                                 </div>
 
                                 <div>
-                                    <label for="experience" class="block text-sm font-medium text-gray-700">Experience</label>
-                                    <input type="text" id="experience" name="experience" value="{{ old('experience', $staff->experience) }}" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">
+                                    <label for="experience" class="sf-prof-label">Experience</label>
+                                    <input type="text" id="experience" name="experience" value="{{ old('experience', $staff->experience) }}" class="sf-prof-input">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="current_address" class="block text-sm font-medium text-gray-700">Current Address</label>
-                                <textarea id="current_address" name="current_address" rows="3" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 border">{{ old('current_address', $staff->current_address) }}</textarea>
+                                <label for="current_address" class="sf-prof-label">Current Address</label>
+                                <textarea id="current_address" name="current_address" rows="3" class="sf-prof-input sf-prof-textarea">{{ old('current_address', $staff->current_address) }}</textarea>
                             </div>
 
-                            <div class="flex justify-end">
-                                <button type="submit" class="inline-flex justify-center rounded-xl border border-transparent bg-[#ff5a1f] py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-[#e64b15] focus:outline-none focus:ring-2 focus:ring-[#ff5a1f] focus:ring-offset-2 transition-colors">
+                            <div class="sf-prof-actions-right">
+                                <button type="submit" class="sf-prof-btn sf-prof-btn-primary">
                                     Save Changes
                                 </button>
                             </div>
@@ -158,43 +153,42 @@
                     </div>
                 </div>
 
-                <!-- Change Password Form -->
-                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900">Change Password</h3>
+                 <div class="sf-prof-form-card">
+                    <div class="sf-prof-form-card-head">
+                        <h3 class="sf-prof-form-card-title">Change Password</h3>
                     </div>
-                    <div class="p-6">
-                        <form method="POST" action="{{ route('staff.profile.password') }}" class="space-y-6">
+                    <div class="sf-prof-form-card-body">
+                        <form method="POST" action="{{ route('staff.profile.password') }}" class="sf-prof-form">
                             @csrf
                             
                             <div>
-                                <label for="current_password" class="block text-sm font-medium text-gray-700">Current Password</label>
-                                <div class="relative mt-1">
-                                    <input type="password" id="current_password" name="current_password" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
-                                    <button type="button" onclick="togglePasswordVisibility('current_password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                <label for="current_password" class="sf-prof-label">Current Password</label>
+                                <div class="sf-prof-password-wrap">
+                                    <input type="password" id="current_password" name="current_password" required class="sf-prof-input sf-prof-password-input">
+                                    <button type="button" onclick="togglePasswordVisibility('current_password', this)" class="sf-prof-password-toggle">Show</button>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="sf-prof-field-grid">
                                 <div>
-                                    <label for="password" class="block text-sm font-medium text-gray-700">New Password</label>
-                                    <div class="relative mt-1">
-                                        <input type="password" id="password" name="password" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
-                                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                    <label for="password" class="sf-prof-label">New Password</label>
+                                    <div class="sf-prof-password-wrap">
+                                        <input type="password" id="password" name="password" required class="sf-prof-input sf-prof-password-input">
+                                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="sf-prof-password-toggle">Show</button>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                                    <div class="relative mt-1">
-                                        <input type="password" id="password_confirmation" name="password_confirmation" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-[#ff5a1f] focus:ring-[#ff5a1f] sm:text-sm p-3 pr-20 border">
-                                        <button type="button" onclick="togglePasswordVisibility('password_confirmation', this)" class="absolute inset-y-0 right-3 my-auto text-xs font-semibold text-gray-500 hover:text-[#ff5a1f] transition">Show</button>
+                                    <label for="password_confirmation" class="sf-prof-label">Confirm New Password</label>
+                                    <div class="sf-prof-password-wrap">
+                                        <input type="password" id="password_confirmation" name="password_confirmation" required class="sf-prof-input sf-prof-password-input">
+                                        <button type="button" onclick="togglePasswordVisibility('password_confirmation', this)" class="sf-prof-password-toggle">Show</button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flex justify-end">
-                                <button type="submit" class="inline-flex justify-center rounded-xl border border-gray-300 bg-white py-2 px-6 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#ff5a1f] focus:ring-offset-2 transition-colors">
+                            <div class="sf-prof-actions-right">
+                                <button type="submit" class="sf-prof-btn sf-prof-btn-secondary">
                                     Update Password
                                 </button>
                             </div>
@@ -224,7 +218,7 @@ function previewImage(input) {
         const reader = new FileReader();
         
         reader.onload = function(e) {
-            container.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            container.innerHTML = '<img src="' + e.target.result + '" class="sf-prof-photo-preview-img">';
         };
         
         reader.readAsDataURL(file);

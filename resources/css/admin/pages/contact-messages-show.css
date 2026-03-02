@@ -1,0 +1,271 @@
+.ad-cmsgs-page {
+  padding: 1.5rem;
+}
+
+.ad-cmsgs-main {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.ad-cmsgs-head {
+  margin: 1rem 0 2rem;
+}
+
+.ad-cmsgs-crumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.ad-cmsgs-crumb-link {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.ad-cmsgs-crumb-link:hover {
+  color: #ff5a1f;
+}
+
+.ad-cmsgs-crumb-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #9ca3af;
+}
+
+.ad-cmsgs-title {
+  margin: 0;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ad-cmsgs-flash {
+  margin-bottom: 1.5rem;
+  border: 1px solid #d1fae5;
+  border-radius: 0.75rem;
+  background: #f0fdf4;
+  padding: 1rem;
+}
+
+.ad-cmsgs-flash-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ad-cmsgs-flash-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4ade80;
+}
+
+.ad-cmsgs-flash-text {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #166534;
+}
+
+.ad-cmsgs-card,
+.ad-cmsgs-actions {
+  border: 1px solid #f3f4f6;
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ad-cmsgs-card {
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.ad-cmsgs-card-head {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.ad-cmsgs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ad-cmsgs-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ad-cmsgs-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff5a1f;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.ad-cmsgs-author-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ad-cmsgs-author-email {
+  margin: 0.125rem 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.ad-cmsgs-meta {
+  text-align: right;
+}
+
+.ad-cmsgs-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ad-cmsgs-badge-new {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.ad-cmsgs-badge-read {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.ad-cmsgs-badge-replied {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ad-cmsgs-date {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.ad-cmsgs-body {
+  padding: 2rem 1.5rem;
+}
+
+.ad-cmsgs-section {
+  margin-bottom: 1.5rem;
+}
+
+.ad-cmsgs-section:last-child {
+  margin-bottom: 0;
+}
+
+.ad-cmsgs-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.ad-cmsgs-subject {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.ad-cmsgs-message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+.ad-cmsgs-actions {
+  padding: 1.5rem;
+}
+
+.ad-cmsgs-actions-title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ad-cmsgs-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ad-cmsgs-inline-form {
+  display: inline-flex;
+}
+
+.ad-cmsgs-select {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #fff;
+}
+
+.ad-cmsgs-select:focus {
+  outline: 2px solid transparent;
+  border-color: #ff5a1f;
+  box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.2);
+}
+
+.ad-cmsgs-btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.ad-cmsgs-btn-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.ad-cmsgs-btn-primary {
+  background: #ff5a1f;
+  color: #fff;
+}
+
+.ad-cmsgs-btn-primary:hover {
+  background: #e64b15;
+}
+
+.ad-cmsgs-btn-danger {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.ad-cmsgs-btn-danger:hover {
+  background: #fee2e2;
+}

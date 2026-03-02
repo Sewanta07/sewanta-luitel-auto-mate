@@ -1,0 +1,96 @@
+.ad-staffapps-empty-icon-wrap {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    color: #d1d5db;
+}
+
+.ad-staffapps-empty-icon-wrap svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ad-staffapps-avatar {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.ad-staffapps-status-badge {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.ad-staffapps-role-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ad-staffapps-role-input {
+    display: block;
+    width: 8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #111827;
+    background: #fff;
+}
+
+.ad-staffapps-role-input:focus {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    border-color: #a5b4fc;
+}
+
+.ad-staffapps-actions-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.ad-staffapps-action-save {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #4f46e5;
+}
+
+.ad-staffapps-action-save:hover {
+    color: #312e81;
+}
+
+.ad-staffapps-action-approve {
+    color: #16a34a;
+}
+
+.ad-staffapps-action-approve:hover {
+    color: #166534;
+}
+
+.ad-staffapps-action-reject {
+    color: #ef4444;
+}
+
+.ad-staffapps-action-reject:hover {
+    color: #b91c1c;
+}
+
+.ad-staffapps-delete-btn {
+    border: 0;
+    padding: 0;
+    color: #9ca3af;
+    cursor: pointer;
+    background: transparent;
+    transition: color 0.2s ease;
+}
+
+.ad-staffapps-delete-btn:hover {
+    color: #4b5563;
+}
+
+.ad-staffapps-delete-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
