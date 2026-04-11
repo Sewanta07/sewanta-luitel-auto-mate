@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Test users are created via dedicated seeders for each role
+        $this->call(AdminSeeder::class);
     }
 }

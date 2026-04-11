@@ -1,0 +1,59 @@
+{
+  "resources/css/admin-core.css": {
+    "file": "assets/admin-core-D9sgv5xw.css",
+    "src": "resources/css/admin-core.css",
+    "isEntry": true,
+    "name": "admin-core",
+    "names": [
+      "admin-core.css"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-DAsYhkqy.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/customer-core.css": {
+    "file": "assets/customer-core-CFjVP7Ge.css",
+    "src": "resources/css/customer-core.css",
+    "isEntry": true,
+    "name": "customer-core",
+    "names": [
+      "customer-core.css"
+    ]
+  },
+  "resources/css/public-core.css": {
+    "file": "assets/public-core-DlH6cav-.css",
+    "src": "resources/css/public-core.css",
+    "isEntry": true,
+    "name": "public-core",
+    "names": [
+      "public-core.css"
+    ]
+  },
+  "resources/css/staff-core.css": {
+    "file": "assets/staff-core-CMLXnzM1.css",
+    "src": "resources/css/staff-core.css",
+    "isEntry": true,
+    "name": "staff-core",
+    "names": [
+      "staff-core.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-iQPYxswQ.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/customer-core.js": {
+    "file": "assets/customer-core-l0sNRNKZ.js",
+    "name": "customer-core",
+    "src": "resources/js/customer-core.js",
+    "isEntry": true
+  }
+}

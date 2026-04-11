@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: laravel-app
+    env: php
+    buildCommand: ./render-build.sh
+    startCommand: ./render-start.sh
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://your-app-name.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: your-db-host
+      - key: DB_PORT
+        value: your-db-port
+      - key: DB_DATABASE
+        value: your-db-name
+      - key: DB_USERNAME
+        value: your-db-user
+      - key: DB_PASSWORD
+        value: your-db-password

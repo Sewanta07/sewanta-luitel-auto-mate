@@ -97,7 +97,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY') ?: (function() {
+        \Log::warning('APP_KEY is missing. Please set it in your environment file.');
+        return '';
+    })(),
 
     'previous_keys' => [
         ...array_filter(
