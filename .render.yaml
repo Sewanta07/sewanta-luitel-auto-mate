@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: laravel-app
+    name: automate
     env: php
     buildCommand: ./render-build.sh
     startCommand: ./render-start.sh
@@ -11,7 +11,7 @@ services:
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://your-app-name.onrender.com
+        value: https://automate.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
