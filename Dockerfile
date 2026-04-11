@@ -3,10 +3,10 @@ FROM php:8.2-fpm
 
 # Install system dependencies and Node.js
 RUN apt-get update \
-    && apt-get install -y git unzip libzip-dev libpng-dev libonig-dev libxml2-dev curl \
+    && apt-get install -y git unzip libzip-dev libpng-dev libonig-dev libxml2-dev curl libpq-dev \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
-    && docker-php-ext-install pdo pdo_mysql zip gd
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql zip gd
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
