@@ -1,0 +1,54 @@
+# Laravel + Vite for Render (PHP built-in server)
+FROM php:8.2-cli-bookworm
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        git unzip curl libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+        libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql mbstring exif pcntl bcmath gd zip opcache \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY . .
+
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+RUN npm ci
+
+# Render passes service env vars as Docker build-args when ARG names match (see Render Docker docs).
+ARG APP_NAME="AutoMate"
+ARG REVERB_APP_KEY=""
+ARG REVERB_HOST=""
+ARG REVERB_SCHEME="https"
+ARG REVERB_PORT="443"
+ARG VITE_REVERB_APP_KEY=""
+ARG VITE_REVERB_HOST=""
+ARG VITE_REVERB_PORT="443"
+ARG VITE_REVERB_SCHEME="https"
+RUN export VITE_APP_NAME="${APP_NAME}" && \
+    export VITE_REVERB_APP_KEY="${VITE_REVERB_APP_KEY:-$REVERB_APP_KEY}" && \
+    export VITE_REVERB_HOST="${VITE_REVERB_HOST:-$REVERB_HOST}" && \
+    export VITE_REVERB_PORT="${VITE_REVERB_PORT:-443}" && \
+    export VITE_REVERB_SCHEME="${VITE_REVERB_SCHEME:-https}" && \
+    npm run build && \
+    npm prune --omit=dev
+
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+EXPOSE 8000
+
+# RENDER_EXTERNAL_URL is set by Render; use it for APP_URL when present
+CMD /bin/sh -c '\
+  if [ -n "$RENDER_EXTERNAL_URL" ]; then export APP_URL="$RENDER_EXTERNAL_URL"; fi && \
+  php artisan storage:link --force 2>/dev/null || true && \
+  php artisan config:cache && \
+  php artisan migrate --force && \
+  exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"'

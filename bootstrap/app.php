@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'multi.auth' => \App\Http\Middleware\CheckMultiGuardAuth::class,
             'check.staff.status' => \App\Http\Middleware\CheckStaffStatus::class,

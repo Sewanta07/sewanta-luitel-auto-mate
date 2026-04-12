@@ -1,13 +1,3 @@
-// === TEMPORARY DIAGNOSTIC ROUTE ===
-Route::get('/view-paths-diagnostic', function () {
-    return response()->json([
-        'view_paths' => config('view.paths'),
-        'base_path' => base_path(),
-        'cwd' => getcwd(),
-        'dir' => __DIR__,
-        'files_in_views' => is_dir(base_path('resources/views')) ? scandir(base_path('resources/views')) : 'NOT FOUND',
-    ]);
-});
 <?php
 
 use Illuminate\Support\Facades\Route;
