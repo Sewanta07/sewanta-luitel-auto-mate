@@ -24,7 +24,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
 # Set permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache resources/views
 
 # Expose port 8000 and start Laravel with migrations and cache commands at container startup
 EXPOSE 8000
