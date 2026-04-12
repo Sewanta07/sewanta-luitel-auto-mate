@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" href="{{ asset('assets/branding/company-logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/branding/favicon.png') }}">
 
     <title>@yield('title', 'AutoMate - Smart Vehicle Service Management')</title>
 
