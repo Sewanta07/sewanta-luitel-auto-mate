@@ -44,7 +44,8 @@ RUN export VITE_APP_NAME="${APP_NAME}" && \
 RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs \
     bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 777 storage bootstrap/cache
 
 # Defaults when Render omits these (Laravel's config defaults to database for session/cache without .env)
 ENV SESSION_DRIVER=file \
