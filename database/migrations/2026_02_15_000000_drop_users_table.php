@@ -14,7 +14,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Drop the users table (PostgreSQL does not need foreign key checks disabled)
+        // Drop foreign keys referencing users
+        if (Schema::hasTable('vehicles')) {
+            Schema::table('vehicles', function (Blueprint $table) {
+                try { $table->dropForeign(['rented_by_user_id']); } catch (\Exception $e) {}
+            });
+        }
+        if (Schema::hasTable('messages')) {
+            Schema::table('messages', function (Blueprint $table) {
+                try { $table->dropForeign(['sender_id']); } catch (\Exception $e) {}
+                try { $table->dropForeign(['receiver_id']); } catch (\Exception $e) {}
+            });
+        }
+
+        // Now drop the users table
         Schema::dropIfExists('users');
     }
 
