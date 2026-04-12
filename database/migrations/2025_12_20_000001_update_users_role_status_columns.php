@@ -1,7 +1,8 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -10,13 +11,15 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::hasTable('users')) {
-            // Ensure role is ENUM with expected values/default.
-            DB::statement("ALTER TABLE users MODIFY role ENUM('admin','staff','customer') NOT NULL DEFAULT 'customer'");
+            Schema::table('users', function (Blueprint $table) {
+                // Change role to string with default
+                $table->string('role')->default('customer')->change();
 
-            // Add status column if missing.
-            if (!Schema::hasColumn('users', 'status')) {
-                DB::statement("ALTER TABLE users ADD COLUMN status ENUM('active','pending','rejected') NOT NULL DEFAULT 'active' AFTER role");
-            }
+                // Add status column if missing
+                if (!Schema::hasColumn('users', 'status')) {
+                    $table->string('status')->default('active');
+                }
+            });
         }
     }
 
@@ -24,13 +27,13 @@ return new class extends Migration
     public function down(): void
     {
         if (Schema::hasTable('users')) {
-            // Revert status column if it exists.
-            if (Schema::hasColumn('users', 'status')) {
-                DB::statement("ALTER TABLE users DROP COLUMN status");
-            }
-
-            // Revert role to a simple string if needed.
-            DB::statement("ALTER TABLE users MODIFY role VARCHAR(191) NOT NULL DEFAULT 'customer'");
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'status')) {
+                    $table->dropColumn('status');
+                }
+                // Optionally revert role to previous type if needed
+                $table->string('role')->default('customer')->change();
+            });
         }
     }
 };
