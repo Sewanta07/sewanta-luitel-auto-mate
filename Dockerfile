@@ -23,6 +23,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Install Node dependencies and build assets
 RUN npm install && npm run build
 
+# Diagnostic: List resources/views contents for debugging
+RUN ls -lR resources/views
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache resources/views
 
