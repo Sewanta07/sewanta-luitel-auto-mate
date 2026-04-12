@@ -199,13 +199,13 @@ class DashboardController extends Controller
             ->get();
 
         $startMonth = now()->subMonths(5)->startOfMonth();
-        $monthlyServiceTotals = ServiceBooking::selectRaw("DATE_FORMAT(updated_at, '%Y-%m') as month_key, COUNT(*) as total")
+        $monthlyServiceTotals = ServiceBooking::selectRaw("TO_CHAR(updated_at, 'YYYY-MM') as month_key, COUNT(*) as total")
             ->where('status', 'Completed')
             ->where('updated_at', '>=', $startMonth)
             ->groupBy('month_key')
             ->pluck('total', 'month_key');
 
-        $monthlyRevenueTotals = Payment::selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as month_key, SUM(amount) as total")
+        $monthlyRevenueTotals = Payment::selectRaw("TO_CHAR(paid_at, 'YYYY-MM') as month_key, SUM(amount) as total")
             ->where('status', 'paid')
             ->whereNotNull('paid_at')
             ->where('paid_at', '>=', $startMonth)
@@ -335,7 +335,7 @@ class DashboardController extends Controller
             : 0.0;
 
         $startMonth = now()->subMonths(5)->startOfMonth();
-        $monthlyTotals = Payment::selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as month_key, SUM(amount) as total")
+        $monthlyTotals = Payment::selectRaw("TO_CHAR(paid_at, 'YYYY-MM') as month_key, SUM(amount) as total")
             ->where('status', 'paid')
             ->whereNotNull('paid_at')
             ->where('paid_at', '>=', $startMonth)
