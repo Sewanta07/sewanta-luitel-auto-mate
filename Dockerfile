@@ -27,7 +27,6 @@ RUN npm install && npm run build
 RUN ls -lR resources/views
 # Diagnostic: Print resource_path('views') and list its contents
 RUN echo "\n\n=== RESOURCE_PATH DIAGNOSTIC ===" \
-    && php -r "echo 'resource_path: ' . resource_path('views') . PHP_EOL;" \
     && ls -l "/var/www/resources/views" \
     && echo "=== END RESOURCE_PATH DIAGNOSTIC ===\n\n"
 # Set permissions
