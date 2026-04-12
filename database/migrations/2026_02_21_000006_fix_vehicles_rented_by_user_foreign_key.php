@@ -10,9 +10,24 @@ return new class extends Migration
     public function up(): void
     {
         // Drop the foreign key using Laravel's schema builder
-        Schema::table('vehicles', function (Blueprint $table) {
-            try { $table->dropForeign(['rented_by_user_id']); } catch (\Exception $e) {}
-        });
+        // PostgreSQL-safe: Only drop constraint if it exists
+        if (DB::getDriverName() === 'pgsql') {
+            $constraint = DB::selectOne(<<<SQL
+                SELECT conname FROM pg_constraint
+                WHERE conrelid = 'vehicles'::regclass
+                AND contype = 'f'
+                AND conkey = ARRAY[
+                    (SELECT attnum FROM pg_attribute WHERE attrelid = 'vehicles'::regclass AND attname = 'rented_by_user_id')
+                ]
+            SQL);
+            if ($constraint && isset($constraint->conname)) {
+                DB::statement('ALTER TABLE vehicles DROP CONSTRAINT IF EXISTS "' . $constraint->conname . '"');
+            }
+        } else {
+            Schema::table('vehicles', function (Blueprint $table) {
+                try { $table->dropForeign(['rented_by_user_id']); } catch (\Exception $e) {}
+            });
+        }
 
         DB::table('vehicles')
             ->whereNotNull('rented_by_user_id')
