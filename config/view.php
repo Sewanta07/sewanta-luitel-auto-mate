@@ -11,7 +11,7 @@ return [
     | the usual Laravel view path has already been registered for you.
     |
     'paths' => [
-        base_path('resources/views'),
+        resource_path('views'),
     ],
         base_path('resources/views'),
     ],
