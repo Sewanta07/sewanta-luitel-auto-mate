@@ -21,5 +21,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Surface errors in Render logs when APP_DEBUG=false (Monolog may target storage/logs).
+        $exceptions->reportable(function (\Throwable $e): void {
+            fwrite(STDERR, sprintf(
+                "[exception] %s: %s in %s:%d\n",
+                $e::class,
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+            ));
+        });
     })->create();

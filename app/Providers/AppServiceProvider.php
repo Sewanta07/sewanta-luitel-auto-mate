@@ -10,7 +10,6 @@ use App\Models\RentalRequest;
 use App\Models\ServiceBooking;
 use App\Support\Realtime\ChatUserResolver;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
@@ -29,10 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes([
-            'middleware' => ['web', 'multi.auth'],
-        ]);
-
         View::composer([
             'components.admin-sidebar',
             'components.admin-navbar',

@@ -20,6 +20,7 @@ storage/logs/*
 bootstrap/cache/*
 !bootstrap/cache/.gitignore
 npm-debug.log
+public/hot
 Dockerfile
 Dockerfile.render
 README.md
