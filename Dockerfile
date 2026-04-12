@@ -25,11 +25,14 @@ RUN npm install && npm run build
 
 # Diagnostic: List resources/views contents for debugging
 RUN ls -lR resources/views
+# Diagnostic: Print resource_path('views')
+RUN php -r "echo 'resource_path: ' . resource_path('views') . PHP_EOL;"
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache resources/views
 
 # Expose port 8000 and start Laravel with migrations and cache commands at container startup
 EXPOSE 8000
+WORKDIR /var/www
 CMD php artisan config:clear \
     && php artisan view:clear \
     && php artisan migrate --force \
