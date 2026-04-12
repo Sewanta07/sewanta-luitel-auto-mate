@@ -3,7 +3,7 @@
 @section('title', 'AutoMate - Smart Vehicle Service Management')
 
 @section('content')
-<div class="lp-page">
+<div class="lp-page" x-data="{ mobileMenuOpen: false }">
     <!-- Navigation -->
     <nav class="lp-nav">
         <div class="lp-container">
@@ -12,7 +12,7 @@
                     <img src="{{ asset('assets/branding/company-logo.png') }}" alt="AutoMate" class="lp-logo-image">
                 </div>
                 
-                <div class="lp-nav-links">
+                <div class="lp-nav-links" :class="{ 'lp-nav-links-mobile-open': mobileMenuOpen }">
                     <a href="#services" class="lp-nav-link">Services</a>
                     <a href="#features" class="lp-nav-link">Features</a>
                     <a href="#how-it-works" class="lp-nav-link">How it Works</a>
@@ -34,7 +34,7 @@
 
                 {{-- Mobile Menu Button (Placeholder) --}}
                 <div class="lp-mobile-toggle-wrap">
-                    <button class="lp-mobile-toggle" type="button" aria-label="Open menu">
+                    <button class="lp-mobile-toggle" type="button" aria-label="Open menu" @click="mobileMenuOpen = !mobileMenuOpen">
                         <img src="{{ asset('assets/landing/icons/menu.svg') }}" alt="Menu" class="lp-icon-lg lp-icon-img">
                     </button>
                 </div>
