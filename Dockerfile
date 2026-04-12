@@ -28,7 +28,9 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Expose port 8000 and start Laravel with migrations and cache commands at container startup
 EXPOSE 8000
-CMD php artisan migrate --force \
+CMD php artisan config:clear \
+    && php artisan view:clear \
+    && php artisan migrate --force \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
