@@ -26,6 +26,12 @@ RUN npm install && npm run build
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# Run migrations and cache commands automatically (for Render free tier)
+RUN php artisan migrate --force \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
+
 # Expose port 8000 and start Laravel
 EXPOSE 8000
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
