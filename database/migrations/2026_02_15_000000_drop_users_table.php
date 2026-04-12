@@ -14,13 +14,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Disable foreign key checks to drop the table
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        
+        // Drop the users table (PostgreSQL does not need foreign key checks disabled)
         Schema::dropIfExists('users');
-        
-        // Re-enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**
