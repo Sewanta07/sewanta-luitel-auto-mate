@@ -25,8 +25,11 @@ RUN npm install && npm run build
 
 # Diagnostic: List resources/views contents for debugging
 RUN ls -lR resources/views
-# Diagnostic: Print resource_path('views')
-RUN php -r "echo 'resource_path: ' . resource_path('views') . PHP_EOL;"
+# Diagnostic: Print resource_path('views') and list its contents
+RUN echo "\n\n=== RESOURCE_PATH DIAGNOSTIC ===" \
+    && php -r "echo 'resource_path: ' . resource_path('views') . PHP_EOL;" \
+    && ls -l "/var/www/resources/views" \
+    && echo "=== END RESOURCE_PATH DIAGNOSTIC ===\n\n"
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache resources/views
 
