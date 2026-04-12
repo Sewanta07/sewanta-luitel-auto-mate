@@ -65,6 +65,22 @@
   gap: 2rem;
 }
 
+/* Show mobile nav links when menu is toggled open */
+.lp-nav-links-mobile-open {
+  display: flex !important;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100vw;
+  background: var(--lp-white);
+  box-shadow: var(--lp-shadow-md);
+  padding: 1.5rem 0 2rem 0;
+  z-index: 100;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
 .lp-nav-link,
 .lp-login-link {
   font-size: 0.9rem;

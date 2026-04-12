@@ -9,7 +9,7 @@
         <div class="lp-container">
             <div class="lp-nav-row">
                 <div class="lp-brand-wrap">
-                    <img src="{{ asset('assets/branding/company-logo.png') }}" alt="AutoMate" class="lp-logo-image">
+                    <img src="{{ asset('assets/branding/favicon.png') }}" alt="AutoMate" class="lp-logo-image">
                 </div>
                 
                 <div class="lp-nav-links" :class="{ 'lp-nav-links-mobile-open': mobileMenuOpen }">
