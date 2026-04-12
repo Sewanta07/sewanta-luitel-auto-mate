@@ -9,11 +9,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE payments MODIFY COLUMN type ENUM('service', 'admin_rental', 'marketplace_rental', 'rental_damage') NOT NULL");
+        // Change 'type' column to string for PostgreSQL compatibility
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('type', 32)->default('service')->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE payments MODIFY COLUMN type ENUM('service', 'admin_rental', 'marketplace_rental') NOT NULL");
+        // Optionally revert to previous state (still as string for portability)
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('type', 32)->default('service')->change();
+        });
     }
 };
