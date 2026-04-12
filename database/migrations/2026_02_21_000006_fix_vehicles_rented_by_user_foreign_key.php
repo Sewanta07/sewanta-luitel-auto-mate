@@ -9,7 +9,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $this->dropForeignKeyIfExists('vehicles', 'rented_by_user_id');
+        // Drop the foreign key using Laravel's schema builder
+        Schema::table('vehicles', function (Blueprint $table) {
+            try { $table->dropForeign(['rented_by_user_id']); } catch (\Exception $e) {}
+        });
 
         DB::table('vehicles')
             ->whereNotNull('rented_by_user_id')
@@ -28,7 +31,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        $this->dropForeignKeyIfExists('vehicles', 'rented_by_user_id');
+        Schema::table('vehicles', function (Blueprint $table) {
+            try { $table->dropForeign(['rented_by_user_id']); } catch (\Exception $e) {}
+        });
 
         if (Schema::hasTable('users')) {
             Schema::table('vehicles', function (Blueprint $table) {
@@ -37,23 +42,6 @@ return new class extends Migration
                     ->on('users')
                     ->nullOnDelete();
             });
-        }
-    }
-
-    private function dropForeignKeyIfExists(string $table, string $column): void
-    {
-        $database = DB::getDatabaseName();
-
-        $foreignKeys = DB::table('information_schema.KEY_COLUMN_USAGE')
-            ->select('CONSTRAINT_NAME')
-            ->where('TABLE_SCHEMA', $database)
-            ->where('TABLE_NAME', $table)
-            ->where('COLUMN_NAME', $column)
-            ->whereNotNull('REFERENCED_TABLE_NAME')
-            ->pluck('CONSTRAINT_NAME');
-
-        foreach ($foreignKeys as $constraintName) {
-            DB::statement("ALTER TABLE `{$table}` DROP FOREIGN KEY `{$constraintName}`");
         }
     }
 };
