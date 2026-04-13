@@ -14,6 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Test users are created via dedicated seeders for each role
+        // Create default admin user
+        \App\Models\Admin::updateOrCreate(
+            [
+                'email' => 'sewantaluitel@gmail.com',
+            ],
+            [
+                'name' => 'Sewanta Luitel',
+                'password' => bcrypt('Sewanta@1122'),
+                'status' => 'active',
+            ]
+        );
     }
 }

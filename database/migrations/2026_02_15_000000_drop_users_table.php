@@ -17,7 +17,9 @@ return new class extends Migration
         // Disable foreign key checks to drop the table
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::dropIfExists('users');
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1');
         
         // Re-enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1');

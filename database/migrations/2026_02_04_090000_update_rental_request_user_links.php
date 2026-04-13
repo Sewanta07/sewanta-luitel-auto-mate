@@ -16,11 +16,20 @@ return new class extends Migration
             })
             ->update(['owner_id' => null]);
 
-        Schema::table('rental_requests', function (Blueprint $table) {
-            // Drop existing foreign keys (users table)
-            $table->dropForeign(['renter_id']);
-            $table->dropForeign(['owner_id']);
 
+        // Safely drop foreign keys if they exist
+        try {
+            Schema::table('rental_requests', function (Blueprint $table) {
+                $table->dropForeign(['renter_id']);
+            });
+        } catch (\Exception $e) {}
+        try {
+            Schema::table('rental_requests', function (Blueprint $table) {
+                $table->dropForeign(['owner_id']);
+            });
+        } catch (\Exception $e) {}
+
+        Schema::table('rental_requests', function (Blueprint $table) {
             // Make owner_id nullable
             $table->unsignedBigInteger('owner_id')->nullable()->change();
         });

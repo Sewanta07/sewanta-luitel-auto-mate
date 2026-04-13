@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->date('availability_start')->nullable()->after('listing_status');
-            $table->date('availability_end')->nullable()->after('availability_start');
-            $table->string('pickup_location')->nullable()->after('availability_end');
+            $table->date('availability_start')->nullable();
+            $table->date('availability_end')->nullable();
+            $table->string('pickup_location')->nullable();
         });
     }
 

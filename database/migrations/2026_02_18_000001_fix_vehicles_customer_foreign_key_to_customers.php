@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->dropForeign(['customer_id']);
-        });
-
-        Schema::table('vehicles', function (Blueprint $table) {
+            try {
+                $table->dropForeign(['customer_id']);
+            } catch (\Exception $e) {}
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
@@ -29,10 +28,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->dropForeign(['customer_id']);
-        });
-
-        Schema::table('vehicles', function (Blueprint $table) {
+            try {
+                $table->dropForeign(['customer_id']);
+            } catch (\Exception $e) {}
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('users')
