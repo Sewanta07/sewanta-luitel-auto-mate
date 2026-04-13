@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Vehicle extends Model
 {
@@ -54,6 +55,42 @@ class Vehicle extends Model
     public function approvedRental()
     {
         return $this->hasOne(RentalRequest::class)->where('status', 'Approved')->latestOfMany();
+    }
+
+    public function resolveImageUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        $normalized = str_replace('\\', '/', trim($path));
+
+        if (Str::startsWith($normalized, ['http://', 'https://'])) {
+            return $normalized;
+        }
+
+        if (Str::startsWith($normalized, '/storage/')) {
+            return asset(ltrim($normalized, '/'));
+        }
+
+        if (Str::startsWith($normalized, 'storage/')) {
+            return asset($normalized);
+        }
+
+        return asset('storage/' . ltrim($normalized, '/'));
+    }
+
+    public function primaryImageUrl(): ?string
+    {
+        if (!empty($this->image_path)) {
+            return $this->resolveImageUrl($this->image_path);
+        }
+
+        $extraImage = $this->relationLoaded('images')
+            ? $this->images->first()
+            : $this->images()->orderBy('sort_order')->first();
+
+        return $extraImage ? $this->resolveImageUrl($extraImage->image_path) : null;
     }
 
     public function currentStatus()

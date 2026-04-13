@@ -75,7 +75,7 @@
         </form>
 
         {{-- Mobile menu button --}}
-        <button class="sf-topnav-mobile-btn" type="button" aria-label="Toggle mobile menu">
+        <button id="staffMobileMenuButton" class="sf-topnav-mobile-btn" type="button" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="staffMobileMenu">
           <svg class="sf-topnav-mobile-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
@@ -85,7 +85,7 @@
   </div>
 
   {{-- Mobile Menu --}}
-  <div class="sf-topnav-mobile-menu sf-hidden">
+  <div id="staffMobileMenu" class="sf-topnav-mobile-menu sf-hidden">
     <a href="{{ route('dashboard.staff') }}" class="sf-topnav-mobile-link">Dashboard</a>
     <a href="{{ route('staff.bookings') }}" class="sf-topnav-mobile-link">Bookings</a>
     <a href="{{ route('staff.service.logs') }}" class="sf-topnav-mobile-link">Service Logs</a>
@@ -93,3 +93,54 @@
     <a href="{{ route('staff.customers') }}" class="sf-topnav-mobile-link">Customers</a>
   </div>
 </nav>
+
+@once
+  @push('scripts')
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navRoot = document.querySelector('.sf-topnav');
+        const button = document.getElementById('staffMobileMenuButton');
+        const menu = document.getElementById('staffMobileMenu');
+
+        if (!button || !menu) {
+          return;
+        }
+
+        const closeMenu = () => {
+          menu.classList.add('sf-hidden');
+          button.setAttribute('aria-expanded', 'false');
+        };
+
+        const toggleMenu = () => {
+          const shouldOpen = menu.classList.contains('sf-hidden');
+          menu.classList.toggle('sf-hidden', !shouldOpen);
+          button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        };
+
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleMenu();
+        });
+
+        menu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            closeMenu();
+          });
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!navRoot?.contains(event.target)) {
+            closeMenu();
+          }
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMenu();
+          }
+        });
+      });
+    </script>
+  @endpush
+@endonce

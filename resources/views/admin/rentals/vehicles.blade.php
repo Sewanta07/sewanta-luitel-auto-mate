@@ -34,8 +34,8 @@
     <div class="ad-rveh-grid">
         @forelse($vehicles as $vehicle)
         <div class="ad-rveh-card">
-            @if($vehicle->image_path)
-            <img src="{{ asset('storage/' . $vehicle->image_path) }}" alt="{{ $vehicle->vehicle_name }}" class="ad-rveh-image">
+            @if($vehicle->primaryImageUrl())
+            <img src="{{ $vehicle->primaryImageUrl() }}" alt="{{ $vehicle->vehicle_name }}" class="ad-rveh-image">
             @else
             <div class="ad-rveh-image-placeholder">
                 <svg class="ad-rveh-image-placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -343,6 +343,12 @@
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+@media (max-width: 767px) {
+	.cs-cnav-mobile-menu.cs-cnav-mobile-open {
+		display: block;
+	}
+}
+
 @media (min-width: 768px) {
 	.cs-cnav-mobile-menu {
 		display: none !important;

@@ -46,34 +46,12 @@
             <div class="cs-rent-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($vehicles as $vehicle)
                     @php
-                        $resolveVehicleImageUrl = static function (?string $path): ?string {
-                            if (!$path) {
-                                return null;
-                            }
-
-                            $normalized = str_replace('\\', '/', trim($path));
-
-                            if (\Illuminate\Support\Str::startsWith($normalized, ['http://', 'https://'])) {
-                                return $normalized;
-                            }
-
-                            if (\Illuminate\Support\Str::startsWith($normalized, '/storage/')) {
-                                return asset(ltrim($normalized, '/'));
-                            }
-
-                            if (\Illuminate\Support\Str::startsWith($normalized, 'storage/')) {
-                                return asset($normalized);
-                            }
-
-                            return asset('storage/' . ltrim($normalized, '/'));
-                        };
-
                         $allImages = [];
                         if ($vehicle->image_path) {
                             $allImages[] = $vehicle->image_path;
                         }
                         $allImages = array_merge($allImages, $vehicle->images->pluck('image_path')->toArray());
-                        $primaryImage = count($allImages) > 0 ? $resolveVehicleImageUrl($allImages[0]) : null;
+                        $primaryImage = $vehicle->primaryImageUrl();
                         $isAdminVehicle = (bool) $vehicle->is_service_center_vehicle;
                         $displayRate = $isAdminVehicle ? $vehicle->daily_rate : ($vehicle->owner_daily_rate ?? $vehicle->daily_rate);
                         $vehiclePayload = [
@@ -92,8 +70,8 @@
                         <!-- Image Gallery Section -->
                         <div class="cs-rent-card-media relative h-48 bg-gray-100 overflow-hidden">
                             <!-- Main Image -->
-                            @if(count($allImages) > 0)
-                                <img src="{{ $resolveVehicleImageUrl($allImages[0]) }}"
+                            @if($primaryImage)
+                                <img src="{{ $primaryImage }}"
                                      class="cs-rent-card-image w-full h-full object-cover"
                                      alt="{{ $vehicle->vehicle_name ?? $vehicle->brand }}">
                             @else

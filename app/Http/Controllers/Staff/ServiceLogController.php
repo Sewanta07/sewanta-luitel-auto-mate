@@ -19,7 +19,7 @@ class ServiceLogController extends Controller
             abort(403, 'Unauthorized: Staff details not found.');
         }
         
-        $query = ServiceLog::with(['booking', 'user'])
+        $query = ServiceLog::with(['booking'])
             ->whereNotNull('service_booking_id')
             ->whereHas('booking', function ($q) use ($staffMember) {
                 $q->where('staff_id', $staffMember->id);

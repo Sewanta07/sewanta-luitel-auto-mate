@@ -48,7 +48,7 @@
 
       {{-- ACTIONS & USER (RIGHT) --}}
       <div class="cs-cnav-actions">
-        <button id="customerMobileMenuButton" type="button" class="cs-cnav-mobile-toggle" aria-label="Toggle mobile menu">
+        <button id="customerMobileMenuButton" type="button" class="cs-cnav-mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="customerMobileMenu">
           <svg class="cs-cnav-mobile-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         
@@ -122,7 +122,7 @@
   </div>
 
   {{-- MOBILE MENU --}}
-  <div id="customerMobileMenu" class="cs-cnav-mobile-menu hidden">
+  <div id="customerMobileMenu" class="cs-cnav-mobile-menu">
     
     <a href="{{ route('dashboard.customer') }}" class="cs-cnav-mobile-link">Dashboard</a>
     <a href="{{ route('customer.vehicles') }}" class="cs-cnav-mobile-link">My Vehicles</a>
@@ -152,15 +152,27 @@
     const mobileMenu = document.getElementById('customerMobileMenu');
 
     const closeUserDropdown = () => userDropdownMenu?.classList.add('hidden');
-    const closeMobileMenu = () => mobileMenu?.classList.add('hidden');
+    const closeMobileMenu = () => {
+      mobileMenu?.classList.remove('cs-cnav-mobile-open');
+      mobileMenuButton?.setAttribute('aria-expanded', 'false');
+    };
 
     userDropdownButton?.addEventListener('click', (event) => {
       event.stopPropagation();
       userDropdownMenu?.classList.toggle('hidden');
     });
 
-    mobileMenuButton?.addEventListener('click', () => {
-      mobileMenu?.classList.toggle('hidden');
+    mobileMenuButton?.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const isOpen = mobileMenu?.classList.toggle('cs-cnav-mobile-open');
+      mobileMenuButton?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    mobileMenu?.querySelectorAll('a,button').forEach((item) => {
+      item.addEventListener('click', () => {
+        closeMobileMenu();
+      });
     });
 
     document.addEventListener('click', (event) => {
