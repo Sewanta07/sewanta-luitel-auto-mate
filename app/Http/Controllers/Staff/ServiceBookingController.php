@@ -16,9 +16,19 @@ use Illuminate\Support\Facades\Storage;
 
 class ServiceBookingController extends Controller
 {
+    private function staffId(): ?int
+    {
+        return Auth::guard('staff')->id();
+    }
+
+    private function staffUser()
+    {
+        return Auth::guard('staff')->user();
+    }
+
     public function index()
     {
-        $bookings = ServiceBooking::where('staff_id', Auth::id())
+        $bookings = ServiceBooking::where('staff_id', $this->staffId())
             ->with('customer')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -42,7 +52,7 @@ class ServiceBookingController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
-        $booking = ServiceBooking::where('id', $id)->where('staff_id', Auth::id())->firstOrFail();
+        $booking = ServiceBooking::where('id', $id)->where('staff_id', $this->staffId())->firstOrFail();
 
         if ($booking->status === 'Completed') {
             return redirect()->back()->with('error', 'This booking is completed and is now view-only.');
@@ -63,8 +73,8 @@ class ServiceBookingController extends Controller
         // Create log entry with polymorphic relationship
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->staffId(),
+            'user_type' => get_class($this->staffUser()),
             'status' => $request->status,
             'notes' => $request->notes ?? "Status updated to {$request->status}",
             'attachment_path' => $attachmentPath,
@@ -93,7 +103,7 @@ class ServiceBookingController extends Controller
     public function show($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('staff_id', Auth::id())
+            ->where('staff_id', $this->staffId())
             ->with(['customer', 'parts'])
             ->firstOrFail();
 
@@ -112,7 +122,7 @@ class ServiceBookingController extends Controller
         ]);
 
         $booking = ServiceBooking::where('id', $id)
-            ->where('staff_id', Auth::id())
+            ->where('staff_id', $this->staffId())
             ->firstOrFail();
 
         if ($booking->status === 'Completed') {
@@ -154,8 +164,8 @@ class ServiceBookingController extends Controller
         InventoryMovement::create([
             'inventory_item_id' => $item->id,
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->staffId(),
+            'user_type' => get_class($this->staffUser()),
             'change_type' => 'consume',
             'quantity_change' => -1 * $request->quantity,
             'unit_price' => $unitPrice,
@@ -164,8 +174,8 @@ class ServiceBookingController extends Controller
 
         ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->staffId(),
+            'user_type' => get_class($this->staffUser()),
             'status' => 'Parts Used',
             'notes' => "Parts used: {$item->part_name} x{$request->quantity}",
         ]);

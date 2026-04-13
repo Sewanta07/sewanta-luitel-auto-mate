@@ -100,26 +100,30 @@
                                     <div class="sf-slog-time">{{ $log->created_at->format('h:i A') }}</div>
                                 </td>
                                 <td class="sf-slog-td sf-slog-nowrap">
-                                    <span class="sf-slog-booking-chip">{{ $log->booking->booking_code }}</span>
+                                    <span class="sf-slog-booking-chip">{{ $log->booking->booking_code ?? 'N/A' }}</span>
                                 </td>
                                 <td class="sf-slog-td">
-                                    <div class="sf-slog-vehicle">{{ $log->booking->vehicle_model }}</div>
-                                    <div class="sf-slog-plate">{{ $log->booking->vehicle_number }}</div>
+                                    <div class="sf-slog-vehicle">{{ $log->booking->vehicle_model ?? 'N/A' }}</div>
+                                    <div class="sf-slog-plate">{{ $log->booking->vehicle_number ?? 'N/A' }}</div>
                                 </td>
                                 <td class="sf-slog-td">
-                                    <div class="sf-slog-service">{{ $log->booking->service_type }}</div>
+                                    <div class="sf-slog-service">{{ $log->booking->service_type ?? 'N/A' }}</div>
                                     @if($log->notes)
                                         <div class="sf-slog-notes">{{ \Illuminate\Support\Str::limit($log->notes, 70) }}</div>
                                     @endif
                                 </td>
                                 <td class="sf-slog-td sf-slog-nowrap">
-                                    <span class="sf-slog-cost">Rs. {{ number_format((float) ($log->booking->total_amount ?? $log->booking->estimated_cost ?? 0), 2) }}</span>
+                                    <span class="sf-slog-cost">Rs. {{ number_format((float) (optional($log->booking)->total_amount ?? optional($log->booking)->estimated_cost ?? 0), 2) }}</span>
                                 </td>
                                 <td class="sf-slog-td sf-slog-nowrap sf-slog-right">
+                                    @if($log->booking)
                                     <a href="{{ route('staff.services.show', $log->booking->id) }}" class="sf-slog-view-btn">
                                         <svg class="sf-slog-view-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         View
                                     </a>
+                                    @else
+                                    <span class="sf-slog-view-btn sf-slog-filter-btn-secondary">Unavailable</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

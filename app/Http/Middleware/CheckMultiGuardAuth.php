@@ -14,16 +14,32 @@ class CheckMultiGuardAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('admin')->check()) {
-            Auth::shouldUse('admin');
-            $isAuthenticated = true;
-        } elseif (Auth::guard('staff')->check()) {
-            Auth::shouldUse('staff');
-            $isAuthenticated = true;
-        } elseif (Auth::guard('customer')->check()) {
-            Auth::shouldUse('customer');
-            $isAuthenticated = true;
-        } else {
+        $preferredGuard = null;
+        if ($request->is('admin/*')) {
+            $preferredGuard = 'admin';
+        } elseif ($request->is('staff/*')) {
+            $preferredGuard = 'staff';
+        } elseif ($request->is('customer/*')) {
+            $preferredGuard = 'customer';
+        }
+
+        $guards = array_values(array_unique(array_filter([
+            $preferredGuard,
+            'admin',
+            'staff',
+            'customer',
+        ])));
+
+        $isAuthenticated = false;
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                Auth::shouldUse($guard);
+                $isAuthenticated = true;
+                break;
+            }
+        }
+
+        if (!$isAuthenticated) {
             $isAuthenticated = Auth::check();
         }
 

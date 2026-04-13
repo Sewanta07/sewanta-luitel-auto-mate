@@ -12,7 +12,7 @@ class StaffProfileController extends Controller
 {
     private function staffUser()
     {
-        return Auth::guard('staff')->user() ?? Auth::user();
+        return Auth::guard('staff')->user();
     }
 
     /**

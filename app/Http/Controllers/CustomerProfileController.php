@@ -13,7 +13,7 @@ class CustomerProfileController extends Controller
 {
     private function customerUser()
     {
-        return Auth::guard('customer')->user() ?? Auth::user();
+        return Auth::guard('customer')->user();
     }
 
     /**

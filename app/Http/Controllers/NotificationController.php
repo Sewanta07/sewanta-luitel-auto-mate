@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -50,10 +49,13 @@ class NotificationController extends Controller
      */
     public function markAsRead($id)
     {
+        $user = getAuthenticatedUser();
+        abort_unless((bool) $user, 401);
+
         $notification = Notification::findOrFail($id);
         
         // Ensure the notification belongs to the authenticated user
-        if ($notification->customer_id !== Auth::id()) {
+        if ((int) $notification->customer_id !== (int) $user->id) {
             abort(403);
         }
 
@@ -67,7 +69,10 @@ class NotificationController extends Controller
      */
     public function markAllAsRead()
     {
-        Notification::where('customer_id', Auth::id())
+        $user = getAuthenticatedUser();
+        abort_unless((bool) $user, 401);
+
+        Notification::where('customer_id', (int) $user->id)
             ->where('is_read', false)
             ->update([
                 'is_read' => true,
@@ -82,10 +87,13 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
+        $user = getAuthenticatedUser();
+        abort_unless((bool) $user, 401);
+
         $notification = Notification::findOrFail($id);
         
         // Ensure the notification belongs to the authenticated user
-        if ($notification->customer_id !== Auth::id()) {
+        if ((int) $notification->customer_id !== (int) $user->id) {
             abort(403);
         }
 

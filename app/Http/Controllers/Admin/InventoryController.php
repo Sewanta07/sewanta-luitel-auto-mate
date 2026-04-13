@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
+    private function adminId(): ?int
+    {
+        return Auth::guard('admin')->id();
+    }
+
+    private function adminUser()
+    {
+        return Auth::guard('admin')->user();
+    }
+
     public function index()
     {
         $items = InventoryItem::orderBy('part_name')->get();
@@ -64,8 +74,8 @@ class InventoryController extends Controller
         InventoryMovement::create([
             'inventory_item_id' => $item->id,
             'service_booking_id' => null,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->adminId(),
+            'user_type' => get_class($this->adminUser()),
             'change_type' => 'add',
             'quantity_change' => $item->quantity,
             'unit_price' => $item->unit_price,
@@ -105,8 +115,8 @@ class InventoryController extends Controller
             InventoryMovement::create([
                 'inventory_item_id' => $item->id,
                 'service_booking_id' => null,
-                'user_id' => Auth::id(),
-                'user_type' => get_class(Auth::user()),
+                'user_id' => $this->adminId(),
+                'user_type' => get_class($this->adminUser()),
                 'change_type' => $quantityChange > 0 ? 'restock' : 'adjust',
                 'quantity_change' => $quantityChange,
                 'unit_price' => $item->unit_price,

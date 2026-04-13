@@ -19,7 +19,8 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $staff = Auth::user();
+        $staff = Auth::guard('staff')->user() ?? getAuthenticatedUser();
+        abort_unless((bool) $staff, 401);
         $staffUser = ChatUserResolver::forAuthenticated();
         abort_unless((bool) $staffUser, 401);
         
@@ -62,7 +63,8 @@ class CustomerController extends Controller
 
     public function messages(Request $request, $customerId)
     {
-        $staff = Auth::user();
+        $staff = Auth::guard('staff')->user() ?? getAuthenticatedUser();
+        abort_unless((bool) $staff, 401);
         $staffUser = ChatUserResolver::forAuthenticated();
         abort_unless((bool) $staffUser, 401);
         $openConversation = $request->boolean('open');

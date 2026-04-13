@@ -16,6 +16,21 @@ use App\Models\WithdrawalRequest;
 
 class DashboardController extends Controller
 {
+    private function customerUser()
+    {
+        return Auth::guard('customer')->user();
+    }
+
+    private function staffUser()
+    {
+        return Auth::guard('staff')->user();
+    }
+
+    private function adminUser()
+    {
+        return Auth::guard('admin')->user();
+    }
+
     /**
      * Create a new controller instance.
      */
@@ -29,7 +44,7 @@ class DashboardController extends Controller
      */
     public function customer()
     {
-        $user = Auth::user();
+        $user = $this->customerUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -75,7 +90,7 @@ class DashboardController extends Controller
      */
     public function staff()
     {
-        $user = Auth::user();
+        $user = $this->staffUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -161,7 +176,7 @@ class DashboardController extends Controller
      */
     public function admin()
     {
-        $user = Auth::user();
+        $user = $this->adminUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -278,7 +293,7 @@ class DashboardController extends Controller
      */
     public function analytics(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->adminUser();
 
         if (!$user) {
             return redirect()->route('login');

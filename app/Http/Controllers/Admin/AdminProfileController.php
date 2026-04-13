@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminProfileController extends Controller
 {
+    private function adminUser()
+    {
+        return Auth::guard('admin')->user();
+    }
+
     /**
      * Create a new controller instance.
      */
@@ -25,7 +30,7 @@ class AdminProfileController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->adminUser();
         
         if (!$user) {
             return redirect()->route('login');
@@ -45,7 +50,7 @@ class AdminProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->adminUser();
         
         // Ensure user is admin
         if (!($user instanceof \App\Models\Admin)) {
@@ -74,7 +79,7 @@ class AdminProfileController extends Controller
      */
     public function sendPasswordResetLink(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->adminUser();
         
         // Ensure user is admin
         if (!($user instanceof \App\Models\Admin)) {

@@ -17,7 +17,7 @@ class RentalRequestController extends Controller
      */
     public function index()
     {
-        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        $customerId = Auth::guard('customer')->id();
         
         // Get rental requests with full details
         $requests = RentalRequest::with(['vehicle', 'assignedStaff', 'owner'])
@@ -110,7 +110,7 @@ class RentalRequestController extends Controller
             return redirect()->back()->with('error', 'This vehicle listing is not yet approved.');
         }
 
-        $renterId = Auth::guard('customer')->id() ?? Auth::id();
+        $renterId = Auth::guard('customer')->id();
         if ($vehicle->customer_id === $renterId) {
             return redirect()->back()->with('error', 'You cannot rent your own vehicle.');
         }
@@ -154,7 +154,7 @@ class RentalRequestController extends Controller
         notifyRentalUpdate($renterId, $rentalRequest, 'Pending', $vehicleName);
 
         if (!empty($ownerId)) {
-            $renterName = trim((string) (Auth::guard('customer')->user()?->name ?? Auth::user()?->name ?? 'A renter'));
+            $renterName = trim((string) (Auth::guard('customer')->user()?->name ?? 'A renter'));
             $dateDetails = '';
             if (!empty($validated['start_date']) && !empty($validated['end_date'])) {
                 $dateDetails = ' Rental period: ' . $validated['start_date'] . ' to ' . $validated['end_date'] . '.';
@@ -183,7 +183,7 @@ class RentalRequestController extends Controller
      */
     public function approve(RentalRequest $request)
     {
-        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        $customerId = Auth::guard('customer')->id();
         if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
@@ -224,7 +224,7 @@ class RentalRequestController extends Controller
      */
     public function reject(RentalRequest $request)
     {
-        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        $customerId = Auth::guard('customer')->id();
         if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
@@ -250,7 +250,7 @@ class RentalRequestController extends Controller
      */
     public function pay(RentalRequest $request)
     {
-        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        $customerId = Auth::guard('customer')->id();
         if ($request->renter_id !== $customerId) {
             abort(403, 'Unauthorized');
         }
@@ -272,7 +272,7 @@ class RentalRequestController extends Controller
      */
     public function markReturned(RentalRequest $request)
     {
-        $customerId = Auth::guard('customer')->id() ?? Auth::id();
+        $customerId = Auth::guard('customer')->id();
         if ($request->owner_id !== $customerId) {
             abort(403, 'Unauthorized');
         }

@@ -12,17 +12,29 @@ use Illuminate\Support\Facades\Mail;
 
 class ServiceBookingController extends Controller
 {
+    private function customerId(): ?int
+    {
+        return Auth::guard('customer')->id();
+    }
+
+    private function customerUser()
+    {
+        return Auth::guard('customer')->user();
+    }
+
     /**
      * Display a listing of the customer's bookings.
      */
     public function index()
     {
-        $bookings = ServiceBooking::where('customer_id', Auth::id())
+        $customerId = $this->customerId();
+
+        $bookings = ServiceBooking::where('customer_id', $customerId)
             ->orderBy('created_at', 'desc')
             ->get();
 
         $servicePayments = Payment::query()
-            ->where('user_id', Auth::id())
+            ->where('user_id', $customerId)
             ->where('type', 'service')
             ->where('status', 'paid')
             ->orderByDesc('id')
@@ -49,7 +61,9 @@ class ServiceBookingController extends Controller
      */
     public function create(Request $request)
     {
-        $savedVehicles = ServiceBooking::where('customer_id', Auth::id())
+        $customerId = $this->customerId();
+
+        $savedVehicles = ServiceBooking::where('customer_id', $customerId)
             ->select('vehicle_number', 'vehicle_model', 'vehicle_name', 'vehicle_year', 'vehicle_type')
             ->distinct()
             ->orderBy('vehicle_model')
@@ -61,7 +75,7 @@ class ServiceBookingController extends Controller
             $preFilledVehicle = \App\Models\Vehicle::find($request->vehicle_id);
             
             // Make sure the vehicle belongs to the authenticated customer
-            if ($preFilledVehicle && $preFilledVehicle->customer_id !== Auth::id()) {
+            if ($preFilledVehicle && (int) $preFilledVehicle->customer_id !== (int) $customerId) {
                 $preFilledVehicle = null;
             }
         }
@@ -91,7 +105,10 @@ class ServiceBookingController extends Controller
             'pickup_drop' => 'required|boolean',
         ]);
 
-        $hasConflict = ServiceBooking::where('customer_id', Auth::id())
+        $customerId = $this->customerId();
+        $customer = $this->customerUser();
+
+        $hasConflict = ServiceBooking::where('customer_id', $customerId)
             ->whereDate('preferred_date', $validated['preferred_date'])
             ->where('preferred_time_slot', $validated['preferred_time_slot'])
             ->whereIn('status', ['Pending', 'Approved', 'Assigned', 'In Progress', 'Waiting for Parts'])
@@ -107,7 +124,7 @@ class ServiceBookingController extends Controller
             $validated['location'] = $validated['location'] ?: 'Service Center Pickup';
         }
 
-        $validated['customer_id'] = Auth::id();
+        $validated['customer_id'] = $customerId;
         $validated['status'] = 'Pending';
 
         $validated['rental_required'] = false;
@@ -116,19 +133,19 @@ class ServiceBookingController extends Controller
         // Create initial log entry
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $customerId,
+            'user_type' => get_class($customer),
             'status' => 'Pending',
             'notes' => 'Booking created' . ($booking->rental_required ? ' with rental requested.' : '.'),
         ]);
 
         // Notify customer and admin (if configured)
         try {
-            if (Auth::user()?->email) {
+            if ($customer?->email) {
                 Mail::raw(
                     "Your booking {$booking->booking_code} has been submitted and is pending approval.",
-                    function ($message) {
-                        $message->to(Auth::user()->email)
+                    function ($message) use ($customer) {
+                        $message->to($customer->email)
                             ->subject('Booking Submitted - AutoMate');
                     }
                 );
@@ -160,7 +177,7 @@ class ServiceBookingController extends Controller
     public function cancel($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->firstOrFail();
 
         if ($booking->status !== 'Pending') {
@@ -171,8 +188,8 @@ class ServiceBookingController extends Controller
 
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->customerId(),
+            'user_type' => get_class($this->customerUser()),
             'status' => 'Cancelled',
             'notes' => 'Booking cancelled by customer.',
         ]);
@@ -208,14 +225,14 @@ class ServiceBookingController extends Controller
         ]);
 
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->firstOrFail();
 
         if ($booking->status !== 'Pending') {
             return redirect()->back()->with('success', 'Only pending bookings can be rescheduled.');
         }
 
-        $hasConflict = ServiceBooking::where('customer_id', Auth::id())
+        $hasConflict = ServiceBooking::where('customer_id', $this->customerId())
             ->whereDate('preferred_date', $validated['preferred_date'])
             ->where('preferred_time_slot', $validated['preferred_time_slot'])
             ->whereIn('status', ['Pending', 'Approved', 'Assigned', 'In Progress', 'Waiting for Parts'])
@@ -235,8 +252,8 @@ class ServiceBookingController extends Controller
 
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->customerId(),
+            'user_type' => get_class($this->customerUser()),
             'status' => 'Pending',
             'notes' => 'Booking rescheduled by customer.',
         ]);
@@ -267,7 +284,7 @@ class ServiceBookingController extends Controller
     public function invoice($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->with('parts')
             ->firstOrFail();
 
@@ -284,7 +301,7 @@ class ServiceBookingController extends Controller
     public function downloadInvoice($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->with('parts')
             ->firstOrFail();
 
@@ -305,7 +322,7 @@ class ServiceBookingController extends Controller
     public function show($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->with([
                 'logs' => function($query) {
                     $query->with('user')->orderBy('created_at', 'desc');
@@ -325,7 +342,7 @@ class ServiceBookingController extends Controller
     public function accept($id)
     {
         $booking = ServiceBooking::where('id', $id)
-            ->where('customer_id', Auth::id())
+            ->where('customer_id', $this->customerId())
             ->firstOrFail();
 
         if ($booking->status !== 'Assigned') {
@@ -336,8 +353,8 @@ class ServiceBookingController extends Controller
 
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'user_type' => get_class(Auth::user()),
+            'user_id' => $this->customerId(),
+            'user_type' => get_class($this->customerUser()),
             'status' => 'Customer Accepted',
             'notes' => 'Customer accepted the assigned staff and authorized work to begin.',
         ]);

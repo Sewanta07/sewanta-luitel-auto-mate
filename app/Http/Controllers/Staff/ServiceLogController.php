@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ServiceLog;
 use App\Models\ServiceBooking;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceLogController extends Controller
 {
@@ -20,6 +20,7 @@ class ServiceLogController extends Controller
         }
         
         $query = ServiceLog::with(['booking', 'user'])
+            ->whereNotNull('service_booking_id')
             ->whereHas('booking', function ($q) use ($staffMember) {
                 $q->where('staff_id', $staffMember->id);
             })

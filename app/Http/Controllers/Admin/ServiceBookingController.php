@@ -7,10 +7,21 @@ use App\Events\ServiceStatusUpdated;
 use App\Models\ServiceBooking;
 use App\Models\StaffMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class ServiceBookingController extends Controller
 {
+    private function adminId(): ?int
+    {
+        return Auth::guard('admin')->id();
+    }
+
+    private function adminUser()
+    {
+        return Auth::guard('admin')->user();
+    }
+
     public function index()
     {
         $bookings = ServiceBooking::with(['customer', 'staff'])->orderBy('created_at', 'desc')->get();
@@ -54,8 +65,8 @@ class ServiceBookingController extends Controller
         // Create assignment log
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
+            'user_id' => $this->adminId(),
+            'user_type' => get_class($this->adminUser()),
             'status' => 'Assigned',
             'notes' => "Booking assigned to technician: {$staffMember->name}",
         ]);
@@ -100,8 +111,8 @@ class ServiceBookingController extends Controller
         // Create log entry
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
+            'user_id' => $this->adminId(),
+            'user_type' => get_class($this->adminUser()),
             'status' => $request->status,
             'notes' => "Admin updated status to {$request->status}",
         ]);
@@ -147,8 +158,8 @@ class ServiceBookingController extends Controller
         // Create approval log
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
+            'user_id' => $this->adminId(),
+            'user_type' => get_class($this->adminUser()),
             'status' => 'Approved',
             'notes' => "Booking approved and assigned to {$staffMember->name}. Estimated cost: रू " . number_format($booking->estimated_cost ?? 0, 2),
         ]);
@@ -196,8 +207,8 @@ class ServiceBookingController extends Controller
         // Create rejection log
         \App\Models\ServiceLog::create([
             'service_booking_id' => $booking->id,
-            'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'user_type' => get_class(\Illuminate\Support\Facades\Auth::user()),
+            'user_id' => $this->adminId(),
+            'user_type' => get_class($this->adminUser()),
             'status' => 'Rejected',
             'notes' => "Booking rejected. Reason: {$request->rejection_reason}",
         ]);

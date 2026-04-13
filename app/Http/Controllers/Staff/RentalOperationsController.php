@@ -11,12 +11,17 @@ use Illuminate\Support\Facades\Storage;
 
 class RentalOperationsController extends Controller
 {
+    private function staffId(): ?int
+    {
+        return Auth::guard('staff')->id();
+    }
+
     /**
      * Display assigned rentals dashboard
      */
     public function index()
     {
-        $staffId = Auth::id();
+        $staffId = $this->staffId();
         
         $rentals = RentalRequest::with(['vehicle', 'renter', 'owner'])
             ->where('assigned_staff_id', $staffId)
@@ -48,7 +53,7 @@ class RentalOperationsController extends Controller
      */
     public function showInspection(RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized to inspect this rental');
         }
 
@@ -60,7 +65,7 @@ class RentalOperationsController extends Controller
      */
     public function storePreInspection(Request $request, RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized');
         }
 
@@ -108,7 +113,7 @@ class RentalOperationsController extends Controller
      */
     public function markPickedUp(RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized');
         }
 
@@ -147,7 +152,7 @@ class RentalOperationsController extends Controller
      */
     public function updateStatus(Request $request, RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized');
         }
 
@@ -170,7 +175,7 @@ class RentalOperationsController extends Controller
      */
     public function storePostInspection(Request $request, RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized');
         }
 
@@ -251,7 +256,7 @@ class RentalOperationsController extends Controller
      */
     public function completeRental(RentalRequest $rental)
     {
-        if ($rental->assigned_staff_id !== Auth::id()) {
+        if ((int) $rental->assigned_staff_id !== (int) $this->staffId()) {
             abort(403, 'Not authorized');
         }
 
@@ -277,7 +282,7 @@ class RentalOperationsController extends Controller
      */
     public function history()
     {
-        $staffId = Auth::id();
+        $staffId = $this->staffId();
         
         $rentals = RentalRequest::with(['vehicle', 'renter', 'owner'])
             ->where('assigned_staff_id', $staffId)

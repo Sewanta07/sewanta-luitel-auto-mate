@@ -45,27 +45,30 @@ class MessageMonitorController extends Controller
             ->get()
             ->keyBy('id');
 
-        $lastMessages = Message::query()
-            ->where(function ($q) use ($conversations) {
-                foreach ($conversations as $conversation) {
-                    $q->orWhere(function ($qq) use ($conversation) {
-                        $qq->where('sender_id', $conversation->customer_id)
-                            ->where('receiver_id', $conversation->staff_id);
-                    })->orWhere(function ($qq) use ($conversation) {
-                        $qq->where('sender_id', $conversation->staff_id)
-                            ->where('receiver_id', $conversation->customer_id);
-                    });
-                }
-            })
-            ->orderByDesc('created_at')
-            ->get()
-            ->groupBy(function ($message) {
-                $pair = [(int) $message->sender_id, (int) $message->receiver_id];
-                sort($pair);
+        $lastMessages = collect();
+        if ($conversations->isNotEmpty()) {
+            $lastMessages = Message::query()
+                ->where(function ($q) use ($conversations) {
+                    foreach ($conversations as $conversation) {
+                        $q->orWhere(function ($qq) use ($conversation) {
+                            $qq->where('sender_id', $conversation->customer_id)
+                                ->where('receiver_id', $conversation->staff_id);
+                        })->orWhere(function ($qq) use ($conversation) {
+                            $qq->where('sender_id', $conversation->staff_id)
+                                ->where('receiver_id', $conversation->customer_id);
+                        });
+                    }
+                })
+                ->orderByDesc('created_at')
+                ->get()
+                ->groupBy(function ($message) {
+                    $pair = [(int) $message->sender_id, (int) $message->receiver_id];
+                    sort($pair);
 
-                return implode('-', $pair);
-            })
-            ->map(fn ($items) => $items->first());
+                    return implode('-', $pair);
+                })
+                ->map(fn ($items) => $items->first());
+        }
 
         return view('admin.messages', [
             'conversations' => $conversations,
@@ -102,27 +105,30 @@ class MessageMonitorController extends Controller
             ->get()
             ->keyBy('id');
 
-        $lastMessages = Message::query()
-            ->where(function ($q) use ($conversationList) {
-                foreach ($conversationList as $conversation) {
-                    $q->orWhere(function ($qq) use ($conversation) {
-                        $qq->where('sender_id', $conversation->customer_id)
-                            ->where('receiver_id', $conversation->staff_id);
-                    })->orWhere(function ($qq) use ($conversation) {
-                        $qq->where('sender_id', $conversation->staff_id)
-                            ->where('receiver_id', $conversation->customer_id);
-                    });
-                }
-            })
-            ->orderByDesc('created_at')
-            ->get()
-            ->groupBy(function ($message) {
-                $pair = [(int) $message->sender_id, (int) $message->receiver_id];
-                sort($pair);
+        $lastMessages = collect();
+        if ($conversationList->isNotEmpty()) {
+            $lastMessages = Message::query()
+                ->where(function ($q) use ($conversationList) {
+                    foreach ($conversationList as $conversation) {
+                        $q->orWhere(function ($qq) use ($conversation) {
+                            $qq->where('sender_id', $conversation->customer_id)
+                                ->where('receiver_id', $conversation->staff_id);
+                        })->orWhere(function ($qq) use ($conversation) {
+                            $qq->where('sender_id', $conversation->staff_id)
+                                ->where('receiver_id', $conversation->customer_id);
+                        });
+                    }
+                })
+                ->orderByDesc('created_at')
+                ->get()
+                ->groupBy(function ($message) {
+                    $pair = [(int) $message->sender_id, (int) $message->receiver_id];
+                    sort($pair);
 
-                return implode('-', $pair);
-            })
-            ->map(fn ($items) => $items->first());
+                    return implode('-', $pair);
+                })
+                ->map(fn ($items) => $items->first());
+        }
 
         $messages = Message::query()
             ->with(['sender', 'receiver'])

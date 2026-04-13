@@ -16,7 +16,7 @@ class CustomerMessageController extends Controller
 {
     public function index()
     {
-        $customer = Auth::user();
+        $customer = Auth::guard('customer')->user() ?? getAuthenticatedUser();
         $customerUser = ChatUserResolver::forAuthenticated();
 
         abort_unless((bool) $customerUser, 401);
@@ -34,7 +34,7 @@ class CustomerMessageController extends Controller
 
     public function show(StaffMember $staff)
     {
-        $customer = Auth::user();
+        $customer = Auth::guard('customer')->user() ?? getAuthenticatedUser();
         $customerUser = ChatUserResolver::forAuthenticated();
         abort_unless((bool) $customerUser, 401);
 

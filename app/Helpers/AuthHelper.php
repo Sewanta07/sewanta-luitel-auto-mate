@@ -9,6 +9,11 @@ if (!function_exists('getAuthenticatedUser')) {
     function getAuthenticatedUser()
     {
         try {
+            $currentUser = Auth::user();
+            if ($currentUser) {
+                return $currentUser;
+            }
+
             // Check each guard in order
             if (Auth::guard('admin')->check()) {
                 return Auth::guard('admin')->user();
@@ -37,6 +42,26 @@ if (!function_exists('getAuthenticatedUserRole')) {
     function getAuthenticatedUserRole(): ?string
     {
         try {
+            // Prefer the currently active guard user (set via middleware).
+            $user = Auth::user();
+            if ($user) {
+                if ($user instanceof \App\Models\Admin) {
+                    return 'admin';
+                }
+
+                if ($user instanceof \App\Models\StaffMember) {
+                    return 'staff';
+                }
+
+                if ($user instanceof \App\Models\CustomerUser) {
+                    return 'customer';
+                }
+
+                if (isset($user->role) && in_array($user->role, ['admin', 'staff', 'customer'], true)) {
+                    return $user->role;
+                }
+            }
+
             // Check guards in order
             if (Auth::guard('admin')->check()) {
                 return 'admin';

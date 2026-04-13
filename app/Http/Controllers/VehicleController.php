@@ -14,7 +14,7 @@ class VehicleController extends Controller
 {
     protected function customerId(): ?int
     {
-        return Auth::guard('customer')->id() ?? Auth::id();
+        return Auth::guard('customer')->id();
     }
 
     /**
@@ -39,7 +39,7 @@ class VehicleController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $user = Auth::guard('customer')->user() ?? Auth::user();
+        $user = Auth::guard('customer')->user();
 
         return view('customer.vehicles.index', compact('vehicles', 'user'));
     }
