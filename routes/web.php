@@ -50,14 +50,18 @@ Route::match(['get', 'post'], '/payments/esewa/failure', [PaymentController::cla
 
 // Protected Routes
 Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
-    Route::get('/customer/dashboard', [DashboardController::class, 'customer'])->name('dashboard.customer');
-    Route::get('/staff/dashboard', [DashboardController::class, 'staff'])->name('dashboard.staff');
+    Route::get('/customer/dashboard', [DashboardController::class, 'customer'])
+        ->middleware('role:customer')
+        ->name('dashboard.customer');
+    Route::get('/staff/dashboard', [DashboardController::class, 'staff'])
+        ->middleware('role:staff')
+        ->name('dashboard.staff');
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
         ->middleware('role:admin')
         ->name('dashboard.admin');
 
     // Customer Profile Routes
-    Route::prefix('customer')->group(function () {
+    Route::prefix('customer')->middleware('role:customer')->group(function () {
         Route::get('/profile', [\App\Http\Controllers\CustomerProfileController::class, 'index'])->name('customer.profile');
         Route::post('/profile/update', [\App\Http\Controllers\CustomerProfileController::class, 'updateProfile'])->name('customer.profile.update');
         Route::post('/profile/password', [\App\Http\Controllers\CustomerProfileController::class, 'updatePassword'])->name('customer.profile.password');
@@ -127,7 +131,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     });
 
     // Staff Profile Routes
-    Route::prefix('staff')->group(function () {
+    Route::prefix('staff')->middleware('role:staff')->group(function () {
         Route::get('/profile', [\App\Http\Controllers\StaffProfileController::class, 'index'])->name('staff.profile');
         Route::post('/profile/update', [\App\Http\Controllers\StaffProfileController::class, 'updateProfile'])->name('staff.profile.update');
         Route::post('/profile/password', [\App\Http\Controllers\StaffProfileController::class, 'updatePassword'])->name('staff.profile.password');
@@ -159,7 +163,7 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     });
 
     // Admin Staff Applications
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/staff-applications', [StaffApplicationController::class, 'index'])->name('admin.staff-applications.index');
         Route::post('/staff-applications/{staff}/approve', [StaffApplicationController::class, 'approve'])->name('admin.staff-applications.approve');
         Route::post('/staff-applications/{staff}/reject', [StaffApplicationController::class, 'reject'])->name('admin.staff-applications.reject');
@@ -231,11 +235,6 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
             ->name('admin.messages.conversation');
         
 
-        // Staff/admin service pricing
-        Route::post('/services/{booking}/set-amount', [PaymentController::class, 'setServiceAmount'])
-            ->middleware('role:admin,staff')
-            ->name('admin.services.set-amount');
-
         // Marketplace approval + payout
         Route::post('/owner-vehicles/{ownerVehicle}/approval', [RentalController::class, 'approveOwnerVehicle'])
             ->middleware('role:admin')
@@ -256,6 +255,11 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
             ->middleware('role:admin')
             ->name('admin.withdrawals.process');
     });
+
+    // Staff/admin service pricing
+    Route::post('/admin/services/{booking}/set-amount', [PaymentController::class, 'setServiceAmount'])
+        ->middleware('role:admin,staff')
+        ->name('admin.services.set-amount');
 });
 
 Route::middleware(['multi.auth', 'check.staff.status', 'role:customer'])->group(function () {
@@ -265,7 +269,7 @@ Route::middleware(['multi.auth', 'check.staff.status', 'role:customer'])->group(
 });
 
 // Additional customer UI routes (protected)
-Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
+Route::middleware(['multi.auth', 'check.staff.status', 'role:customer'])->group(function () {
     // Redirect old requests routes to new bookings routes
     Route::get('/customer/requests', function () {
         return redirect()->route('bookings.index');
@@ -286,11 +290,13 @@ Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
     
+});
+
+Route::middleware(['multi.auth', 'check.staff.status'])->group(function () {
     // Search
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
-
 });
 
 // Staff status pages
-Route::view('/staff/pending', 'staff.pending')->name('staff.pending')->middleware('multi.auth');
+Route::view('/staff/pending', 'staff.pending')->name('staff.pending')->middleware(['multi.auth', 'role:staff']);
 Route::view('/staff/rejected', 'staff.rejected')->name('staff.rejected');
