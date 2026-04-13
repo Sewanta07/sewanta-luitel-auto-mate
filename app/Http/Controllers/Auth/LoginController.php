@@ -27,6 +27,14 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+        // Always log out all guards and invalidate session before login
+        Auth::guard('admin')->logout();
+        Auth::guard('staff')->logout();
+        Auth::guard('customer')->logout();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         $credentials = $request->only('email', 'password');
         $remember = $request->filled('remember');
 
