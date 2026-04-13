@@ -23,7 +23,7 @@ class MessageMonitorController extends Controller
                     $qq->where('sender.role', 'staff')->where('receiver.role', 'customer');
                 });
             })
-            ->selectRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END as customer_id,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END as staff_id,\n                MAX(m.created_at) as last_message_at,\n                COUNT(*) as total_messages,\n                SUM(CASE WHEN m.is_read = 0 THEN 1 ELSE 0 END) as unread_count\n            ")
+            ->selectRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END as customer_id,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END as staff_id,\n                MAX(m.created_at) as last_message_at,\n                COUNT(*) as total_messages,\n                SUM(CASE WHEN m.is_read = false THEN 1 ELSE 0 END) as unread_count\n            ")
             ->groupByRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END\n            ")
             ->orderByDesc('last_message_at');
 
@@ -91,7 +91,7 @@ class MessageMonitorController extends Controller
                     $qq->where('sender.role', 'staff')->where('receiver.role', 'customer');
                 });
             })
-            ->selectRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END as customer_id,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END as staff_id,\n                MAX(m.created_at) as last_message_at,\n                COUNT(*) as total_messages,\n                SUM(CASE WHEN m.is_read = 0 THEN 1 ELSE 0 END) as unread_count\n            ")
+            ->selectRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END as customer_id,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END as staff_id,\n                MAX(m.created_at) as last_message_at,\n                COUNT(*) as total_messages,\n                SUM(CASE WHEN m.is_read = false THEN 1 ELSE 0 END) as unread_count\n            ")
             ->groupByRaw("\n                CASE WHEN sender.role = 'customer' THEN m.sender_id ELSE m.receiver_id END,\n                CASE WHEN sender.role = 'staff' THEN m.sender_id ELSE m.receiver_id END\n            ")
             ->orderByDesc('last_message_at')
             ->limit(100)
